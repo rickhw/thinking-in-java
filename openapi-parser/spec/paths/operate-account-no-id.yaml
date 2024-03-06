@@ -1,0 +1,19 @@
+post:
+    tags:
+        - account
+    summary: Create account
+    description: This can only be done by the logged in account.
+    operationId: createAccount
+    requestBody:
+        description: Created account object
+        content:
+            application/json:
+                schema:
+                    $ref: '../openapi.yaml#/components/schemas/com.gtcafe.rws.entity.Account'
+    responses:
+        default:
+            description: successful operation
+            content:
+                application/json:
+                    schema:
+                        $ref: '../openapi.yaml#/components/schemas/com.gtcafe.rws.entity.Account'

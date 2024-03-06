@@ -1,0 +1,10 @@
+get:
+  tags:
+    - account
+  summary: Logs out current logged in account session
+  description: "Logs out current logged in account session"
+  operationId: logoutAccount
+  parameters: []
+  responses:
+    "200":
+      description: successful operation

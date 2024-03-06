@@ -1,0 +1,23 @@
+type: object
+properties:
+  id:
+    type: integer
+    format: int64
+    example: 10
+  username:
+    type: string
+    example: rickhwang
+  firstName:
+    type: string
+    example: Rick
+  lastName:
+    type: string
+    example: Hwang
+  # password:
+  #     type: string
+  #     example: '12345'
+  status:
+    type: integer
+    description: User Status
+    format: int32
+    example: 1
