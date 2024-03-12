@@ -1,5 +1,8 @@
 package com.gtcafe.openapi;
 
+import java.util.Map;
+import java.util.Set;
+
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.media.Schema;
@@ -33,7 +36,33 @@ public class Main {
 
         for ( String key : openAPI.getComponents().getSchemas().keySet()) {
             Schema s = openAPI.getComponents().getSchemas().get(key);
-            System.out.println(String.format("  - %s: %s", key, s.getType()));
+            processSchemas(key, s);
+        }
+    }
+
+    private static void processSchemas(String key, Schema s) {
+
+        System.out.println(String.format("  - %s: %s", key, s.getType()));
+
+        String type = s.getType();
+
+        if ("object".equals(type)) {
+            Map<String, Schema> p = s.getProperties();
+            Set<String> kk = p.keySet();
+            for (String kk2 : kk) {
+                Schema ss = p.get(kk2);
+                processSchemas(kk2, ss);
+            }
+        } else if ("number".equals(type)) {
+            System.out.println("type=" + type);
+        } else if ("string".equals(type)) {
+            System.out.println("type=" + type);
+        } else if ("integer".equals(type)) {
+            System.out.println("type=" + type);
+        } else if ("boolean".equals(type)) {
+            System.out.println("type=" + type);
+        } else if ("array".equals(type)) {
+            System.out.println("type=" + type);
         }
     }
 
