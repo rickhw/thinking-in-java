@@ -1,3 +1,6 @@
+
+
+
 mvn archetype:generate \
 	-DgroupId=com.gtcafe.lab \
 	-DartifactId=mustache-lab \
@@ -7,6 +10,8 @@ mvn archetype:generate \
 
 mvn clean install
 
+
+com.gtcafe.lab.Main
 
 ---
 
