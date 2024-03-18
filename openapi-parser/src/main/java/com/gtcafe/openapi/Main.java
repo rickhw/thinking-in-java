@@ -9,13 +9,17 @@ import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 public class Main {
+
+    // static String OPENAPI_PATH = "spec/openapi.yaml";
+    static String OPENAPI_PATH = "spec/petstore.yaml";
+
     public static void main(String[] args) {
 
-        // or from a file
-        SwaggerParseResult result = new OpenAPIParser().readLocation("spec/openapi.yaml", null, null);
+        SwaggerParseResult result = new OpenAPIParser().readLocation(OPENAPI_PATH, null, null);
 
+        // validation errors and warnings
         if (result.getMessages() != null)
-            result.getMessages().forEach(System.err::println); // validation errors and warnings
+            result.getMessages().forEach(System.err::println); 
 
         // the parsed POJO
         OpenAPI openAPI = result.getOpenAPI();
@@ -24,7 +28,7 @@ public class Main {
             System.out.println(openAPI.getInfo().getTitle());
             // openAPI.getComponents().getSchemas().forEach((k, v) -> System.out.println(k));
 
-            processPaths(openAPI);
+            // processPaths(openAPI);
 
             processComponents(openAPI);
         }
@@ -40,30 +44,43 @@ public class Main {
         }
     }
 
-    private static void processSchemas(String key, Schema s) {
-
-        System.out.println(String.format("  - %s: %s", key, s.getType()));
+    private static void processSchemas(String propName, Schema s) {
 
         String type = s.getType();
 
         if ("object".equals(type)) {
             Map<String, Schema> p = s.getProperties();
-            Set<String> kk = p.keySet();
-            for (String kk2 : kk) {
-                Schema ss = p.get(kk2);
-                processSchemas(kk2, ss);
+            Set<String> ss = p.keySet();
+            for (String name : ss) {
+                processSchemas(name, p.get(name));
             }
-        } else if ("number".equals(type)) {
-            System.out.println("type=" + type);
-        } else if ("string".equals(type)) {
-            System.out.println("type=" + type);
-        } else if ("integer".equals(type)) {
-            System.out.println("type=" + type);
-        } else if ("boolean".equals(type)) {
-            System.out.println("type=" + type);
         } else if ("array".equals(type)) {
-            System.out.println("type=" + type);
+            System.out.println(String.format("%s:", propName));
+            System.out.println(String.format("  - type: [%s]", s.getType()));
+            System.out.println(String.format("  - items: %s", s.getItems()));
+
+        } else {
+            System.out.println(String.format("%s:", propName));
+            System.out.println(String.format("  - type: [%s]", s.getType()));
+            System.out.println(String.format("  - example: [%s]", s.getExample()));
+            System.out.println(String.format("  - default: [%s]", s.getDefault()));
+            System.out.println(String.format("  - description: [%s]", s.getDescription()));
+            System.out.println(String.format("  - format: [%s]", s.getFormat()));
+            System.out.println(String.format("  - enum: [%s]", s.getEnum()));
         }
+        
+        // if ("number".equals(type)) {
+        //     System.out.println("type=" + type);
+
+        // } else if ("string".equals(type)) {
+        //     System.out.println("type=" + type);
+        // } else if ("integer".equals(type)) {
+        //     System.out.println("type=" + type);
+        // } else if ("boolean".equals(type)) {
+        //     System.out.println("type=" + type);
+        // } else if ("array".equals(type)) {
+        //     System.out.println("type=" + type);
+        // }
     }
 
     private static void processPaths(OpenAPI openAPI) {
