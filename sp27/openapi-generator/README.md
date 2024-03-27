@@ -96,3 +96,23 @@ apiPackage: com.abc.pet.codegen.api
 
 
 
+
+---
+
+## Templates
+
+取得 generator 的 templates
+```bash
+openapi-generator author template -g spring
+```
+
+
+
+```bash
+openapi-generator generate \
+     -i openapi-petstore.yaml \
+     -g spring \
+     -c spring-config.yaml \
+     -t codegen/templates \
+     -o out
+```
