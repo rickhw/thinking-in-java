@@ -1,6 +1,23 @@
 
+## Topic
 
-## 顯示哪些支援的 template
+- [ ] install
+- [ ] usage
+    - [ ] generator
+- [ ] config
+    - global
+    -
+- [ ] template
+    - https://openapi-generator.tech/docs/templating
+    - https://openapi-generator.tech/docs/customization
+- [ ] custom logic
+
+
+
+
+---
+
+## 顯示哪些支援的 generator
 
 支援很多，分成幾大類：
 
@@ -22,7 +39,6 @@ CLIENT generators:
 
 SERVER generators:
     - go-server
-
     - java-camel
     - java-inflector
     - java-play-framework
@@ -94,10 +110,8 @@ apiPackage: com.abc.pet.codegen.api
 ```
 
 
-
-
-
 ---
+# 進階
 
 ## Templates
 

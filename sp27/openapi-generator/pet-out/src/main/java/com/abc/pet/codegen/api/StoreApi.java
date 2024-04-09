@@ -5,8 +5,8 @@
  */
 package com.abc.pet.codegen.api;
 
+import com.abc.pet.codegen.model.ComOrder;
 import java.util.Map;
-import com.abc.pet.codegen.model.Order;
 import io.swagger.v3.oas.annotations.ExternalDocumentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -33,7 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Generated;
 
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T20:15:25.185404+08:00[Asia/Taipei]", comments = "Generator version: 7.4.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-29T17:23:17.131155+08:00[Asia/Taipei]", comments = "Generator version: 7.4.0")
 @Validated
 @Tag(name = "store", description = "Access to Petstore orders")
 public interface StoreApi {
@@ -123,8 +123,8 @@ public interface StoreApi {
         tags = { "store" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/xml", schema = @Schema(implementation = Order.class)),
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))
+                @Content(mediaType = "application/xml", schema = @Schema(implementation = ComOrder.class)),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ComOrder.class))
             }),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied"),
             @ApiResponse(responseCode = "404", description = "Order not found")
@@ -136,7 +136,7 @@ public interface StoreApi {
         produces = { "application/xml", "application/json" }
     )
     
-    default ResponseEntity<Order> getOrderById(
+    default ResponseEntity<ComOrder> getOrderById(
         @Parameter(name = "orderId", description = "ID of order that needs to be fetched", required = true, in = ParameterIn.PATH) @PathVariable("orderId") Long orderId
     ) {
         getRequest().ifPresent(request -> {
@@ -162,7 +162,7 @@ public interface StoreApi {
      * POST /store/order : Place an order for a pet
      * Place a new order in the store
      *
-     * @param order  (optional)
+     * @param comOrder  (optional)
      * @return successful operation (status code 200)
      *         or Invalid input (status code 405)
      */
@@ -173,7 +173,7 @@ public interface StoreApi {
         tags = { "store" },
         responses = {
             @ApiResponse(responseCode = "200", description = "successful operation", content = {
-                @Content(mediaType = "application/json", schema = @Schema(implementation = Order.class))
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ComOrder.class))
             }),
             @ApiResponse(responseCode = "405", description = "Invalid input")
         }
@@ -185,8 +185,8 @@ public interface StoreApi {
         consumes = { "application/json", "application/xml", "application/x-www-form-urlencoded" }
     )
     
-    default ResponseEntity<Order> placeOrder(
-        @Parameter(name = "Order", description = "") @Valid @RequestBody(required = false) Order order
+    default ResponseEntity<ComOrder> placeOrder(
+        @Parameter(name = "ComOrder", description = "") @Valid @RequestBody(required = false) ComOrder comOrder
     ) {
         getRequest().ifPresent(request -> {
             for (MediaType mediaType: MediaType.parseMediaTypes(request.getHeader("Accept"))) {

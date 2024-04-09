@@ -16,11 +16,12 @@ import java.util.*;
 import javax.annotation.Generated;
 
 /**
+ * // Rick Comment
  * ModelApiResponse
  */
 
 @JsonTypeName("ApiResponse")
-@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-27T20:15:25.185404+08:00[Asia/Taipei]", comments = "Generator version: 7.4.0")
+@Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-03-29T17:23:17.131155+08:00[Asia/Taipei]", comments = "Generator version: 7.4.0")
 public class ModelApiResponse {
 
   private Integer code;

@@ -397,19 +397,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/com.Order'
           application/xml:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/com.Order'
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/Order'
+              $ref: '#/components/schemas/com.Order'
       responses:
         "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
+                $ref: '#/components/schemas/com.Order'
           description: successful operation
         "405":
           description: Invalid input
@@ -465,10 +465,10 @@ paths:
           content:
             application/xml:
               schema:
-                $ref: '#/components/schemas/Order'
+                $ref: '#/components/schemas/com.Order'
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
+                $ref: '#/components/schemas/com.Order'
           description: successful operation
         "400":
           description: Invalid ID supplied
@@ -721,7 +721,7 @@ components:
             type: array
       description: List of user object
   schemas:
-    Order:
+    com.Order:
       example:
         petId: 198772
         quantity: 7
