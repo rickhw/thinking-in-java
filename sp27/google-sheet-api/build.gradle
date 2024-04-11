@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id "application"
 }
 
 group = 'com.beginnertechies'
@@ -26,4 +27,12 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+ext {
+   javaMainClass = "com.beginnertechies.googleapi.Main"
+}
+
+application {
+    mainClassName = javaMainClass
 }

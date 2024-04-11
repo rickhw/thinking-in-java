@@ -9,3 +9,5 @@ npm-debug.log
 *.jar
 *.class
 target/
+
+credentials.json
