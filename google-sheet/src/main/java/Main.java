@@ -31,7 +31,7 @@ public class Main {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private static final List<String> SCOPES = Collections.singletonList(SheetsScopes.SPREADSHEETS_READONLY);
-    private static final String CREDENTIALS_FILE_PATH = "/client_secret_72367673822-36d15cmmf1q4shkba6ph50il8rs3t2mb.apps.googleusercontent.com.json";
+    private static final String CREDENTIALS_FILE_PATH = "/credentials.json";
 
     /**
      * Creates an authorized Credential object.

@@ -5,6 +5,7 @@ plugins {
 	id "application"
 }
 
+mainClassName = "com.beginnertechies.googleapi.Main"
 group = 'com.beginnertechies'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
@@ -29,10 +30,10 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-ext {
-   javaMainClass = "com.beginnertechies.googleapi.Main"
-}
+// ext {
+//    javaMainClass = "com.beginnertechies.googleapi.Main"
+// }
 
-application {
-    mainClassName = javaMainClass
-}
+// application {
+//     mainClassName = javaMainClass
+// }
