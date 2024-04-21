@@ -1,0 +1,34 @@
+@API_PATH = http://localhost:8080/api/tokens
+
+### ---- normal request
+POST {{API_PATH}}/
+Content-Type: application/json
+X-Auth-Token: 123
+
+{
+    "tokenName": "app01",
+    "appName": "webapi",
+    "tenantId": 1
+}
+
+
+### ---- trigger validation
+POST {{API_PATH}}/
+Content-Type: application/json
+X-Auth-Token: 123
+
+{
+}
+
+### ---- trigger validation
+POST {{API_PATH}}/
+Content-Type: application/json
+X-Auth-Token: 123
+
+{
+    "tokenName": "app01",
+    "tenantId": 1
+}
+
+
+
