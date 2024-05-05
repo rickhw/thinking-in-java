@@ -4,7 +4,7 @@
 - synchronized
     - 具体为无锁、偏向锁、自旋锁、向OS申请重量级锁
 - ReentrantLock (Java 1.5)
-    - ReentrantLock实现则是通过利用CAS（CompareAndSwap)
+    - ReentrantLock实现则是通过利用CAS (CompareAndSwap)
     - 自旋机制保证线程操作的原子性和volatile保证数据可见性以实现锁的功能。
     - Spinlock
         - 廣泛應用在 linux kernel
@@ -49,6 +49,36 @@ value: -2
 
 
 
+---
+## ReentrantLock
+    ｀｀｀
+可重入鎖
+
+```mermaid
+classDiagram
+    note "From Duck till Zebra"
+    Animal <|-- Duck
+    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
+    Animal <|-- Fish
+    Animal <|-- Zebra
+    Animal : +int age
+    Animal : +String gender
+    Animal: +isMammal()
+    Animal: +mate()
+    class Duck{
+        +String beakColor
+        +swim()
+        +quack()
+    }
+    class Fish{
+        -int sizeInFeet
+        -canEat()
+    }
+    class Zebra{
+        +bool is_wild
+        +run()
+    }
+```
 
 
 ---
@@ -61,3 +91,4 @@ value: -2
 
 - https://ithelp.ithome.com.tw/articles/10281491
 - https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html
+- https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html

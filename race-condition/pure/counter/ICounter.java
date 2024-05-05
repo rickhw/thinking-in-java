@@ -1,3 +1,5 @@
+package pure.counter;
+
 public interface ICounter extends Runnable {
 
     public void increment();

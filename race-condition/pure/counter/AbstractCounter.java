@@ -1,8 +1,11 @@
-public class SyncCounter implements ICounter {
+package pure.counter;
 
-    private int c = 0;
 
-    public SyncCounter() {
+public abstract class AbstractCounter implements ICounter {
+
+    protected int c = 0;
+
+    public AbstractCounter() {
         System.out.printf("Init counter, value: [%s]\n", this.getValue());
     }
 
@@ -27,12 +30,6 @@ public class SyncCounter implements ICounter {
         return c;
     }
 
-    @Override
-    public void run() {
-        synchronized(this) {
-            this.increment();
-            this.decrement();
+    public abstract void run();
     
-        }
-    }
 }

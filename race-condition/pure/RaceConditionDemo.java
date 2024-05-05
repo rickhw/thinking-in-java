@@ -1,11 +1,17 @@
+package pure;
+
+import pure.counter.ICounter;
+import pure.counter.impl.*;
+
 public class RaceConditionDemo {
 
     static int sleep = 2000;
     static int opsCount = 100;
+
     public static void main(String args[]) {
-        // ICounter counter = new NormalCounter();
+        ICounter counter = new NormalCounter();
         // ICounter counter = new SyncCounter();
-        ICounter counter = new ReentrantLockCounter();
+        // ICounter counter = new ReentrantLockCounter();
 
         for(int i=0; i<opsCount;i ++) {
             Thread t = new Thread(counter, "T" + i);
