@@ -3,8 +3,10 @@ import { check, sleep } from 'k6';
 
 export default function () {
     const requests = [
-        { url: 'http://localhost:8092/operate?value=-100'},
-        { url: 'http://localhost:8092/operate?value=100'},
+        { url: 'http://localhost:8092/operate?value=-8'},
+        { url: 'http://localhost:8092/operate?value=8'},
+        // { url: 'http://localhost:8092/operate?value=-3'},
+        // { url: 'http://localhost:8092/operate?value=3'},
     ];
 
     const responses = http.batch(requests.map(req => ({
