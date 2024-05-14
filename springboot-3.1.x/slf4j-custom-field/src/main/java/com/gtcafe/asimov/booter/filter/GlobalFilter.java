@@ -82,9 +82,10 @@ public class GlobalFilter implements Filter {
         for (String header : HEADERS_TO_TRY) {
             clientIp = req.getHeader(header);
             System.out.printf("  - %s: [%s]\n", header, clientIp);
-            // if (clientIp != null && clientIp.length() != 0 && !"unknown".equalsIgnoreCase(clientIp)) {
-            //     break;
-            // }
+            
+            if (clientIp != null && clientIp.length() != 0 && !"unknown".equalsIgnoreCase(clientIp)) {
+                break;
+            }
         }
 
         if (clientIp == null || clientIp.isEmpty()) {
