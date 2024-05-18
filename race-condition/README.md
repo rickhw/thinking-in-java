@@ -1,5 +1,14 @@
 
 
+---
+# Database
+
+
+
+---
+
+# Java
+
 
 - synchronized
     - 具体为无锁、偏向锁、自旋锁、向OS申请重量级锁
