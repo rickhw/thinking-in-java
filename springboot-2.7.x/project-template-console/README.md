@@ -1,1 +1,0 @@
-https://www.baeldung.com/spring-boot-console-app
