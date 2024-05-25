@@ -45,8 +45,6 @@ public class RootController {
 		return cu.getValue();
 	}
 
-
-
 	@GetMapping("/file")
 	public int file(@RequestParam(required = true) Integer value) {
 
@@ -59,7 +57,6 @@ public class RootController {
 
 		return cu.getValue();
 	}
-
 
 	@GetMapping("/metric")
 	// public String file(@RequestParam(required = true) String metricName) {
