@@ -60,7 +60,7 @@ value: -2
 
 ---
 ## ReentrantLock
-    ｀｀｀
+
 可重入鎖
 
 ```mermaid
