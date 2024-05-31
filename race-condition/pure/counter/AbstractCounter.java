@@ -1,6 +1,5 @@
 package pure.counter;
 
-
 public abstract class AbstractCounter implements ICounter {
 
     protected int c = 0;
@@ -13,7 +12,6 @@ public abstract class AbstractCounter implements ICounter {
         try {
             Thread.sleep(10);
         } catch (InterruptedException e) {
-            // Auto-generated catch block
             e.printStackTrace();
         }
         c++;

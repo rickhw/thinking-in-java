@@ -8,7 +8,6 @@ public class ReentrantLockCounter extends AbstractCounter {
     private ReentrantLock locker = new ReentrantLock();
 
     public ReentrantLockCounter() {
-        
         System.out.printf("Init counter, value: [%s]\n", this.getValue());
     }
 
@@ -20,10 +19,8 @@ public class ReentrantLockCounter extends AbstractCounter {
             this.increment();
             this.decrement();
         } catch (Exception ex) {
-            // ...
         } finally {
-            // 解锁操作
-            locker.unlock();
+            locker.unlock();    // 解鎖
         }
 
     }

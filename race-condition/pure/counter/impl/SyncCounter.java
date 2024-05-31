@@ -13,7 +13,6 @@ public class SyncCounter extends AbstractCounter {
         synchronized(this) {
             this.increment();
             this.decrement();
-    
         }
     }
 }
