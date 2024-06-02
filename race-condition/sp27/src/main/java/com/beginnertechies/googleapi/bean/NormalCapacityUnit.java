@@ -1,4 +1,4 @@
-package com.beginnertechies.googleapi.bean;
+package com.gtcafe.race.bean;
 
 import java.util.concurrent.locks.ReentrantLock;
 

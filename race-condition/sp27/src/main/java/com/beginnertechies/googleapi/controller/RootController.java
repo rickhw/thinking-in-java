@@ -1,11 +1,11 @@
-package com.beginnertechies.googleapi.controller;
+package com.gtcafe.race.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Map;
 
-import com.beginnertechies.googleapi.bean.*;
+import com.gtcafe.race.bean.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +20,7 @@ public class RootController {
 
 	@Autowired
 	private ICapacityUnit cu;
-	
+
 	@GetMapping("/operate")
 	public int readDataFromGoogleSheet(@RequestParam(required = true) Integer value) throws GeneralSecurityException, IOException {
 

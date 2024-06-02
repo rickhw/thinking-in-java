@@ -5,9 +5,9 @@ plugins {
 	id "application"
 }
 
-mainClassName = "com.beginnertechies.googleapi.Main"
-group = 'com.beginnertechies'
-version = '0.0.1-SNAPSHOT'
+mainClassName = "com.gtcafe.race.Main"
+group = 'com.gtcafe'
+version = '0.1.0-SNAPSHOT'
 sourceCompatibility = '11'
 
 repositories {
@@ -22,9 +22,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// }
 
 // ext {
 //    javaMainClass = "com.beginnertechies.googleapi.Main"
