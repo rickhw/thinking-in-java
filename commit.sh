@@ -9,6 +9,6 @@ DESC=$1
 git status
 git add .
 git commit -m "update on $TS, comment: ${DESC}"
-git push -u origin master
+git push 
 
 
