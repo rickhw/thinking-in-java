@@ -1,11 +1,11 @@
-package com.beginnertechies.googleapi;
+package com.gtcafe.race;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.beginnertechies.googleapi.bean.ICapacityUnit;
-import com.beginnertechies.googleapi.bean.*;
+import com.gtcafe.race.bean.ICapacityUnit;
+import com.gtcafe.race.bean.*;
 
 @SpringBootApplication
 public class Main {

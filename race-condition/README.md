@@ -1,103 +1,35 @@
 
+- Gradle: 8.3
+- Java 17 (OpenJDK)
+- Spring Boot 2.7.3
+
 
 ---
-# Database
 
 
+```bash
+❯ gradle run
+> Task :run
 
----
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v2.7.3)
 
-# Java
-
-
-- synchronized
-    - 具体为无锁、偏向锁、自旋锁、向OS申请重量级锁
-- ReentrantLock (Java 1.5)
-    - ReentrantLock实现则是通过利用CAS (CompareAndSwap)
-    - 自旋机制保证线程操作的原子性和volatile保证数据可见性以实现锁的功能。
-    - Spinlock
-        - 廣泛應用在 linux kernel
-        - Spinlock 便是實踐 Busy-waiting 的鎖。
-        - spinlock 適合用來保護一段簡單的操作，設想現在我們在排隊的機台，每個人只能使用 5 秒，那根本不值得讓我們離開去做別的事情，待在原地排隊是更好的選擇。
-- Semaphore
-- Mutex
-    - Mutex lock 便是實踐 Sleep-waiting 的鎖。
-    - 相反的，Mutex lock 適合拿來保護一段區域，以排吃到飽餐廳為例，當輪到我們入場時，店家會使用電話告知。因此在這段等待的時間，我們就可以到商場周邊晃晃避免空等。
-
-
-## NormalCounter
-
-❯  cd /Users/rickhwang/Repos/rickhwang/github/java-lab/race-condition ; /usr/bin/env /Users/rickhwang/.sdkman/candidates/java/17.0.8-graalce/bin/java -XX:+ShowCodeDetailsInExceptionMessages -cp /Users/rickhwang/Library/Application\ Support/Code/User/workspaceStorage/77bf20f6fb97228cb327243c4638023e/redhat.java/jdt_ws/race-condition_477a4faa/bin RaceConditionDemo
+2024-06-02 15:05:59.391  INFO 52188 --- [           main] com.beginnertechies.googleapi.Main       : Starting Main using Java 17.0.8 on iStar.local with PID 52188 (/Users/rickhwang/Repos/rickhwang/github/java-lab/race-condition/sp27/build/classes/java/main started by rickhwang in /Users/rickhwang/Repos/rickhwang/github/java-lab/race-condition/sp27)
+2024-06-02 15:05:59.392  INFO 52188 --- [           main] com.beginnertechies.googleapi.Main       : No active profile set, falling back to 1 default profile: "default"
+2024-06-02 15:05:59.895  INFO 52188 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8092 (http)
+2024-06-02 15:05:59.900  INFO 52188 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2024-06-02 15:05:59.900  INFO 52188 --- [           main] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.65]
+2024-06-02 15:05:59.947  INFO 52188 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2024-06-02 15:05:59.947  INFO 52188 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 523 ms
 Init counter, value: [0]
-After increment: Thread: [T5], Value: [5]
-After decrement: Thread: [T5], Value: [5]
-After increment: Thread: [T2], Value: [6]
-After decrement: Thread: [T2], Value: [6]
-After increment: Thread: [T8], Value: [5]
-After decrement: Thread: [T8], Value: [5]
-After increment: Thread: [T0], Value: [5]
-After decrement: Thread: [T0], Value: [4]
-After increment: Thread: [T1], Value: [5]
-After decrement: Thread: [T1], Value: [3]
-After increment: Thread: [T9], Value: [5]
-After decrement: Thread: [T9], Value: [2]
-After increment: Thread: [T6], Value: [5]
-After decrement: Thread: [T6], Value: [1]
-After increment: Thread: [T7], Value: [5]
-After decrement: Thread: [T7], Value: [0]
-After increment: Thread: [T3], Value: [7]
-After decrement: Thread: [T3], Value: [-1]
-After increment: Thread: [T4], Value: [7]
-After decrement: Thread: [T4], Value: [-2]
-value: -2
+2024-06-02 15:06:00.155  INFO 52188 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8092 (http) with context path ''
+2024-06-02 15:06:00.162  INFO 52188 --- [           main] com.beginnertechies.googleapi.Main       : Started Main in 0.995 seconds (JVM running for 1.231)
+<=========----> 75% EXECUTING [14s]
+> :run
 
-
----
-
-## Lock with synchronized
-
-
-
----
-## ReentrantLock
-
-可重入鎖
-
-```mermaid
-classDiagram
-    note "From Duck till Zebra"
-    Animal <|-- Duck
-    note for Duck "can fly\ncan swim\ncan dive\ncan help in debugging"
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : +int age
-    Animal : +String gender
-    Animal: +isMammal()
-    Animal: +mate()
-    class Duck{
-        +String beakColor
-        +swim()
-        +quack()
-    }
-    class Fish{
-        -int sizeInFeet
-        -canEat()
-    }
-    class Zebra{
-        +bool is_wild
-        +run()
-    }
 ```
-
-
----
-
-## Reference
-
-- https://zhuanlan.zhihu.com/p/126085068
-- https://zhuanlan.zhihu.com/p/336248650
-- https://www.baeldung.com/java-mutex
-
-- https://ithelp.ithome.com.tw/articles/10281491
-- https://tech.meituan.com/2019/12/05/aqs-theory-and-apply.html
-- https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/locks/ReentrantLock.html
