@@ -1,0 +1,15 @@
+[Unit]
+Description=Race Service
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=java_user
+Group=java_user
+Type=simple
+ExecStart=/opt/race/0.1.0/bin/race
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
