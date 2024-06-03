@@ -13,3 +13,6 @@ target/
 credentials.json
 
 ## Gradle
+.gradle
+bin/
+build/
