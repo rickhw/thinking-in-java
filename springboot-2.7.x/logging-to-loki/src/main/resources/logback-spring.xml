@@ -5,11 +5,11 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} %X{X-Request-ID} - %msg%n</pattern>
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36}:%X{value} - %msg%n</pattern>
         </encoder>
     </appender>
 
-    <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
+    <!-- <appender name="LOKI" class="com.github.loki4j.logback.Loki4jAppender">
         <http>
             <url>http://localhost:3100/loki/api/v1/push</url>
         </http>
@@ -22,11 +22,11 @@
                 <pattern>{ "level":"%level", "class":"%logger{36}", "thread":"%thread", "message": "%message", "requestId": "%X{X-Request-ID}" }</pattern>
             </message>
         </format>
-    </appender>
+    </appender> -->
 
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
-        <appender-ref ref="LOKI" />
+        <!-- <appender-ref ref="LOKI" /> -->
     </root>
 
 </configuration>

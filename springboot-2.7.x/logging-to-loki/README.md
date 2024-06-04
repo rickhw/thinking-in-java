@@ -4,6 +4,12 @@
 - Spring Boot 2.7.3
 
 
+
+---
+## ref
+
+- https://piotrminkowski.com/2023/07/05/logging-in-spring-boot-with-loki/
+
 ---
 
 
