@@ -4,6 +4,13 @@
 - Spring Boot 2.7.3
 
 
+
+systemctl daemon-reload
+systemctl enable race
+systemctl status race
+systemctl start race
+
+
 ---
 
 

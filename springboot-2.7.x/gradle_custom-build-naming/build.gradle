@@ -3,11 +3,12 @@ plugins {
 	id 'org.springframework.boot' version '2.7.18'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id "application"
+	id 'distribution'
 }
 
 mainClassName = "com.gtcafe.race.Main"
 group = 'com.gtcafe'
-version = '0.5.0-b' + getTimestamp()
+version = '0.2.0'
 sourceCompatibility = '11'
 
 repositories {
@@ -22,12 +23,17 @@ dependencies {
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-
-def getTimestamp() {
-    def date = new Date()
-    def formattedDate = date.format('yyyyMMdd-HHmm')
-    return formattedDate
+distZip {
+    doLast {
+        file("$destinationDir/$archiveName").renameTo("$destinationDir/$baseName-$version-bin.zip")
+    }
 }
+
+// distributions {
+//     custom {
+//         // configure custom distribution
+//     }
+// }
 
 // tasks.named('test') {
 // 	useJUnitPlatform()

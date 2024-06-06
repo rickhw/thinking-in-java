@@ -29,12 +29,9 @@ public class RootController {
 	private ICapacityUnit cu;
 
 	@GetMapping("/operate")
-	public int operate(@RequestParam(required = true) Integer value) throws GeneralSecurityException, IOException {
-		
-		cu.operate(value);
+	public int readDataFromGoogleSheet(@RequestParam(required = true) Integer value) throws GeneralSecurityException, IOException {
 
-		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "operate(), value is {}", cu.getValue());
+		cu.operate(value);
 
 		return cu.getValue();
 	}
@@ -42,9 +39,10 @@ public class RootController {
 
 	@GetMapping("/value")
 	public int getValue() {
+		LOG.info("value: [{}]", cu.getValue());
 
 		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "getValue(), value is {}", cu.getValue());
+		LOG.info(marker, "value successfully found");
 
 		return cu.getValue();
 	}
@@ -54,9 +52,6 @@ public class RootController {
 	public int reset() {
 
 		cu.reset();
-
-		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "reset(), value is {}", cu.getValue());
 
 		return cu.getValue();
 	}

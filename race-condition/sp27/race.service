@@ -4,10 +4,8 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-User=java_user
-Group=java_user
 Type=simple
-ExecStart=/opt/race/0.1.0/bin/race
+ExecStart=/opt/race/latest/bin/race
 Restart=always
 RestartSec=3
 

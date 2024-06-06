@@ -3,7 +3,7 @@ package pure;
 import pure.counter.ICounter;
 import pure.counter.impl.*;
 
-public class RaceConditionDemo {
+public class Main {
 
     static int sleep = 2000;
     static int opsCount = 100;
