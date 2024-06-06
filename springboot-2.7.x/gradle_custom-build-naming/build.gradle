@@ -6,9 +6,10 @@ plugins {
 	id 'distribution'
 }
 
+
 mainClassName = "com.gtcafe.race.Main"
 group = 'com.gtcafe'
-version = '0.2.0'
+version = getBuildName()	// build file name
 sourceCompatibility = '11'
 
 repositories {
@@ -23,17 +24,20 @@ dependencies {
 	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
-distZip {
-    doLast {
-        file("$destinationDir/$archiveName").renameTo("$destinationDir/$baseName-$version-bin.zip")
-    }
+
+def getBuildName() {
+	// user defined
+	def _version = '0.5.0'
+	def _buildType = 'dev'
+
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd-HHmm')
+
+	
+    return _version+'-' + _buildType + '-b' + formattedDate
 }
 
-// distributions {
-//     custom {
-//         // configure custom distribution
-//     }
-// }
+
 
 // tasks.named('test') {
 // 	useJUnitPlatform()
