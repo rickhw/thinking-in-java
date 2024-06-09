@@ -1,4 +1,4 @@
-package com.gtcafe.race.bean;
+package com.gtcafe.race.bean.capacityUnit;
 
 import java.util.concurrent.locks.ReentrantLock;
 

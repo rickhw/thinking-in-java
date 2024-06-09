@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.gtcafe.race.bean.*;
+import com.gtcafe.race.bean.capacityUnit.*;
 
 @SpringBootApplication
 public class Main {

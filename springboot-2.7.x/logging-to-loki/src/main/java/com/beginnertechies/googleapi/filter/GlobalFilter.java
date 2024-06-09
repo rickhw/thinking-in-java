@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.gtcafe.race.bean.ICapacityUnit;
+import com.gtcafe.race.bean.capacityUnit.ICapacityUnit;
 import com.gtcafe.race.HttpHeaderConstants;
 
 // for java17

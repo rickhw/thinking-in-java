@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.gtcafe.race.HttpHeaderConstants;
-import com.gtcafe.race.bean.ICapacityUnit;
+import com.gtcafe.race.bean.capacityUnit.ICapacityUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
