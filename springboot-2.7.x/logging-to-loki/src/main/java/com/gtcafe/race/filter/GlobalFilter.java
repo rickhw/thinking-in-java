@@ -34,18 +34,18 @@ import javax.servlet.http.HttpServletResponse;
 @Order(1)
 public class GlobalFilter implements Filter {
 
-    // private static final Logger logger = LoggerFactory.getLogger(GlobalFilter.class);
+    // private static final Logger logger =
+    // LoggerFactory.getLogger(GlobalFilter.class);
     private final Logger LOG = LoggerFactory.getLogger(GlobalFilter.class);
 
     @Autowired
-	private ICapacityUnit cu;
+    private ICapacityUnit cu;
 
     @Override
     public void doFilter(
             ServletRequest request,
             ServletResponse response,
-            FilterChain chain
-        ) throws IOException, ServletException {
+            FilterChain chain) throws IOException, ServletException {
 
         // logger.info("doFilter before");
 
@@ -55,11 +55,10 @@ public class GlobalFilter implements Filter {
         // ConsumedValue
         MDC.put("consumedValue", "0");
 
-
         // 1. RequestId
         String requestId = req.getHeader(HttpHeaderConstants.R_REQUEST_ID);
         if (requestId == null || requestId.isEmpty()) {
-            requestId =  UUID.randomUUID().toString();
+            requestId = UUID.randomUUID().toString();
         }
         res.setHeader(HttpHeaderConstants.R_REQUEST_ID, requestId);
         MDC.put(HttpHeaderConstants.R_REQUEST_ID, requestId);
@@ -84,8 +83,6 @@ public class GlobalFilter implements Filter {
         // 4. Client URI Path
         // url path
         MDC.put(HttpHeaderConstants.REQUEST_URI, req.getRequestURI());
-
-
 
         chain.doFilter(request, response);
 

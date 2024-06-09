@@ -18,7 +18,6 @@ public class NativeCapacityUnit implements ICapacityUnit {
         capacityUnit += value;
     }
 
-
     public synchronized void increase(int value) {
         capacityUnit = capacityUnit + value;
     }

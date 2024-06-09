@@ -10,7 +10,7 @@ public class ReentrantCapacityUnit implements ICapacityUnit {
     private ReentrantLock locker = new ReentrantLock();
 
     // public ReentrantCapacityUnit() {
-    //     System.out.printf("Init counter, value: [%s]\n", this.getValue());
+    // System.out.printf("Init counter, value: [%s]\n", this.getValue());
     // }
 
     public int getValue() {
@@ -31,7 +31,6 @@ public class ReentrantCapacityUnit implements ICapacityUnit {
             locker.unlock();
         }
     }
-
 
     public void increase(int value) {
         locker.lock();

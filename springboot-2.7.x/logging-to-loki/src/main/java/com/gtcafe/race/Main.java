@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import com.gtcafe.race.singleton.capacityUnit.ICapacityUnit;
 import com.gtcafe.race.singleton.capacityUnit.impl.*;
 
-
 @SpringBootApplication
 public class Main {
 
@@ -17,10 +16,9 @@ public class Main {
 	}
 
 	@Bean
-    public ICapacityUnit capacityUnit() {
-        return new ReentrantCapacityUnit();
+	public ICapacityUnit capacityUnit() {
+		return new ReentrantCapacityUnit();
 		// return new NormalCapacityUnit();
-    }
-
+	}
 
 }

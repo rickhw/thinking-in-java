@@ -7,7 +7,7 @@ public class NormalCapacityUnit implements ICapacityUnit {
     private int capacityUnit = 0;
 
     // public NormalCapacityUnit() {
-    //     System.out.printf("Init counter, value: [%s]\n", this.getValue());
+    // System.out.printf("Init counter, value: [%s]\n", this.getValue());
     // }
 
     public int getValue() {

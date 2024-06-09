@@ -14,12 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.loki4j.slf4j.marker.LabelMarker;
 import com.gtcafe.race.singleton.capacityUnit.ICapacityUnit;
 
-
 @RestController
 public class RootController {
 
-
-  	private final Logger LOG = LoggerFactory.getLogger(RootController.class);
+	private final Logger LOG = LoggerFactory.getLogger(RootController.class);
 
 	@Autowired
 	private ICapacityUnit cu;
@@ -30,7 +28,7 @@ public class RootController {
 		cu.operate(value);
 
 		// MDC.put("consumedValue", Integer.toString(value));
-        // MDC.put("capacityUnit", Integer.toString(cu.getValue()));
+		// MDC.put("capacityUnit", Integer.toString(cu.getValue()));
 		// MDC.put("value", Integer.toString(cu.getValue()));
 
 		LabelMarker marker1 = LabelMarker.of("consumedValue", () -> Integer.toString(value));
@@ -39,28 +37,29 @@ public class RootController {
 		LabelMarker marker2 = LabelMarker.of("capacityUnit", () -> Integer.toString(cu.getValue()));
 		LOG.info(marker2, "operate(), totalCapcity: {}", cu.getValue());
 
-		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(), value);
+		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(),
+		// value);
 
 		return cu.getValue();
 	}
-
 
 	@GetMapping("/value")
 	public int getValue() {
 
-		// LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
+		// LabelMarker marker = LabelMarker.of("value", () ->
+		// Integer.toString(cu.getValue()));
 		// LOG.info(marker, "getValue(), value is {}", cu.getValue());
 
 		return cu.getValue();
 	}
-
 
 	@GetMapping("/reset")
 	public int reset() {
 
 		cu.reset();
 
-		// LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
+		// LabelMarker marker = LabelMarker.of("value", () ->
+		// Integer.toString(cu.getValue()));
 		// LOG.info(marker, "reset(), value is {}", cu.getValue());
 
 		return cu.getValue();
@@ -72,7 +71,8 @@ public class RootController {
 		System.out.println(new Date());
 		try {
 			Thread.sleep(value);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
 		System.out.println(new Date());
 
@@ -83,7 +83,8 @@ public class RootController {
 	// public String file(@RequestParam(required = true) String metricName) {
 	public String metric() {
 
-		String metric = String.format("%s,%d,%d", new Date(), (int)(Math.random() * 100), (int)(Math.random() * 10000));
+		String metric = String.format("%s,%d,%d", new Date(), (int) (Math.random() * 100),
+				(int) (Math.random() * 10000));
 
 		return metric;
 	}
