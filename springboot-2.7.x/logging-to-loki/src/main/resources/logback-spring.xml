@@ -17,7 +17,7 @@
         </http>
         <format>
             <label>
-                <pattern>app=race,version=0.6.0,host=${HOSTNAME},level=%level</pattern>
+                <pattern>app=race,version=0.7.0,host=${HOSTNAME},level=%level</pattern>
                 <readMarkers>true</readMarkers>
             </label>
             <message>

@@ -28,14 +28,12 @@ JQL for value fields:
 the field must be defined as label.
 
 ```sql
-avg_over_time({host="ip-172-31-5-186"} | unwrap value [1m])  -- work
-avg_over_time({host="ip-172-31-5-186"}  |= "capacityUnit" | json | unwrap value [1m])
-avg_over_time({host="ip-172-31-5-186"}  |= "capacityUnit" | unwrap capacityUnit [1m])
-avg_over_time({host="ip-172-31-5-186"}  |= "consumedValue" | unwrap consumedValue [1m])
+avg_over_time({app="race"} | unwrap capacityUnit [1m]) -- work
+avg_over_time({app="race"} | unwrap consumedValue [1m])
 
-sum_over_time({host="ip-172-31-5-186"} |= "capacityUnit"
-| json
-| unwrap capacityUnit [1m])
+sum_over_time({app="race"} |= "consumedValue" | unwrap consumedValue [1m])
+avg_over_time({app="race"} |= "capacityUnit" | unwrap capacityUnit [1m])
+
 
 ```
 

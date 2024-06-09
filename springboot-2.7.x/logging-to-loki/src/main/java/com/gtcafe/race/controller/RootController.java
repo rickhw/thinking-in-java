@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,10 +36,9 @@ public class RootController {
 		LOG.info(marker1, "operate(), consumedValue: {}", value);
 
 		LabelMarker marker2 = LabelMarker.of("capacityUnit", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker2, "operate(), totalCapcity: {}", cu.getValue());
+		LOG.info(marker2, marker1, "operate(), totalCapcity: {}", cu.getValue());
 
-		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(),
-		// value);
+		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(), value);
 
 		return cu.getValue();
 	}
