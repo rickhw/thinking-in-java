@@ -7,7 +7,7 @@ plugins {
 
 mainClassName = "com.gtcafe.race.Main"
 group = 'com.gtcafe'
-version = '0.5.0-b' + getTimestamp()
+version = '0.6.0-b' + getTimestamp()
 sourceCompatibility = '11'
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.github.loki4j:loki-logback-appender:1.4.1'
-	
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

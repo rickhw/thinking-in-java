@@ -5,10 +5,13 @@ import java.security.GeneralSecurityException;
 import java.util.Date;
 import java.util.Map;
 
+
 import com.github.loki4j.slf4j.marker.LabelMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
+import com.gtcafe.race.HttpHeaderConstants;
 import com.gtcafe.race.bean.ICapacityUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +27,26 @@ public class RootController {
 
 
   	private final Logger LOG = LoggerFactory.getLogger(RootController.class);
-  
+
 	@Autowired
 	private ICapacityUnit cu;
 
 	@GetMapping("/operate")
 	public int operate(@RequestParam(required = true) Integer value) throws GeneralSecurityException, IOException {
-		
+
 		cu.operate(value);
 
-		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "operate(), value is {}", cu.getValue());
+		// MDC.put("consumedValue", Integer.toString(value));
+        // MDC.put("capacityUnit", Integer.toString(cu.getValue()));
+		// MDC.put("value", Integer.toString(cu.getValue()));
+
+		LabelMarker marker1 = LabelMarker.of("consumedValue", () -> Integer.toString(value));
+		LOG.info(marker1, "operate(), consumedValue: {}", value);
+
+		LabelMarker marker2 = LabelMarker.of("capacityUnit", () -> Integer.toString(cu.getValue()));
+		LOG.info(marker2, "operate(), totalCapcity: {}", cu.getValue());
+
+		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(), value);
 
 		return cu.getValue();
 	}
@@ -43,8 +55,8 @@ public class RootController {
 	@GetMapping("/value")
 	public int getValue() {
 
-		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "getValue(), value is {}", cu.getValue());
+		// LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
+		// LOG.info(marker, "getValue(), value is {}", cu.getValue());
 
 		return cu.getValue();
 	}
@@ -55,8 +67,8 @@ public class RootController {
 
 		cu.reset();
 
-		LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker, "reset(), value is {}", cu.getValue());
+		// LabelMarker marker = LabelMarker.of("value", () -> Integer.toString(cu.getValue()));
+		// LOG.info(marker, "reset(), value is {}", cu.getValue());
 
 		return cu.getValue();
 	}

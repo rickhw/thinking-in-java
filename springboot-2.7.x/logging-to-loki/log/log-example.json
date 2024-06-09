@@ -1,0 +1,10 @@
+{
+    "timestamp": "2024-06-09T01:20:24.327",
+    "requestId": "a9620b90-e89d-496e-a94c-f10bfbc806a8",
+    "level": "INFO",
+    "class": "com.gtcafe.race.filter.GlobalFilter",
+    "thread": "http-nio-8092-exec-4",
+    "capacityUnit": "132",
+    "consumedValue": "50",
+    "message": "log capacity unit value"
+}
