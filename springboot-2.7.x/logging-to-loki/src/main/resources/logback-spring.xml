@@ -23,7 +23,7 @@
             <message>
                 <!-- <pattern>{ "timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "requestId": "%X{X-Request-Id}", "level":"%level", "class":"%logger{36}", "thread":"%thread", "value": "%X{value}", "message": "%message" }</pattern> -->
                 <!-- <pattern>{ "timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "requestId": "%X{X-Request-Id}", "level":"%level", "class":"%logger{36}", "thread":"%thread", "capacityUnit": "%X{capacityUnit}", "consumedValue": "%X{consumedValue}", "message": "%message" }</pattern> -->
-                <pattern>{ "timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "requestId": "%X{X-Request-Id}", "level":"%level", "class":"%logger{36}", "thread":"%thread", "capacityUnit": "%X{capacityUnit}", "consumedValue": "%X{consumedValue}", "value": "%X{value}", "message": "%message" }</pattern>
+                <pattern>{ "timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "requestId": "%X{X-Request-Id}", "level":"%level", "class":"%logger{36}", "thread":"%thread", "capacityUnit": "%X{capacityUnit}", "consumedValue": "%X{consumedValue}", "message": "%message" }</pattern>
             </message>
         </format>
     </appender>
