@@ -1,5 +1,7 @@
 #!/bin/bash
 
+TARGET_HOST=$1
+
 # Generate a random number between 0 and 1500
 RANDOM_BASE=$((RANDOM % 1501))
 
@@ -7,7 +9,7 @@ RANDOM_BASE=$((RANDOM % 1501))
 RANDOM_VALUE=$((RANDOM_BASE - 500))
 
 # URL of the API
-API_URL="http://54.212.163.79:8092/operate?value=$RANDOM_VALUE"
+API_URL="http://${TARGET_HOST}/operate?value=$RANDOM_VALUE"
 
 # Make the API call
 response=$(curl -s $API_URL)

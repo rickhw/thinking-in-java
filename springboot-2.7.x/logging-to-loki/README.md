@@ -4,6 +4,12 @@
 - Spring Boot 2.7.3
 
 
+---
+
+## Simulator
+
+* * * * * /home/ubuntu/simulator.sh <target_host>
+
 
 ---
 

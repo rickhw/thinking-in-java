@@ -1,7 +1,10 @@
 #!/bin/bash
 
+TARGET_HOST=$1
+
+
 # Generate a random number of requests between 1 and 10
-RANDOM_COUNT=$(shuf -i 1-50 -n 1)
+RANDOM_COUNT=$(shuf -i 1-20 -n 1)
 
 # Function to make the API call
 make_api_call() {
@@ -9,7 +12,7 @@ make_api_call() {
   RANDOM_VALUE=$(( (RANDOM % 101) - 50))
 
   # URL of the API
-  API_URL="http://54.212.163.79:8092/operate?value=$RANDOM_VALUE"
+  API_URL="http://${TARGET_HOST}/operate?value=$RANDOM_VALUE"
 
   # Make the API call
   response=$(curl -s $API_URL)
