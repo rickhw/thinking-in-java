@@ -7,12 +7,30 @@
 
 ---
 
-grafana GQL:
+## Metric by Log
 
-```bash
-pattern `{ "level":"%level", "class":"%logger{36}", "thread":"%thread", "message": "%message", "requestId": "%X{X-Request-ID}" }"`
 
+The log format:
+
+```json
+{ "timestamp":"2024-06-09T00:16:03.922", "requestId": "59c4762b-9cbe-4fac-97a5-40017d54a4bb", "level":"INFO", "class":"c.g.race.controller.RootController", "thread":"http-nio-8092-exec-10", "value": "-18064", "message": "operate(), value is -18064" }
 ```
+
+
+JQL for value fields:
+
+```sql
+avg_over_time({host="ip-172-31-5-186"}  |= "value" | unwrap value [5m])
+```
+
+
+JQL for sum of request:
+
+```sql
+sum(count_over_time({host="ip-172-31-5-186"} |= "requestId" [1m]))
+```
+
+
 
 ---
 ## ref
