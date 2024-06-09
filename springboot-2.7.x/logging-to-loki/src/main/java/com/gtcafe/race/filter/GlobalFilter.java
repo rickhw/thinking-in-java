@@ -11,7 +11,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.gtcafe.race.bean.capacityUnit.ICapacityUnit;
-import com.gtcafe.race.HttpHeaderConstants;
+import com.gtcafe.race.constants.HttpHeaderConstants;
 
 // for java17
 import javax.servlet.Filter;

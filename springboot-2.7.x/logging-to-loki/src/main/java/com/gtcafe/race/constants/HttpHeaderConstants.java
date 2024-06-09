@@ -1,4 +1,4 @@
-package com.gtcafe.race;
+package com.gtcafe.race.constants;
 
 public class HttpHeaderConstants {
     // Request
