@@ -7,7 +7,7 @@ plugins {
 
 mainClassName = "com.gtcafe.race.Main"
 group = 'com.gtcafe'
-version = '0.6.0-b' + getTimestamp()
+version = '0.7.0-b' + getTimestamp()
 sourceCompatibility = '11'
 
 repositories {
