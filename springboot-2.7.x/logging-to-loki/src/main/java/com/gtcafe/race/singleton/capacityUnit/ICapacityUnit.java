@@ -1,4 +1,4 @@
-package com.gtcafe.race.bean.capacityUnit;
+package com.gtcafe.race.singleton.capacityUnit;
 
 public interface ICapacityUnit {
 

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.loki4j.slf4j.marker.LabelMarker;
-import com.gtcafe.race.bean.capacityUnit.ICapacityUnit;
+import com.gtcafe.race.singleton.capacityUnit.ICapacityUnit;
 
 
 @RestController

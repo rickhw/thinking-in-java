@@ -1,6 +1,6 @@
-package com.gtcafe.race.bean.capacityUnit.impl;
+package com.gtcafe.race.singleton.capacityUnit.impl;
 
-import com.gtcafe.race.bean.capacityUnit.ICapacityUnit;
+import com.gtcafe.race.singleton.capacityUnit.ICapacityUnit;
 
 import java.util.concurrent.locks.ReentrantLock;
 
