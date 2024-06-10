@@ -36,7 +36,7 @@ public class RootController {
 		LOG.info(marker1, "operate(), consumedValue: {}", value);
 
 		LabelMarker marker2 = LabelMarker.of("capacityUnit", () -> Integer.toString(cu.getValue()));
-		LOG.info(marker2, marker1, "operate(), totalCapcity: {}", cu.getValue());
+		LOG.info(marker2, "operate(), totalCapcity: {}", cu.getValue());
 
 		// LOG.info("operate(), totalCapcity: {}, consumedValue: {}", cu.getValue(), value);
 

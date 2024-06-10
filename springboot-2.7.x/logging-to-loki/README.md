@@ -5,6 +5,19 @@
 
 
 ---
+## As Systemd
+
+```bash
+
+systemctl daemon-reload
+systemctl enable race
+systemctl status race
+systemctl start race
+
+```
+
+
+---
 
 ## Simulator
 
