@@ -89,4 +89,13 @@ public class RootController {
 		return metric;
 	}
 
+	@GetMapping("/random")
+	public String random() {
+
+		String metric = String.format("%s,%d,%d", new Date(), (int) (Math.random() * 100),
+				(int) (Math.random() * 10000));
+
+		return metric;
+	}
+
 }
