@@ -9,7 +9,7 @@ public class Main {
     static int opsCount = 100;
 
     public static void main(String args[]) {
-        ICounter counter = new NormalCapacityUnit();
+        ICounter counter = new NormalCounter();
         // ICounter counter = new SyncCounter();
         // ICounter counter = new ReentrantLockCounter();
 
