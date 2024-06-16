@@ -5,7 +5,37 @@ After=network-online.target
 
 [Service]
 Type=simple
+
+#ExecStart=/opt/race/latest/bin/race
+
+## Not work
+#ExecStart=/opt/race/latest/bin/race \
+#  --args='--logging.config=/opt/race/latest/config/logback-spring.xml'
+
+## Not work
+#ExecStart=/opt/race/latest/bin/race \
+#  --args='-Dlogging.config=/opt/race/latest/config/logback-spring.xml'
+
+## Work!!!
+#ExecStart=java \
+#    -Dlogging.config=/opt/race/latest/config/logback-spring.xml \
+#    -jar /opt/race/latest/lib/race-0.7.0-b20240610-0833.jar
+
+
+## Not work
+#./race \
+#  --args='-Dlogging.config=/opt/race/latest/config/logback-spring.xml'
+
+## Not work
+# ./race -Dlogging.config=/opt/race/latest/config/logback-spring.xml
+
+## Work!!!!
+#JAVA_OPTS='-Dlogging.config=/opt/race/latest/config/logback-spring.xml' ./race
+Environment="JAVA_OPTS=-Dlogging.config=/opt/race/config/logback-spring.xml"
 ExecStart=/opt/race/latest/bin/race
+
+
+
 Restart=always
 RestartSec=3
 
