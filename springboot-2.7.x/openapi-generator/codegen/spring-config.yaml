@@ -1,3 +1,0 @@
-basePackage: com.abc.pet.codegen
-modelPackage: com.abc.pet.codegen.model
-apiPackage: com.abc.pet.codegen.api
