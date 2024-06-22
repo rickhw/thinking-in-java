@@ -1,0 +1,9 @@
+{
+    "eventType": "START_AFTER_BILLING",
+    "eventTimestampe": "2024-05-31T12:33:32.123Z",
+    "eventData": {
+        "kind": "gtcafe.vm.Instance",
+        "resourceId": "i-12345556",
+        "state": "running"
+    }
+}
