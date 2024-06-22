@@ -1,12 +1,14 @@
 
 
-# Topic
+## Prompt
 
-- SpringBoot
-    - Security
-- Custom Log
-    - IP
-    - Context
-- Maven
-    - Build image name
+
+
+---
+
+請用 java 17, springboot 2.7, gradle 8.7 寫一個程式，這個程式可以處理多個子程序。
+
+主程序每次會處理多個子程序，當所有子程序成功，主程序才算成功；其中一個子程序失敗，主程序就回傳失敗。
+
+當子程序執行過程中如果失敗，會有 3 次的 retry。
 
