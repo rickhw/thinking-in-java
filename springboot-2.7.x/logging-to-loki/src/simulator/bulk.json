@@ -1,0 +1,4 @@
+{ "index" : { "_index" : "logs" } }
+{ "timestamp": "2024-06-26T14:00:00Z", "level": "INFO", "message": "This is a test log message 1", "logger": "com.example.demo.DemoApplication", "thread": "main" }
+{ "index" : { "_index" : "logs" } }
+{ "timestamp": "2024-06-26T14:01:00Z", "level": "ERROR", "message": "This is a test log message 2", "logger": "com.example.demo.DemoApplication", "thread": "main" }

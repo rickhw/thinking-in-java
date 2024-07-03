@@ -28,9 +28,22 @@
         </format>
     </appender>
 
+    <appender name="ELASTIC" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <!-- <destination>172.31.5.147:9200</destination> -->
+        <destination>ip-172-31-5-147.us-west-2.compute.internal:9200</destination>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <!-- <appender name="ELASTIC_HTTP" class="net.logstash.logback.appender.LogstashHttpAppender">
+        <url>http://172.31.5.147:9200/_bulk</url>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender> -->
+
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="LOKI" />
+        <!-- <appender-ref ref="ELASTIC_HTTP"/> -->
+        <appender-ref ref="ELASTIC"/>
     </root>
 
 </configuration>

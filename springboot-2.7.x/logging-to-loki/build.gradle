@@ -7,7 +7,7 @@ plugins {
 
 mainClassName = "com.gtcafe.race.Main"
 group = 'com.gtcafe'
-version = '0.7.0-b' + getTimestamp()
+version = '0.8.0-b' + getTimestamp()
 sourceCompatibility = '11'
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'com.github.loki4j:loki-logback-appender:1.4.1'
-
+ 	implementation 'net.logstash.logback:logstash-logback-encoder:7.2' // elastcsearch
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
