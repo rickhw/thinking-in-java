@@ -1,18 +1,5 @@
-.DS_Store
-Thumbs.db
-db.json
-debug.log
-node_modules/
-.deploy/
-.deploy_git/
-npm-debug.log
-*.jar
-*.class
-target/
+/apisix_log/*
+!/apisix_log/.keep
 
-credentials.json
-
-## Gradle
-.gradle
-bin/
-build/
+/etcd_data/*
+!/etcd_data/.keep

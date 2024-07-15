@@ -1,0 +1,93 @@
+{
+    "list": [
+        {
+            "key": "/apisix/routes/comp-dns",
+            "value": {
+                "uri": "/v2alpha/dns/*",
+                "create_time": 1712192988,
+                "id": "comp-dns",
+                "upstream": {
+                    "type": "roundrobin",
+                    "pass_host": "pass",
+                    "nodes": {
+                        "127.0.0.1:8082": 1
+                    },
+                    "scheme": "http",
+                    "hash_on": "vars"
+                },
+                "status": 1,
+                "priority": 0,
+                "update_time": 1712192988
+            },
+            "modifiedIndex": 17,
+            "createdIndex": 17
+        },
+        {
+            "key": "/apisix/routes/comp-vm",
+            "value": {
+                "uri": "/v2alpha/vm/instance/*",
+                "create_time": 1712192933,
+                "id": "comp-vm",
+                "upstream": {
+                    "type": "roundrobin",
+                    "pass_host": "pass",
+                    "nodes": {
+                        "127.0.0.1:8083": 1
+                    },
+                    "scheme": "http",
+                    "hash_on": "vars"
+                },
+                "status": 1,
+                "priority": 0,
+                "update_time": 1712192933
+            },
+            "modifiedIndex": 16,
+            "createdIndex": 16
+        },
+        {
+            "key": "/apisix/routes/getting-started-ip",
+            "value": {
+                "uri": "/ip",
+                "create_time": 1712193835,
+                "id": "getting-started-ip",
+                "upstream": {
+                    "type": "roundrobin",
+                    "pass_host": "pass",
+                    "nodes": {
+                        "httpbin.org:80": 1
+                    },
+                    "scheme": "http",
+                    "hash_on": "vars"
+                },
+                "status": 1,
+                "priority": 0,
+                "update_time": 1712193835
+            },
+            "modifiedIndex": 36,
+            "createdIndex": 36
+        },
+        {
+            "key": "/apisix/routes/v2alpha-core",
+            "value": {
+                "uri": "/v2alpha/core/",
+                "create_time": 1712193761,
+                "id": "v2alpha-core",
+                "upstream": {
+                    "type": "roundrobin",
+                    "pass_host": "pass",
+                    "hash_on": "vars",
+                    "scheme": "http",
+                    "nodes": {
+                        "127.0.0.1:8081": 1
+                    }
+                },
+                "status": 1,
+                "priority": 0,
+                "update_time": 1712193761
+            },
+            "modifiedIndex": 35,
+            "createdIndex": 35
+        }
+    ],
+    "total": 4
+}

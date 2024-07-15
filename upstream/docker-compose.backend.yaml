@@ -1,0 +1,48 @@
+version: "3"
+
+services:
+
+  core-api:
+    image: nginx:1.19.0-alpine
+    restart: always
+    volumes:
+      - ./upstream/core.conf:/etc/nginx/nginx.conf
+    ports:
+      - "9081:80/tcp"
+    environment:
+      - NGINX_PORT=80
+    # networks:
+    #   apisix:
+
+  comp-dns:
+    image: nginx:1.19.0-alpine
+    restart: always
+    volumes:
+      - ./upstream/comp-dns.conf:/etc/nginx/nginx.conf
+    ports:
+      - "9082:80/tcp"
+    environment:
+      - NGINX_PORT=80
+  #   networks:
+  #     apisix:
+
+  comp-vm:
+    image: nginx:1.19.0-alpine
+    restart: always
+    volumes:
+      - ./upstream/comp-vm.conf:/etc/nginx/nginx.conf
+    ports:
+      - "9083:80/tcp"
+    environment:
+      - NGINX_PORT=80
+  #   networks:
+  #     apisix:
+
+
+# networks:
+#   apisix:
+#     driver: bridge
+
+# volumes:
+#   etcd_data:
+#     driver: local

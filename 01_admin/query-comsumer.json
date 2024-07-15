@@ -1,0 +1,35 @@
+{
+    "list": [
+        {
+            "createdIndex": 161,
+            "key": "/apisix/consumers/t12345678_dns_apiname",
+            "value": {
+                "create_time": 1712363345,
+                "plugins": {
+                    "key-auth": {
+                        "key": "9527"
+                    }
+                },
+                "username": "t12345678_dns_apiname",
+                "update_time": 1712363345
+            },
+            "modifiedIndex": 161
+        },
+        {
+            "createdIndex": 159,
+            "key": "/apisix/consumers/t12345678_vm_apiname",
+            "value": {
+                "create_time": 1712362982,
+                "plugins": {
+                    "key-auth": {
+                        "key": "9527"
+                    }
+                },
+                "username": "t12345678_vm_apiname",
+                "update_time": 1712362982
+            },
+            "modifiedIndex": 159
+        }
+    ],
+    "total": 2
+}

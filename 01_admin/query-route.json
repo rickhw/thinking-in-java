@@ -1,0 +1,33 @@
+{
+    "createdIndex": 158,
+    "key": "/apisix/routes/comp-vm",
+    "value": {
+        "priority": 0,
+        "update_time": 1712363442,
+        "status": 1,
+        "uris": [
+            "/v2alpha/vm",
+            "/v2alpha/vm/",
+            "/v2alpha/vm/*"
+        ],
+        "create_time": 1712362116,
+        "plugins": {
+            "key-auth": {
+                "query": "apikey",
+                "header": "apikey",
+                "hide_credentials": false
+            }
+        },
+        "upstream": {
+            "type": "roundrobin",
+            "hash_on": "vars",
+            "nodes": {
+                "192.168.25.50:9083": 1
+            },
+            "pass_host": "pass",
+            "scheme": "http"
+        },
+        "id": "comp-vm"
+    },
+    "modifiedIndex": 162
+}
