@@ -27,8 +27,9 @@
 
 ---
 
+## Persona
 
-- api
-- srvmin
-- ptmin
-- apimin
+- 01. api: API Client
+- 02. srvmin: Service Provider Manager
+- 03. ptmin: Platform Manager
+- 04. apimin: API Manager
