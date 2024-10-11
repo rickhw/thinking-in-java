@@ -1,0 +1,35 @@
+@contentType = application/json
+@hostname = http://localhost:8080
+
+
+# -----------------------------------------------------------------------------
+### object use @class
+POST {{hostname}}/api/tasks
+Content-Type: {{contentType}}
+
+{
+    "@class": "com.example.demo.TaskDomainObject",
+    "kind": "system.Hello",
+    "operationId": "sayHello",
+    "data": {
+        "message": "Hello, Master Asimov"
+    }
+}
+
+# -----------------------------------------------------------------------------
+### object use @class
+POST {{hostname}}/api/tasks
+Content-Type: {{contentType}}
+
+{
+    "kind": "system.Hello",
+    "operationId": "sayHello",
+    "data": {
+        "message": "Hello, Master Asimov"
+    }
+}
+
+
+### abnormal case#1: no attribute
+GET {{hostname}}/api/tasks/fb65bd31-66a8-497b-9b37-cb32633f2564
+

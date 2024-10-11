@@ -1,20 +1,20 @@
 package com.example.demo;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.List;
-
 @SpringBootApplication
-public class DemoApplication implements CommandLineRunner {
+public class Main implements CommandLineRunner {
 
     @Autowired
     private RedisService redisService;
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(Main.class, args);
     }
 
     @Override
