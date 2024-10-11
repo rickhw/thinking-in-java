@@ -1,0 +1,8 @@
+FROM golang:1.18 AS build
+COPY . /app
+WORKDIR /app
+RUN go build -o app
+
+FROM scratch
+COPY --from=build /app/app /app/app
+CMD ["/app/app"]

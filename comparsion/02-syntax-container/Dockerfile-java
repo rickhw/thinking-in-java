@@ -1,0 +1,9 @@
+FROM oracle/graalvm-ce:21.3.0 AS build
+COPY . /app
+WORKDIR /app
+RUN gu install native-image
+RUN native-image -jar app.jar
+
+FROM busybox
+COPY --from=build /app/app /app/app
+CMD ["/app/app"]
