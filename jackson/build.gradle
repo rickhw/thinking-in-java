@@ -1,0 +1,37 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '8.1.0' // 添加 shadow 插件
+}
+
+group 'com.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.module:jackson-module-parameter-names:2.15.0'
+}
+
+application {
+    mainClass = 'com.example.Main' // 設置主類為 com.example.Main
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': application.mainClass // 自動設置 Main-Class 屬性
+        )
+    }
+}
+
+shadowJar {
+    archiveClassifier.set('all') // 設置生成的 JAR 文件分類
+}
+
+test {
+    useJUnitPlatform()
+}
