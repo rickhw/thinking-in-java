@@ -1,0 +1,30 @@
+# -----------------------------------------------------------------------------
+# Server (Tomcat)
+# -----------------------------------------------------------------------------
+## Product Metadata
+server:
+  port: ${port:8080}
+
+  # Disable Whitelabel Error Page
+  # see: https://websparrow.org/spring/how-to-resolve-whitelabel-error-page-in-spring-boot
+  error:
+    whitelabel:
+      enabled: false
+
+
+# -----------------------------------------------------------------------------
+# Sprinboot
+# -----------------------------------------------------------------------------
+spring:
+
+  application:
+    name: SaaS API Server
+
+  data:
+    redis:
+      database: 0
+      host: 192.168.64.18
+      port: 6379
+      # password: password
+      # timeout: 60000
+
