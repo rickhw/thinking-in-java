@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/rws_booter
+    username: root
+    password: medusa
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  redis:
+    host: localhost
+    port: 6379
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: medusa
