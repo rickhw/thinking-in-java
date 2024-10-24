@@ -1,0 +1,24 @@
+
+
+# -----------------------------------------------------------------------------
+# Application
+# -----------------------------------------------------------------------------
+
+app:
+  rabbitmq:
+    # exchange: app.exchange1.topic1
+    # queue: app.queue
+    # routingkey: app.routingkey
+    queues:
+    - name: sys.tasks
+      exchange: directExchange
+      routingKey: sys-task
+    - name: platform.sayHello
+      exchange: directExchange
+      routingKey: platform-sayHello
+    - name: platform.tenant
+      exchange: directExchange
+      routingKey: platform-tenant
+    # - name: platform.tenant
+    #   exchange: fanoutExchange
+    #   routing-key: "" # Fanout exchange doesn't need routing key

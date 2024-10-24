@@ -1,0 +1,13 @@
+@contentType = application/json
+
+@hostname = http://localhost:8080/send-message
+
+
+### Send Message
+POST {{hostname}}
+content-type: {{contentType}}
+
+{
+  "name": "rick",
+  "age": 18
+}
