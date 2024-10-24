@@ -1,0 +1,11 @@
+{
+    "timestamp": "2024-06-09T04:28:41.703",
+    "requestId": "da29b8a4-09fd-4196-8a77-1bb1bf89920c",
+    "level": "INFO",
+    "class": "c.g.race.controller.RootController",
+    "thread": "http-nio-8092-exec-10",
+    "capacityUnit": "",
+    "consumedValue": "0",
+    "value": "",
+    "message": "operate(), consumedValue: 36"
+}

@@ -1,0 +1,52 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.18'
+	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+	id "application"
+	id 'distribution'
+}
+
+
+mainClassName = "com.gtcafe.race.Main"
+group = 'com.gtcafe'
+version = getBuildName()	// build file name
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'com.github.loki4j:loki-logback-appender:1.4.1'
+	
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+def getBuildName() {
+	// user defined
+	def _version = '0.5.0'
+	def _buildType = 'dev'
+
+    def date = new Date()
+    def formattedDate = date.format('yyyyMMdd-HHmm')
+
+	
+    return _version+'-' + _buildType + '-b' + formattedDate
+}
+
+
+
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// }
+
+// ext {
+//    javaMainClass = "com.beginnertechies.googleapi.Main"
+// }
+
+// application {
+//     mainClassName = javaMainClass
+// }

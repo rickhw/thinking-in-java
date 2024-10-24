@@ -1,0 +1,16 @@
+   ______                      __     __          ________    _       __
+  / ____/___  ____ ___  ____  / /__  / /____     /_  __/ /_  (_)___  / /__
+ / /   / __ \/ __ `__ \/ __ \/ / _ \/ __/ _ \     / / / __ \/ / __ \/ //_/
+/ /___/ /_/ / / / / / / /_/ / /  __/ /_/  __/    / / / / / / / / / / ,<
+\____/\____/_/ /_/ /_/ .___/_/\___/\__/\___/    /_/ /_/ /_/_/_/ /_/_/|_|
+                    /_/
+::: RWS :::
+ServiceName: [<ServiceName>], ApiVersion: [<Version>]
+BuildType: [<BuildType>], BuildId: [<BuildId>]
+
+::: User Info :::
+TenantId: [<TenantName>] (<TenandId>)
+UserName: [<UserName>] (<UserId>)
+RoleName: [<RoleName>] (<RoleId>)
+
+Request-Id: <Request-Id>
