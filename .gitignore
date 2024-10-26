@@ -14,5 +14,6 @@ credentials.json
 
 ## Gradle
 .gradle
+gradle
 bin/
 build/
