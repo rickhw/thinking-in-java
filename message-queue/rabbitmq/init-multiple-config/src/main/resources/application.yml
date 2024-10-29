@@ -4,6 +4,7 @@ spring:
     port: 5672
     username: root
     password: password
+
 app:
   rabbitmq:
     autoInit: true
@@ -16,6 +17,14 @@ app:
       - name: queue2
         exchange: directExchange
         routingKey: rk2
-      - name: queue3
+      - name: queue3-fantout
         exchange: fanoutExchange
         routingKey: ""
+
+      - name: queue4-fantout
+        exchange: directExchange
+        routingKey: rk4
+
+      - name: queue5-fantout
+        exchange: directExchange
+        routingKey: rk5
