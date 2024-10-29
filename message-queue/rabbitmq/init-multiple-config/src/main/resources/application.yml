@@ -1,24 +1,21 @@
-
-
-# -----------------------------------------------------------------------------
-# Application
-# -----------------------------------------------------------------------------
-
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: password
 app:
   rabbitmq:
-    # exchange: app.exchange1.topic1
-    # queue: app.queue
-    # routingkey: app.routingkey
+    autoInit: true
+    # reset: true
+
     queues:
-    - name: sys.tasks
-      exchange: directExchange
-      routingKey: sys-task
-    - name: platform.sayHello
-      exchange: directExchange
-      routingKey: platform-sayHello
-    - name: platform.tenant
-      exchange: directExchange
-      routingKey: platform-tenant
-    # - name: platform.tenant
-    #   exchange: fanoutExchange
-    #   routing-key: "" # Fanout exchange doesn't need routing key
+      - name: queue1
+        exchange: directExchange
+        routingKey: rk1
+      - name: queue2
+        exchange: directExchange
+        routingKey: rk2
+      - name: queue3
+        exchange: fanoutExchange
+        routingKey: ""

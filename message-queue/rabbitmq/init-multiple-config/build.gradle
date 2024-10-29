@@ -1,12 +1,11 @@
 plugins {
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'java'
 }
 
-group = 'com.gtcafe.asimov'
-version = '1.0.0-SNAPSHOT'
-description = 'Message Producer'
+group = 'com.gtcafe'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 repositories {
@@ -14,13 +13,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-amqp'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    implementation 'org.springframework.boot:spring-boot-starter'
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
 }
