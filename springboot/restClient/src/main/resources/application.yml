@@ -1,0 +1,18 @@
+app:
+  api:
+    base-url: "https://api.example.com"  # API 基本 URL
+    timeout:
+      connect: 5000   # 連線逾時 (毫秒)
+      read: 10000     # 讀取逾時 (毫秒)
+    auth:
+      token: "Bearer your-auth-token"  # 認證 token
+    endpoints:
+      get-user:
+        path: "/users"
+        query-params:
+          userId: "12345"
+      update-user:
+        path: "/users/update"
+        payload:
+          name: "John Doe"
+          email: "johndoe@example.com"

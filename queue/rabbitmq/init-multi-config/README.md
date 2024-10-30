@@ -1,4 +1,13 @@
 
+
+## Feature
+
+- load config from application.yml
+- autoInit if the config is not ready
+- reset if needed
+- connection check when launch application.
+
+
 ## Prompt
 
 我有一個 java 17, springboot 3.2 的 application.yml 如下:

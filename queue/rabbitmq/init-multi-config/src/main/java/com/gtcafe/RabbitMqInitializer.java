@@ -17,7 +17,7 @@ import org.springframework.context.annotation.DependsOn;
 
 @Configuration
 @ConfigurationProperties(prefix = "app.rabbitmq")
-public class RabbitMQConfig {
+public class RabbitMqInitializer {
 
     @Value("${app.rabbitmq.autoInit:true}")
     private boolean autoInit;
@@ -29,6 +29,17 @@ public class RabbitMQConfig {
 
     public List<QueueConfig> getQueues() { return queues; }
     public void setQueues(List<QueueConfig> queues) { this.queues = queues; }
+
+    public RabbitQueueConfig getQueueConfig(String queueName) {
+		return queueMap.get(queueName);
+	}
+
+
+    @Bean
+	public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+		RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+		return rabbitTemplate;
+	}
 
     @Bean
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
