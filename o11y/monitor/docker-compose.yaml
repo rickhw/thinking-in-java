@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  springboot-app:
+    build:
+      context: .    # 指向當前目錄
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin # 設置 Grafana 管理員密碼
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge

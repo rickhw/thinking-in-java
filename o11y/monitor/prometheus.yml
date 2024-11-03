@@ -1,0 +1,8 @@
+global:
+  scrape_interval: 15s # 每 15 秒抓取一次指標
+
+scrape_configs:
+  - job_name: 'springboot-app'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['springboot-app:8080']

@@ -5,13 +5,15 @@ import java.util.Map;
 
 public class QueueConfiguration {
 
-    public static final Map<String, String[]> STATE_TRANSITIONS = new HashMap<>() {{
-        put("test.tenant", new String[]{"pending", "running", "completed", "failure"});
-        put("test.member", new String[]{"pending", "active", "inactive", "suspended"});
-        put("test.serviceQuota", new String[]{"init", "processing", "completed", "failed"});
-        put("test.hello", new String[]{"new", "processing", "done", "error"});
-        put("test.apiMeta", new String[]{"unverified", "verified", "expired", "rejected"});
-    }};
+    public static final Map<String, String[]> STATE_TRANSITIONS = new HashMap<>() {
+        {
+            put("test.tenant", new String[] { "pending", "running", "completed", "failure" });
+            put("test.member", new String[] { "pending", "active", "inactive", "suspended" });
+            put("test.serviceQuota", new String[] { "init", "processing", "completed", "failed" });
+            put("test.hello", new String[] { "new", "processing", "done", "error" });
+            put("test.apiMeta", new String[] { "unverified", "verified", "expired", "rejected" });
+        }
+    };
 
     public static String getQueueName(String resource) {
         return resource + ".state.queue";
