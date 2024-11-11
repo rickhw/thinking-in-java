@@ -20,95 +20,78 @@
     - 請提供幾個測試，用來確保範例程式的正確性
     - 這個應用程式的 package name 叫做: com.gtcafe.app
     - 幫我完善程式碼，包含使用 lombok 簡化程式內容
-- 幫我用 meriaid 畫好 class and sequence diagram.
+- 幫我用 mermaid 畫好 class and sequence diagram.
 
 
 
 
 ## ChatGPT
 
-以下是一個符合您需求的 Java Spring Boot 應用程式架構。此應用程式使用 RabbitMQ 處理資源的狀態機，包含 Tenant 資源，並利用 CQRS 模式來管理狀態移轉。程式碼會使用 `lombok` 簡化程式內容，並提供 `build.gradle` 設定和一些基本測試。
 
-### 目錄結構
-```
-com/
-└── gtcafe/
-    └── app/
-        ├── config/
-        │   └── RabbitMQConfig.java
-        ├── domain/
-        │   └── Tenant.java
-        ├── dto/
-        │   └── TenantStatusUpdateRequest.java
-        ├── enums/
-        │   └── TenantStatus.java
-        ├── handler/
-        │   └── TenantStatusHandler.java
-        ├── queue/
-        │   └── TenantStatusConsumer.java
-        ├── repository/
-        │   └── TenantRepository.java
-        ├── service/
-        │   ├── CommandService.java
-        │   └── QueryService.java
-        └── Application.java
-```
+為了完成您所描述的應用程式架構，這裡將提供一個基於 Java 17、Spring Boot 3.2、Gradle 和 RabbitMQ 的完整框架。此架構包括 `Tenant` 資源的狀態機移轉處理，並使用 CQRS 模式來實現不同狀態的移轉。以下是詳細說明：
 
-### 1. RabbitMQ 設定
+### 1. Gradle 建置檔 (`build.gradle`)
 
-在 `RabbitMQConfig.java` 中配置 RabbitMQ 的 queue 和 exchange：
+首先，定義必要的依賴和配置。
 
-```java
-// RabbitMQConfig.java
-package com.gtcafe.app.config;
+```groovy
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.3'
+}
 
-import org.springframework.amqp.core.*;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
-import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+group = 'com.gtcafe.app'
+version = '1.0.0'
+sourceCompatibility = '17'
 
-@Configuration
-@EnableRabbit
-public class RabbitMQConfig {
+repositories {
+    mavenCentral()
+}
 
-    public static final String TENANT_QUEUE = "tenant-status-queue";
-    public static final String EXCHANGE = "tenant-exchange";
-
-    @Bean
-    Queue queue() {
-        return new Queue(TENANT_QUEUE, false);
-    }
-
-    @Bean
-    DirectExchange exchange() {
-        return new DirectExchange(EXCHANGE);
-    }
-
-    @Bean
-    Binding binding(Queue queue, DirectExchange exchange) {
-        return BindingBuilder.bind(queue).to(exchange).with(TENANT_QUEUE);
-    }
-
-    @Bean
-    RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
-    }
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.projectlombok:lombok:1.18.26'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 ```
 
-### 2. Domain 類別
+### 2. RabbitMQ 配置 (`application.yaml`)
 
-在 `Tenant.java` 中定義 `Tenant` 物件並使用 Lombok 進行簡化：
+設定 RabbitMQ Queue、Exchange、Binding Key，並支援動態生成 Queue 和 Exchange 的功能。
+
+```yaml
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+app:
+  rabbitmq:
+    autoInit: true
+    queues:
+      tenant:
+        exchange: tenant-exchange
+        queueName: tenant-queue
+        routingKeys:
+          - initing
+          - active
+          - inactive
+          - terminated
+```
+
+### 3. 狀態與資源類別 (`Tenant.java`)
+
+定義 `Tenant` 資源類別，使用 Lombok 簡化代碼。
 
 ```java
-// Tenant.java
 package com.gtcafe.app.domain;
 
-import com.gtcafe.app.enums.TenantStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -120,17 +103,8 @@ public class Tenant {
     private String id;
     private TenantStatus status;
 }
-```
 
-### 3. Enum 狀態
-
-定義 `TenantStatus` 狀態：
-
-```java
-// TenantStatus.java
-package com.gtcafe.app.enums;
-
-public enum TenantStatus {
+enum TenantStatus {
     INITING,
     ACTIVE,
     INACTIVE,
@@ -138,179 +112,202 @@ public enum TenantStatus {
 }
 ```
 
-### 4. DTO
+### 4. 狀態機邏輯 (`TenantStateMachine.java`)
 
-定義傳遞狀態更新的請求物件 `TenantStatusUpdateRequest`：
-
-```java
-// TenantStatusUpdateRequest.java
-package com.gtcafe.app.dto;
-
-import com.gtcafe.app.enums.TenantStatus;
-import lombok.Data;
-
-@Data
-public class TenantStatusUpdateRequest {
-    private String tenantId;
-    private TenantStatus newStatus;
-}
-```
-
-### 5. Command 和 Query Service
-
-建立 `CommandService` 和 `QueryService` 以支援 CQRS 模式：
+實作狀態機的移轉邏輯，使用獨立方法進行處理。
 
 ```java
-// CommandService.java
 package com.gtcafe.app.service;
 
 import com.gtcafe.app.domain.Tenant;
-import com.gtcafe.app.enums.TenantStatus;
-import com.gtcafe.app.repository.TenantRepository;
+import com.gtcafe.app.domain.TenantStatus;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CommandService {
-    private final TenantRepository tenantRepository;
+public class TenantStateMachine {
 
-    public CommandService(TenantRepository tenantRepository) {
-        this.tenantRepository = tenantRepository;
+    public Tenant handleInitingToActive(Tenant tenant) {
+        tenant.setStatus(TenantStatus.ACTIVE);
+        return tenant;
     }
 
-    public void updateTenantStatus(String tenantId, TenantStatus status) {
-        Tenant tenant = tenantRepository.findById(tenantId);
-        tenant.setStatus(status);
-        tenantRepository.save(tenant);
+    public Tenant handleActiveToInactive(Tenant tenant) {
+        tenant.setStatus(TenantStatus.INACTIVE);
+        return tenant;
     }
+
+    public Tenant handleInactiveToTerminated(Tenant tenant) {
+        tenant.setStatus(TenantStatus.TERMINATED);
+        return tenant;
+    }
+
+    // 根據需求添加其他狀態轉移
 }
 ```
 
+### 5. RabbitMQ 消費者處理 (`TenantMessageConsumer.java`)
+
+建立一個 `@RabbitListener` 消費者處理狀態轉移邏輯。
+
 ```java
-// QueryService.java
-package com.gtcafe.app.service;
+package com.gtcafe.app.rabbitmq;
 
 import com.gtcafe.app.domain.Tenant;
-import com.gtcafe.app.repository.TenantRepository;
-import org.springframework.stereotype.Service;
-
-@Service
-public class QueryService {
-    private final TenantRepository tenantRepository;
-
-    public QueryService(TenantRepository tenantRepository) {
-        this.tenantRepository = tenantRepository;
-    }
-
-    public Tenant getTenantById(String tenantId) {
-        return tenantRepository.findById(tenantId);
-    }
-}
-```
-
-### 6. Consumer Handler
-
-定義 `TenantStatusConsumer` 處理接收到的訊息：
-
-```java
-// TenantStatusConsumer.java
-package com.gtcafe.app.queue;
-
-import com.gtcafe.app.dto.TenantStatusUpdateRequest;
-import com.gtcafe.app.enums.TenantStatus;
-import com.gtcafe.app.service.CommandService;
+import com.gtcafe.app.domain.TenantStatus;
+import com.gtcafe.app.service.TenantStateMachine;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TenantStatusConsumer {
-    private final CommandService commandService;
+public class TenantMessageConsumer {
 
-    public TenantStatusConsumer(CommandService commandService) {
-        this.commandService = commandService;
+    private final TenantStateMachine stateMachine;
+
+    public TenantMessageConsumer(TenantStateMachine stateMachine) {
+        this.stateMachine = stateMachine;
     }
 
-    @RabbitListener(queues = RabbitMQConfig.TENANT_QUEUE)
-    public void handleTenantStatusUpdate(TenantStatusUpdateRequest request) {
-        commandService.updateTenantStatus(request.getTenantId(), request.getNewStatus());
+    @RabbitListener(queues = "#{tenantQueue.name}")
+    public void receiveTenantMessage(Tenant tenant) {
+        switch (tenant.getStatus()) {
+            case INITING -> stateMachine.handleInitingToActive(tenant);
+            case ACTIVE -> stateMachine.handleActiveToInactive(tenant);
+            case INACTIVE -> stateMachine.handleInactiveToTerminated(tenant);
+            // 其他狀態轉移邏輯可加入此處
+        }
+        // 處理完成後，將更新後的 tenant 狀態寫入其他服務或資料庫
     }
 }
 ```
 
-### 7. 測試範例
+### 6. RabbitMQ 設定 (`RabbitMQConfig.java`)
 
-撰寫測試來確保應用程式的正確性：
+配置 Queue、Exchange 和 Binding，自動創建 RabbitMQ 資源。
 
 ```java
-// CommandServiceTest.java
+package com.gtcafe.app.config;
+
+import org.springframework.amqp.core.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class RabbitMQConfig {
+
+    @Value("${app.rabbitmq.queues.tenant.exchange}")
+    private String exchangeName;
+
+    @Value("${app.rabbitmq.queues.tenant.queueName}")
+    private String queueName;
+
+    @Value("${app.rabbitmq.queues.tenant.routingKeys}")
+    private String[] routingKeys;
+
+    @Bean
+    public DirectExchange tenantExchange() {
+        return new DirectExchange(exchangeName, true, false);
+    }
+
+    @Bean
+    public Queue tenantQueue() {
+        return new Queue(queueName, true);
+    }
+
+    @Bean
+    public Declarables tenantBindings() {
+        var bindings = new Declarables();
+        for (String routingKey : routingKeys) {
+            bindings.add(new Binding(queueName, Binding.DestinationType.QUEUE, exchangeName, routingKey, null));
+        }
+        return bindings;
+    }
+}
+```
+
+### 7. 測試類別 (`TenantStateMachineTest.java`)
+
+編寫測試類別以驗證狀態機的功能。
+
+```java
 package com.gtcafe.app.service;
 
 import com.gtcafe.app.domain.Tenant;
-import com.gtcafe.app.enums.TenantStatus;
-import com.gtcafe.app.repository.TenantRepository;
-import org.junit.jupiter.api.BeforeEach;
+import com.gtcafe.app.domain.TenantStatus;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+class TenantStateMachineTest {
 
-class CommandServiceTest {
-    private CommandService commandService;
-    private TenantRepository tenantRepository;
+    private final TenantStateMachine stateMachine = new TenantStateMachine();
 
-    @BeforeEach
-    void setUp() {
-        tenantRepository = Mockito.mock(TenantRepository.class);
-        commandService = new CommandService(tenantRepository);
+    @Test
+    void testInitingToActive() {
+        Tenant tenant = new Tenant("1", TenantStatus.INITING);
+        Tenant updatedTenant = stateMachine.handleInitingToActive(tenant);
+        assertEquals(TenantStatus.ACTIVE, updatedTenant.getStatus());
     }
 
     @Test
-    void updateTenantStatusTest() {
-        Tenant tenant = new Tenant("123", TenantStatus.INITING);
-        when(tenantRepository.findById("123")).thenReturn(tenant);
+    void testActiveToInactive() {
+        Tenant tenant = new Tenant("1", TenantStatus.ACTIVE);
+        Tenant updatedTenant = stateMachine.handleActiveToInactive(tenant);
+        assertEquals(TenantStatus.INACTIVE, updatedTenant.getStatus());
+    }
 
-        commandService.updateTenantStatus("123", TenantStatus.ACTIVE);
-        assertEquals(TenantStatus.ACTIVE, tenant.getStatus());
-
-        verify(tenantRepository, times(1)).save(tenant);
+    @Test
+    void testInactiveToTerminated() {
+        Tenant tenant = new Tenant("1", TenantStatus.INACTIVE);
+        Tenant updatedTenant = stateMachine.handleInactiveToTerminated(tenant);
+        assertEquals(TenantStatus.TERMINATED, updatedTenant.getStatus());
     }
 }
 ```
 
-### 8. `build.gradle` 設定
+### 8. 類別與時序圖 (Mermaid)
 
-以下是 `build.gradle` 設定文件：
+以下是類別圖與時序圖的範例：
 
-```groovy
-plugins {
-    id 'org.springframework.boot' version '3.2.0'
-    id 'io.spring.dependency-management' version '1.1.3'
-    id 'java'
-}
+```mermaid
+classDiagram
+    class Tenant {
+        String id
+        TenantStatus status
+    }
 
-group = 'com.gtcafe'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+    class TenantStatus {
+        <<enumeration>>
+        INITING
+        ACTIVE
+        INACTIVE
+        TERMINATED
+    }
 
-repositories {
-    mavenCentral()
-}
+    class TenantStateMachine {
+        +Tenant handleInitingToActive(Tenant tenant)
+        +Tenant handleActiveToInactive(Tenant tenant)
+        +Tenant handleInactiveToTerminated(Tenant tenant)
+    }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+    class TenantMessageConsumer {
+        +void receiveTenantMessage(Tenant tenant)
+    }
 
-test {
-    useJUnitPlatform()
-}
+Tenant -- TenantStatus
+TenantMessageConsumer --> TenantStateMachine : uses
 ```
 
-### 說明
+```mermaid
+sequenceDiagram
+    participant Producer
+    participant RabbitMQ
+    participant TenantMessageConsumer
+    participant TenantStateMachine
 
-此範例程式使用 Spring Boot 的 AMQP 支援來與 RabbitMQ 互動，使用 CQRS 模式分離指令和查詢邏輯。程式碼使用 `lombok` 簡化資料類別的建立，並包含基本的測試，以確保更新邏輯的正確性。
+    Producer ->> RabbitMQ : Publish message to tenant-queue
+    RabbitMQ ->> TenantMessageConsumer : Deliver message
+    TenantMessageConsumer ->> TenantStateMachine : Process status transition
+    TenantStateMachine -->> TenantMessageConsumer : Updated Tenant Status
+```
 
-請根據需求擴充測試案例並驗證 RabbitMQ 設定，這樣能確保應用程式運作正常。
+這個框架提供了基本的狀態機邏輯和 RabbitMQ 消費者處理，每個狀態的移轉方法都被分離在 `TenantStateMachine` 類別中。透過 CQRS 模式管理各種狀態轉換邏輯，您可以輕鬆擴展以支援更多資源類型或狀態。

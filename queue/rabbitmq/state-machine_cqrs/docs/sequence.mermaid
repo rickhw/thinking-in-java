@@ -1,0 +1,10 @@
+sequenceDiagram
+    participant Producer
+    participant RabbitMQ
+    participant TenantMessageConsumer
+    participant TenantStateMachine
+
+    Producer ->> RabbitMQ : Publish message to tenant-queue
+    RabbitMQ ->> TenantMessageConsumer : Deliver message
+    TenantMessageConsumer ->> TenantStateMachine : Process status transition
+    TenantStateMachine -->> TenantMessageConsumer : Updated Tenant Status

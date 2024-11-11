@@ -1,0 +1,26 @@
+classDiagram
+    class Tenant {
+        String id
+        TenantStatus status
+    }
+
+    class TenantStatus {
+        <<enumeration>>
+        INITING
+        ACTIVE
+        INACTIVE
+        TERMINATED
+    }
+
+    class TenantStateMachine {
+        +Tenant handleInitingToActive(Tenant tenant)
+        +Tenant handleActiveToInactive(Tenant tenant)
+        +Tenant handleInactiveToTerminated(Tenant tenant)
+    }
+
+    class TenantMessageConsumer {
+        +void receiveTenantMessage(Tenant tenant)
+    }
+
+Tenant -- TenantStatus
+TenantMessageConsumer --> TenantStateMachine : uses
