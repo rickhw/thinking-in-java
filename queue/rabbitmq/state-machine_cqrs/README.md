@@ -6,13 +6,22 @@
 
 請幫我完成一個完整的程式碼框架，用以下的例子：
 
-1. 有一個叫做 Tenant 的資源，起始與終止狀態為 Initing / Terminated，其他狀態還有 Active / Inactive
-2. 使用 CQRS 方式實作
-3. 幫我配置好 RabbitMQ 的設定，未來可以增加其他種類的資源
-4. 請提供 build.gradle, 並且幫我確認都可以正常編譯
-5. 請提供幾個測試，用來確保範例程式的正確性
-6. 這個應用程式的 package name 叫做: com.gtcafe.app
-7. 幫我完善程式碼，包含使用 lombok 簡化程式內容
+- 資源種類部分：
+    - 有一個叫做 Tenant 的資源，起始與終止狀態為 Initing / Terminated，其他狀態還有 Active / Inactive
+- 核心狀態機移轉處理架構：
+    - 使用 CQRS 方式實作
+    - 每個移轉 (Transition) 都透過獨立的 method 處理
+- RabbitMQ 部分:
+    - 每種資源類型，提供一個 Queue 與多個 binding key
+    - 幫我配置好 RabbitMQ 初始設定，像是發現 Queue / Exchange 沒有建立，就自動建立
+    - 未來可以透過 application.yaml 增加不同資源的 queue
+- java 部分：
+    - 請提供 build.gradle, 並且幫我確認都可以正常編譯
+    - 請提供幾個測試，用來確保範例程式的正確性
+    - 這個應用程式的 package name 叫做: com.gtcafe.app
+    - 幫我完善程式碼，包含使用 lombok 簡化程式內容
+- 幫我用 meriaid 畫好 class and sequence diagram.
+
 
 
 
