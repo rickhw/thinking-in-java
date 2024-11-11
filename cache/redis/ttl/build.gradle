@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starter Web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    
+    // Spring Boot Starter for Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // Jackson Databind (for JSON serialization/deserialization)
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    
+    // Jackson Annotations
+    implementation 'com.fasterxml.jackson.core:jackson-annotations'
+    
+    // // Spring Boot Starter Test (for testing)
+    // testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    // // Testcontainers for Redis (for integration tests)
+    // testImplementation 'org.testcontainers:junit-jupiter'
+    // testImplementation 'org.testcontainers:redis'
+}
+
+test {
+    useJUnitPlatform()
+}
+

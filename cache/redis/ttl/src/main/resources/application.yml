@@ -1,0 +1,19 @@
+spring:
+  redis:
+    host: localhost
+    port: 6379
+    timeout: 6000
+
+app:
+  redis:
+    defaultTtl: 1800           # 預設 TTL 30 分鐘 (以秒為單位)
+    prefixes:
+      tenant:                  # 不同資料類型的 prefix 和 TTL
+        prefix: "tenant-"
+        ttl: 3600              # 1 小時
+      session:
+        prefix: "session-"
+        ttl: 1800              # 30 分鐘
+      product:
+        prefix: "product-"
+        ttl: 7200              # 2 小時
