@@ -16,6 +16,7 @@
     - 幫我配置好 RabbitMQ 初始設定，像是發現 Queue / Exchange 沒有建立，就自動建立
     - 未來可以透過 application.yaml 增加不同資源的 queue
 - java 部分：
+    - 提供完整的程式碼，包含程式架構，以及能夠順利執行的必要 class
     - 請提供 build.gradle, 並且幫我確認都可以正常編譯
     - 請提供幾個測試，用來確保範例程式的正確性
     - 這個應用程式的 package name 叫做: com.gtcafe.app
