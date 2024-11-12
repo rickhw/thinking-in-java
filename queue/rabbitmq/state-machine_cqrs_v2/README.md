@@ -680,3 +680,25 @@ curl -X PUT http://localhost:8080/api/tenants/1/status \
 - 擴充測試案例
 
 需要任何調整或有任何問題，請隨時告訴我。
+
+
+----
+
+```bash
+## 
+~$ curl -X POST http://localhost:8080/api/tenants \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Test Tenant"}'
+{"id":1,"name":"Test Tenant","status":"INITING"}
+
+## 
+~$ curl http://localhost:8080/api/tenants/1
+{"id":1,"name":"Test Tenant","status":"ACTIVE"}
+
+## 
+~$ curl -X PUT http://localhost:8080/api/tenants/1/status \
+    -H "Content-Type: application/json" \
+    -d '{"targetStatus":"INACTIVE"}'
+{"id":1,"name":"Test Tenant","status":"INACTIVE"}
+
+```
