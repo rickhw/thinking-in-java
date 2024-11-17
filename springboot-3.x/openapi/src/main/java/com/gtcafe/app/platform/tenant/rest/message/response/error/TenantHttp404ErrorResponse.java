@@ -1,22 +1,22 @@
-package com.gtcafe.app.platform.rest.message.error;
+package com.gtcafe.app.platform.tenant.rest.message.response.error;
 
 import java.time.LocalDateTime;
 
-import com.gtcafe.app.platform.rest.model.SystemKind;
+import com.gtcafe.app.platform.tenant.domain.model.TenantKind;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class GlobalHttp401ErrorResponse {
+public class TenantHttp404ErrorResponse {
 
-    @Schema(defaultValue = SystemKind.NAME)
+    @Schema(defaultValue = TenantKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_API_KEY")
+    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_TENANT_NAME")
     private ErrorCode code;
 
-    @Schema(description = "Human-readable message providing more details about the error", example = "API key is invalid")
+    @Schema(description = "Human-readable message providing more details about the error", example = "Tenant name is invalid")
     private ErrorMessage message;
 
     private Object detail;
@@ -24,13 +24,12 @@ public class GlobalHttp401ErrorResponse {
     private LocalDateTime timestamp;
 
     public enum ErrorCode {
-        INVALID_API_KEY
+        TENANT_NOT_FOUND
         ;
     }
 
     public enum ErrorMessage {
-        INVALID_API_KEY("API key is invalid")
-        
+        TENANT_NOT_FOUND("Tenant not found")
         ;
 
         private String message;

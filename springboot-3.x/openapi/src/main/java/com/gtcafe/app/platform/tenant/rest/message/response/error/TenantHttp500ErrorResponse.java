@@ -2,18 +2,46 @@ package com.gtcafe.app.platform.tenant.rest.message.response.error;
 
 import java.time.LocalDateTime;
 
-import lombok.Builder;
+import com.gtcafe.app.platform.tenant.domain.model.TenantKind;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Builder
 public class TenantHttp500ErrorResponse {
-    
+
+    @Schema(defaultValue = TenantKind.NAME)
     private String kind;
-    private String path;
-    private String errorCode;
-    private String errorMessage;
+
+    @Schema(description = "Error code for the specific 400 issue", example = "FAILED_TO_CREATE_TENANT")
+    private ErrorCode code;
+
+    @Schema(description = "Human-readable message providing more details about the error", example = "Failed to create tenant")
+    private ErrorMessage message;
+
     private Object detail;
+
     private LocalDateTime timestamp;
-    
+
+    public enum ErrorCode {
+        FAILED_TO_CREATE_TENANT
+        ;
+    }
+
+    public enum ErrorMessage {
+        FAILED_TO_CREATE_TENANT("Failed to create tenant")
+        
+        ;
+
+        private String message;
+
+        ErrorMessage(String message) {
+            this.message = message;
+        }
+
+        public String toString() {
+            return message;
+        }
+    }
+
 }

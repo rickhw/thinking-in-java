@@ -8,15 +8,15 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class GlobalHttp401ErrorResponse {
+public class GlobalHttp500ErrorResponse {
 
     @Schema(defaultValue = SystemKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_API_KEY")
+    @Schema(description = "Error code for the specific 400 issue", example = "UNEXPECTED_ERROR")
     private ErrorCode code;
 
-    @Schema(description = "Human-readable message providing more details about the error", example = "API key is invalid")
+    @Schema(description = "Human-readable message providing more details about the error", example = "An unexpected error occurred")
     private ErrorMessage message;
 
     private Object detail;
@@ -24,12 +24,12 @@ public class GlobalHttp401ErrorResponse {
     private LocalDateTime timestamp;
 
     public enum ErrorCode {
-        INVALID_API_KEY
+        UNEXPECTED_ERROR
         ;
     }
 
     public enum ErrorMessage {
-        INVALID_API_KEY("API key is invalid")
+        UNEXPECTED_ERROR("An unexpected error occurred")
         
         ;
 

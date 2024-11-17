@@ -2,17 +2,48 @@ package com.gtcafe.app.platform.rest.message.error;
 
 import java.time.LocalDateTime;
 
-import lombok.Builder;
+import com.gtcafe.app.platform.rest.model.SystemKind;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@Builder
 public class GlobalHttp429ErrorResponse {
+
+    @Schema(defaultValue = SystemKind.NAME)
     private String kind;
-    private String path;
-    private String errorCode;
-    private String errorMessage;
+
+    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_API_KEY")
+    private ErrorCode code;
+
+    @Schema(description = "Human-readable message providing more details about the error", example = "API key is invalid")
+    private ErrorMessage message;
+
     private Object detail;
+
     private LocalDateTime timestamp;
-    
+
+    public enum ErrorCode {
+        TOO_MANY_REQUESTS,
+        OVER_SERVICE_QUOTA
+        ;
+    }
+
+    public enum ErrorMessage {
+        TOO_MANY_REQUESTS("Too many requests"),
+        OVER_SERVICE_QUOTA("Over service quota")
+
+        ;
+
+        private String message;
+
+        ErrorMessage(String message) {
+            this.message = message;
+        }
+
+        public String toString() {
+            return message;
+        }
+    }
+
 }
