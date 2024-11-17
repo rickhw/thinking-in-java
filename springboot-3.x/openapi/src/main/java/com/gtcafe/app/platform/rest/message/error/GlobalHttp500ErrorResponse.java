@@ -13,7 +13,7 @@ public class GlobalHttp500ErrorResponse {
     @Schema(defaultValue = SystemKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "UNEXPECTED_ERROR")
+    @Schema(description = "Error code for the specific 500 issue", example = "UNEXPECTED_ERROR")
     private ErrorCode code;
 
     @Schema(description = "Human-readable message providing more details about the error", example = "An unexpected error occurred")

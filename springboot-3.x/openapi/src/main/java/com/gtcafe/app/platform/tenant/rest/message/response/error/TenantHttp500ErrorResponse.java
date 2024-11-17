@@ -13,7 +13,7 @@ public class TenantHttp500ErrorResponse {
     @Schema(defaultValue = TenantKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "FAILED_TO_CREATE_TENANT")
+    @Schema(description = "Error code for the specific 500 issue", example = "FAILED_TO_CREATE_TENANT")
     private ErrorCode code;
 
     @Schema(description = "Human-readable message providing more details about the error", example = "Failed to create tenant")

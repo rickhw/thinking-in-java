@@ -13,7 +13,7 @@ public class GlobalHttp429ErrorResponse {
     @Schema(defaultValue = SystemKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_API_KEY")
+    @Schema(description = "Error code for the specific 429 issue", example = "INVALID_API_KEY")
     private ErrorCode code;
 
     @Schema(description = "Human-readable message providing more details about the error", example = "API key is invalid")

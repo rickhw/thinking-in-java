@@ -13,10 +13,10 @@ public class TenantHttp404ErrorResponse {
     @Schema(defaultValue = TenantKind.NAME)
     private String kind;
 
-    @Schema(description = "Error code for the specific 400 issue", example = "INVALID_TENANT_NAME")
+    @Schema(description = "Error code for the specific 404 issue", example = "TENANT_NOT_FOUND")
     private ErrorCode code;
 
-    @Schema(description = "Human-readable message providing more details about the error", example = "Tenant name is invalid")
+    @Schema(description = "Human-readable message providing more details about the error", example = "Tenant not found")
     private ErrorMessage message;
 
     private Object detail;
