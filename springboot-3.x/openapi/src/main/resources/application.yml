@@ -19,8 +19,9 @@ server:
 
 springdoc:
   api-docs:
-    path: /api-docs
     enabled: true
+
+  ## http://localhost:8080/swagger-ui/index.html
   swagger-ui:
     path: /swagger-ui.html
     # operationsSorter: name
@@ -40,3 +41,21 @@ springdoc:
 logging:
   level:
     com.gtcafe.app: DEBUG
+
+  
+app:
+  openapi:
+    version: v1
+    title: Asimov
+    description: Asimov API
+    contact:
+      name: GTCAFE
+      url: https://gtcafe.com
+      email:
+
+
+    # servers:
+    #   - url: "http://localhost:8080"
+    #     description: "Development Server"
+    #   - url: "http://gtcafe.com/api"
+    #     des

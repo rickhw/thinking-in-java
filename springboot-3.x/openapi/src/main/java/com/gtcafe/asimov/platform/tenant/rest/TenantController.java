@@ -20,7 +20,6 @@ import com.gtcafe.asimov.platform.rest.message.error.GlobalHttp429ErrorResponse;
 import com.gtcafe.asimov.platform.rest.message.error.GlobalHttp500ErrorResponse;
 import com.gtcafe.asimov.platform.rest.model.HttpHeaderConstants;
 import com.gtcafe.asimov.platform.tenant.domain.TenantService;
-import com.gtcafe.asimov.platform.tenant.domain.exception.TenantNotFoundException;
 import com.gtcafe.asimov.platform.tenant.domain.model.Tenant;
 import com.gtcafe.asimov.platform.tenant.domain.model.TenantState;
 import com.gtcafe.asimov.platform.tenant.rest.message.request.CreateTenantRequest;
@@ -45,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/tenants")
+@RequestMapping("/api/tenants")
 @Tag(name = "Tenant", description = "Tenant management APIs")
 public class TenantController {
 
