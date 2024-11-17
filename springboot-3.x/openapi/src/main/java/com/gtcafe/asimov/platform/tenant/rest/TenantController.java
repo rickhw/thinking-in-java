@@ -58,12 +58,7 @@ public class TenantController {
         summary = "[ASYNC] Create new tenant", 
         description = "Create a new tenant with the provided information",
         parameters = {
-            @Parameter(
-                name = HttpHeaderConstants.X_REQUEST_ID,
-                in = ParameterIn.HEADER,
-                required = false,
-                description = "Unique request ID"
-            )
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" )
         }
     )
     @ApiResponses(value = {
@@ -93,14 +88,15 @@ public class TenantController {
         summary = "[SYNC] Query all tenants", 
         description = "Retrieve all tenants with optional filtering",
         parameters = {
-                @Parameter(
-                    name = "state",
-                    in = ParameterIn.QUERY,
-                    required = false,
-                    description = "Filter tenants by active status",
-                    schema = @Schema(implementation = TenantState.class)
-                )
-            }
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+            @Parameter(
+                name = "state",
+                in = ParameterIn.QUERY,
+                required = false,
+                description = "Filter tenants by active status",
+                schema = @Schema(implementation = TenantState.class)
+            )
+        }
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved tenants", content = @Content(schema = @Schema(implementation = QueryTenantResponse.class))),
@@ -109,6 +105,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<QueryTenantResponse> query(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @RequestParam(required = false, defaultValue = "ACTIVE") TenantState state) {
 
         log.debug("Fetching tenants with filters - state: {}", state);
@@ -123,7 +120,13 @@ public class TenantController {
     // ------------------------------------------------------------------------
     @GetMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[SYNC] Retrieve tenant by ID", description = "Retrieve a specific tenant by its ID")
+    @Operation(
+        summary = "[SYNC] Retrieve tenant by ID", 
+        description = "Retrieve a specific tenant by its ID",
+        parameters = {
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved tenant", content = @Content(schema = @Schema(implementation = RetrieveTenantResponse.class))),
             @ApiResponse(responseCode = "401", description = "Authentication required", content = @Content(schema = @Schema(implementation = GlobalHttp401ErrorResponse.class))),
@@ -132,6 +135,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<RetrieveTenantResponse> retrieve(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @Parameter(description = "Tenant ID", required = true) @PathVariable String id) {
         log.debug("Fetching tenant with id: {}", id);
 
@@ -150,7 +154,13 @@ public class TenantController {
     // ------------------------------------------------------------------------
     @DeleteMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[ASYNC] Delete tenant", description = "Delete a tenant by its ID, the state has to set as inactive.")
+    @Operation(
+        summary = "[ASYNC] Delete tenant", 
+        description = "Delete a tenant by its ID, the state has to set as inactive.",
+        parameters = {
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accept the command of the deleting tenant", content = @Content(schema = @Schema(implementation = TenantTaskResponse.class))),
             @ApiResponse(responseCode = "401", description = "Authentication required", content = @Content(schema = @Schema(implementation = GlobalHttp401ErrorResponse.class))),
@@ -159,6 +169,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<TenantTaskResponse> delete(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @Parameter(description = "Tenant ID", required = true) @PathVariable String id) {
 
         // Tenant tenant = service.getTenantById(id);
@@ -171,7 +182,13 @@ public class TenantController {
     // ------------------------------------------------------------------------
     @PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[SYNC] Update the attributes of tenant", description = "Update an existing tenant's information")
+    @Operation(
+        summary = "[SYNC] Update the attributes of tenant", 
+        description = "Update an existing tenant's information",
+        parameters = {
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully updated tenant", content = @Content(schema = @Schema(implementation = RetrieveTenantResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content(schema = @Schema(implementation = TenantHttp400ErrorResponse.class))),
@@ -182,6 +199,7 @@ public class TenantController {
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Update tenant request body", required = true, content = @Content(schema = @Schema(implementation = UpdateTenantAttributeRequest.class)))
     public ResponseEntity<RetrieveTenantResponse> update(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @Parameter(description = "Tenant ID", required = true) @PathVariable String id,
             @Parameter(description = "Updated tenant details", required = true) @Valid @RequestBody UpdateTenantAttributeRequest request) {
         // if (!tenants.containsKey(id)) {
@@ -201,7 +219,13 @@ public class TenantController {
     // ------------------------------------------------------------------------
     @PatchMapping(value = "/{id}:inactive", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[ASYNC] Make the tenant as inactive", description = "Set the tenant to inactive state.")
+    @Operation(
+        summary = "[ASYNC] Make the tenant as inactive", 
+        description = "Set the tenant to inactive state.",
+        parameters = {
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accept the command of inactive tenant", content = @Content(schema = @Schema(implementation = TenantTaskResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content(schema = @Schema(implementation = TenantHttp400ErrorResponse.class))),
@@ -211,6 +235,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<TenantTaskResponse> setInactive(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @Parameter(description = "Tenant ID", required = true) @PathVariable String id) {
 
         // if (!tenants.containsKey(id)) {
@@ -228,7 +253,13 @@ public class TenantController {
     // ------------------------------------------------------------------------
     @PatchMapping(value = "/{id}:active", consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = {
             MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[ASYNC] Make the tenant as active", description = "Set the tenant to active state.")
+    @Operation(
+        summary = "[ASYNC] Make the tenant as active", 
+        description = "Set the tenant to active state.",
+        parameters = {
+            @Parameter(name = HttpHeaderConstants.X_REQUEST_ID, in = ParameterIn.HEADER, required = false, description = "Unique request ID", example = "3f73cd1a-b580-175c-2542-6ab331d4f696" ),
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accept the command of active tenant", content = @Content(schema = @Schema(implementation = TenantTaskResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content(schema = @Schema(implementation = TenantHttp400ErrorResponse.class))),
@@ -238,6 +269,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<TenantTaskResponse> setActive(
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
             @Parameter(description = "Tenant ID", required = true) @PathVariable String id) {
 
         // if (!tenants.containsKey(id)) {
