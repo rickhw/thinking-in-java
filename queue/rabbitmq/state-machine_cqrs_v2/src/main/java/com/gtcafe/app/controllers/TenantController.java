@@ -26,7 +26,9 @@ public class TenantController {
     private final TenantService tenantService;
     
     @PostMapping
-    public ResponseEntity<Tenant> createTenant(@RequestBody CreateTenantCommand command) {
+    public ResponseEntity<Tenant> createTenant(
+            @RequestBody CreateTenantCommand command
+    ) {
         log.info("Request: [{}]", command);
         return ResponseEntity.ok(tenantService.createTenant(command));
     }
@@ -36,11 +38,11 @@ public class TenantController {
         return ResponseEntity.ok(tenantService.getTenant(id));
     }
     
-    @PutMapping("/{id}/status")
+    @PutMapping("/{id}/{state}")
     public ResponseEntity<Tenant> updateTenantStatus(
             @PathVariable Long id,
-            @RequestBody UpdateTenantStatusCommand command) {
-        command.setTenantId(id);
-        return ResponseEntity.ok(tenantService.updateTenantStatus(command));
+            @PathVariable String state) {
+        
+        return ResponseEntity.ok(tenantService.updateTenantStatus(new UpdateTenantStatusCommand(id, state)));
     }
 }

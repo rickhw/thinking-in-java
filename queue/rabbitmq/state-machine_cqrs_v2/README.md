@@ -5,7 +5,7 @@
 這個程式用 java 17, springboot 3.2, gradle, rabbitmq 作為基礎，請完成完整的程式碼框架，滿足以下條件：
 
 - 資源種類部分：
-    - 有一個叫做 Tenant 的資源，起始與終止狀態為 Initing / Terminated，其他狀態還有 Active / Inactive
+    - 有一個叫做 Tenant 的資源，起始與終止狀態為 Starting / Terminated，其他狀態還有 Active / Inactive
 - 核心狀態機移轉處理架構：
     - 使用 CQRS 方式實作
     - 每個移轉 (Transition) 都透過獨立的 method 處理, 例如從 active to inactive 是一個 method. 所以四個狀態最多有 16 個排列組合，但是同樣狀態不需要處理。
