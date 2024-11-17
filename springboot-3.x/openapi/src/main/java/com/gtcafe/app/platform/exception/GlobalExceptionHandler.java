@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationException(
+    public ResponseEntity<GeneraicErrorResponse> handleValidationException(
             MethodArgumentNotValidException ex, WebRequest request) {
         String errors = ex.getBindingResult()
                 .getFieldErrors()
@@ -28,13 +28,19 @@ public class GlobalExceptionHandler {
         
         log.error("Validation failed: {}", errors);
         
-        ErrorResponse error = ErrorResponse.builder()
+        // ErrorResponse error = ErrorResponse.builder()
+        //         .timestamp(LocalDateTime.now())
+        //         .status(HttpStatus.BAD_REQUEST.value())
+        //         .error("Validation Failed")
+        //         .message(errors)
+        //         .path(request.getDescription(false))
+        //         .build();
+
+        GeneraicErrorResponse error = GeneraicErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error("Validation Failed")
                 .message(errors)
-                .path(request.getDescription(false))
                 .build();
+
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
