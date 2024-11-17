@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.HandlerMethod;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,7 +20,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GeneraicErrorResponse> handleValidationException(
-            MethodArgumentNotValidException ex, WebRequest request) {
+            MethodArgumentNotValidException ex, WebRequest request, HandlerMethod handlerMethod) {
+
+        String controllerName = handlerMethod.getBeanType().getSimpleName();
+        String methodName = handlerMethod.getMethod().getName();
+
+        log.error("controllerName: [{}], methodName: [{}]", controllerName, methodName);
+
         String errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()

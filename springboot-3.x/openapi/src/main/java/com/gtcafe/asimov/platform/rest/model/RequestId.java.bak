@@ -1,0 +1,13 @@
+// package com.gtcafe.asimov.platform.rest.model;
+
+// import io.swagger.v3.oas.annotations.media.Schema;
+
+// @Schema(description = "Request ID")
+// public class RequestId {
+//     private String value;
+
+//     public RequestId(String value) {
+//         this.value = value;
+//     }
+
+// }

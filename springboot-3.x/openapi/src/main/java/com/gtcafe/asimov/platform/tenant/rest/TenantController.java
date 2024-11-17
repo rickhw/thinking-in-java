@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.gtcafe.asimov.platform.rest.message.error.GlobalHttp401ErrorResponse;
 import com.gtcafe.asimov.platform.rest.message.error.GlobalHttp429ErrorResponse;
 import com.gtcafe.asimov.platform.rest.message.error.GlobalHttp500ErrorResponse;
+import com.gtcafe.asimov.platform.rest.model.HttpHeaderConstants;
 import com.gtcafe.asimov.platform.tenant.domain.TenantService;
 import com.gtcafe.asimov.platform.tenant.domain.exception.TenantNotFoundException;
 import com.gtcafe.asimov.platform.tenant.domain.model.Tenant;
@@ -32,6 +34,7 @@ import com.gtcafe.asimov.platform.tenant.rest.message.response.error.TenantHttp5
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -51,7 +54,18 @@ public class TenantController {
 
     // ------------------------------------------------------------------------
     @PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[ASYNC] Create new tenant", description = "Create a new tenant with the provided information")
+    @Operation(
+        summary = "[ASYNC] Create new tenant", 
+        description = "Create a new tenant with the provided information",
+        parameters = {
+            @Parameter(
+                name = HttpHeaderConstants.X_REQUEST_ID,
+                in = ParameterIn.HEADER,
+                required = false,
+                description = "Unique request ID"
+            )
+        }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Accepted the task of created tenant", content = @Content(schema = @Schema(implementation = TenantTaskResponse.class))),
             @ApiResponse(responseCode = "400", description = "Invalid input provided", content = @Content(schema = @Schema(implementation = TenantHttp400ErrorResponse.class))),
@@ -61,9 +75,12 @@ public class TenantController {
     })
     @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Tenant request body", required = true, content = @Content(schema = @Schema(implementation = CreateTenantRequest.class)))
     public ResponseEntity<TenantTaskResponse> create(
-            @Parameter(description = "Tenant details", required = true) @Valid @RequestBody CreateTenantRequest request) {
+            @RequestHeader(value = HttpHeaderConstants.X_REQUEST_ID, required = false) String requestId,
+        //     @RequestHeader(value = HttpHeaderConstants.X_REQUEST_MODE, required = false) RequestMode requestMode,
+        @Parameter(description = "Tenant request payload", required = true) @Valid @RequestBody CreateTenantRequest request) {
 
-        Tenant tenant = new Tenant();
+        Tenant tenant = service.createTenantAsync(request);
+
         TenantTaskResponse response = new TenantTaskResponse();
 
         log.info("Created new tenant with id: {}", tenant.getId());
@@ -72,7 +89,19 @@ public class TenantController {
 
     // ------------------------------------------------------------------------
     @GetMapping(consumes = { MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @Operation(summary = "[SYNC] Query all tenants", description = "Retrieve all tenants with optional filtering")
+    @Operation(
+        summary = "[SYNC] Query all tenants", 
+        description = "Retrieve all tenants with optional filtering",
+        parameters = {
+                @Parameter(
+                    name = "state",
+                    in = ParameterIn.QUERY,
+                    required = false,
+                    description = "Filter tenants by active status",
+                    schema = @Schema(implementation = TenantState.class)
+                )
+            }
+    )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved tenants", content = @Content(schema = @Schema(implementation = QueryTenantResponse.class))),
             @ApiResponse(responseCode = "401", description = "Authentication required", content = @Content(schema = @Schema(implementation = GlobalHttp401ErrorResponse.class))),
@@ -80,7 +109,7 @@ public class TenantController {
             @ApiResponse(responseCode = "500", description = "Internal server error occurred", content = @Content(schema = @Schema(oneOf = { TenantHttp500ErrorResponse.class, GlobalHttp500ErrorResponse.class })))
     })
     public ResponseEntity<QueryTenantResponse> query(
-            @Parameter(description = "Filter tenants by active status", schema = @Schema(implementation = TenantState.class)) @RequestParam(required = false, defaultValue = "ACTIVE") TenantState state) {
+            @RequestParam(required = false, defaultValue = "ACTIVE") TenantState state) {
 
         log.debug("Fetching tenants with filters - state: {}", state);
 
