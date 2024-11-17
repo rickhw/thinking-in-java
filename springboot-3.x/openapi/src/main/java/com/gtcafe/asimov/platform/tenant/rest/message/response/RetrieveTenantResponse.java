@@ -18,9 +18,10 @@ public class RetrieveTenantResponse {
 
     @Schema(
         description = "the kind of the tenant",
-        example = "platform.Tenant"
+        example = "platform.Tenant",
+        defaultValue = TenantKind.NAME
     )
-    private String kind = TenantKind.NAME;
+    private String kind;
 
     @Schema(
         description = "the unique id of the tenant",

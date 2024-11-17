@@ -20,9 +20,22 @@ server:
 springdoc:
   api-docs:
     path: /api-docs
+    enabled: true
   swagger-ui:
     path: /swagger-ui.html
     # operationsSorter: name
+  
+  ## Not Work
+  # openapi:
+  #   info:
+  #     title: "Asimov"
+  #     description: "Asimov"
+  #     version: "v1.0"
+  #   servers:
+  #     - url: "http://localhost:8080"
+  #       description: "Development Server"
+  #     - url: "http://gtcafe.com/api"
+  #       description: "Production Server"
 
 logging:
   level:
