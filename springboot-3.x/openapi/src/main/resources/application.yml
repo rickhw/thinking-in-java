@@ -48,10 +48,6 @@ app:
     version: v1
     title: Asimov
     description: Asimov API
-    contact:
-      name: GTCAFE
-      url: https://gtcafe.com
-      email:
 
 
     # servers:

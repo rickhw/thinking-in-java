@@ -13,28 +13,23 @@ import io.swagger.v3.oas.models.servers.Server;
 @Configuration
 public class OpenApiConfig {
 
-    @Value("${app.openapi.name}")
-    private String applicationName;
+    @Value("${app.openapi.title}")
+    private String openapiTitle;
 
     @Value("${app.openapi.description}")
     private String description;
 
     @Value("${app.openapi.version}")
-    private String applicationVersion;
+    private String openapiVersion;
 
     @Bean
     public OpenAPI customOpenAPI() {
-        // List<Server> servers = new ArrayList<>();
-        // servers.add(new Server().url(serverUrl).description("Primary Server"));
-
-        // 如果有額外的 URL，可以在這裡加入，例如其他環境
-        // servers.add(new Server().url("http://api.example.com").description("Production Server"));
 
         return new OpenAPI()
                 .info(new Info()
-                        .title(applicationName)
+                        .title(openapiTitle)
                         .description(description)
-                        .version(applicationVersion))
+                        .version(openapiVersion))
                 .servers(Arrays.asList(
                         new Server().url("http://localhost:8080").description("Development Server"),
                         new Server().url("http://api.example.com").description("Production Server")));
