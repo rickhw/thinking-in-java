@@ -8,10 +8,10 @@ import com.gtcafe.asimov.platform.tenant.domain.exception.InvalidAddressExceptio
 import com.gtcafe.asimov.platform.tenant.domain.exception.InvalidEmailException;
 import com.gtcafe.asimov.platform.tenant.domain.exception.QuotaExceededException;
 import com.gtcafe.asimov.platform.tenant.rest.message.request.UpdateTenantAttributeRequest;
-import com.gtcafe.asimov.system.validation.ValidationStrategy;
+import com.gtcafe.asimov.system.validation.IValidationStrategy;
 
 @Component
-public class UpdateTenantAttributeValidationStrategy implements ValidationStrategy<UpdateTenantAttributeRequest> {
+public class UpdateTenantAttributeValidationStrategy implements IValidationStrategy<UpdateTenantAttributeRequest> {
     
     private static final Set<String> VALID_PLANS = Set.of("a", "b", "c");
     

@@ -22,7 +22,7 @@ public class ValidationAspect {
     
     @Before("@annotation(validateRequest) && args(request,..)")
     public void validate(JoinPoint joinPoint, ValidateRequest validateRequest, Object request) {
-        ValidationStrategy<?> strategy = validationStrategyFactory.getStrategy(request.getClass());
+        IValidationStrategy<?> strategy = validationStrategyFactory.getStrategy(request.getClass());
         
         if (validateRequest.validatePayload()) {
             executeValidation(strategy::validatePayload, request);

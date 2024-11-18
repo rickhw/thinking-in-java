@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ValidationStrategyFactory {
     
-    private final Map<Class<?>, ValidationStrategy<?>> strategies;
+    private final Map<Class<?>, IValidationStrategy<?>> strategies;
     
-    public ValidationStrategyFactory(List<ValidationStrategy<?>> strategies) {
+    public ValidationStrategyFactory(List<IValidationStrategy<?>> strategies) {
         this.strategies = strategies.stream()
             .collect(Collectors.toMap(
                 strategy -> getStrategyType(strategy.getClass()),
@@ -22,19 +22,19 @@ public class ValidationStrategyFactory {
     }
     
     @SuppressWarnings("unchecked")
-    public <T> ValidationStrategy<T> getStrategy(Class<T> requestType) {
-        ValidationStrategy<?> strategy = strategies.get(requestType);
+    public <T> IValidationStrategy<T> getStrategy(Class<T> requestType) {
+        IValidationStrategy<?> strategy = strategies.get(requestType);
         if (strategy == null) {
             throw new IllegalArgumentException("No validation strategy found for type: " + requestType);
         }
-        return (ValidationStrategy<T>) strategy;
+        return (IValidationStrategy<T>) strategy;
     }
     
     private Class<?> getStrategyType(Class<?> strategyClass) {
         return Arrays.stream(strategyClass.getGenericInterfaces())
             .filter(type -> type instanceof ParameterizedType)
             .map(type -> (ParameterizedType) type)
-            .filter(type -> type.getRawType().equals(ValidationStrategy.class))
+            .filter(type -> type.getRawType().equals(IValidationStrategy.class))
             .map(type -> (Class<?>) type.getActualTypeArguments()[0])
             .findFirst()
             .orElseThrow(() -> new IllegalStateException("Cannot determine strategy type"));

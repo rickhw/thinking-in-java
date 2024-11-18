@@ -8,10 +8,10 @@ import com.gtcafe.asimov.platform.tenant.domain.exception.InvalidNameException;
 import com.gtcafe.asimov.platform.tenant.domain.exception.InvalidPlanException;
 import com.gtcafe.asimov.platform.tenant.domain.exception.QuotaExceededException;
 import com.gtcafe.asimov.platform.tenant.rest.message.request.CreateTenantRequest;
-import com.gtcafe.asimov.system.validation.ValidationStrategy;
+import com.gtcafe.asimov.system.validation.IValidationStrategy;
 
 @Component
-public class CreateTenantValidationStrategy implements ValidationStrategy<CreateTenantRequest> {
+public class CreateTenantValidationStrategy implements IValidationStrategy<CreateTenantRequest> {
     
     private static final Set<String> VALID_PLANS = Set.of("a", "b", "c");
     
