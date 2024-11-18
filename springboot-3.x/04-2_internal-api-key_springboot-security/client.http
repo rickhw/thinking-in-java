@@ -1,0 +1,14 @@
+### -- normal
+GET /internal/health
+Host: localhost:8080
+X-API-KEY: service1-api-key
+
+### -- invalid
+GET /internal/health
+Host: localhost:8080
+Content-Type: application/json
+
+### -- normal
+GET /internal/health
+Host: localhost:8080
+X-API-KEY: service1-api-k2ey
