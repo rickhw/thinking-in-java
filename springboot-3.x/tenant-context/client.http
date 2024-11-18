@@ -1,0 +1,17 @@
+
+### -- happy path
+GET /api/tenants
+Content-Type: application/json
+Host: localhost:8080
+tenantId: tenant-123
+appName: my-app
+roleName: admin
+
+
+### -- miss required header tenantId
+GET /api/tenants
+Content-Type: application/json
+Host: localhost:8080
+appName: my-app
+roleName: admin
+

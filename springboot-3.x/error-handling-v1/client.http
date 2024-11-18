@@ -1,0 +1,38 @@
+## -- normal
+POST /api/tenants
+Host: localhost:8080
+Content-Type: application/json
+tenantId: tenant-123
+appName: my-app
+roleName: admin
+
+{
+    "name": "rick123",
+    "plan": "a"
+}
+
+### 錯誤的請求（無效的名稱）
+POST /api/tenants
+Host: localhost:8080
+Content-Type: application/json
+tenantId: tenant-123
+appName: my-app
+roleName: admin
+
+{
+    "name": "Rick@123",
+    "plan": "a"
+}
+
+### 錯誤的請求（無效的計劃）
+POST /api/tenants
+Host: localhost:8080
+Content-Type: application/json
+tenantId: tenant-123
+appName: my-app
+roleName: admin
+
+{
+    "name": "rick123",
+    "plan": "d"
+}
