@@ -1,0 +1,44 @@
+### 創建有效的 Tenant
+POST /api/tenants
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "name": "Test Tenant",
+    "email": "test@example.com",
+    "description": "A test tenant for validation"
+}
+
+### 創建無效的 Tenant（錯誤的 Email）
+POST /api/tenants
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "name": "",
+    "email": "invalid-email",
+    "description": "Invalid tenant data"
+}
+
+### 獲取所有 Tenants
+GET /api/tenants
+Host: localhost:8080
+
+### 根據 ID 獲取 Tenant
+GET /api/tenants/1
+Host: localhost:8080
+
+### 更新 Tenant
+PUT /api/tenants/1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+    "name": "Updated Tenant Name",
+    "email": "updated@example.com",
+    "description": "Updated tenant description"
+}
+
+### 刪除 Tenant
+DELETE /api/tenants/1
+Host: localhost:8080
