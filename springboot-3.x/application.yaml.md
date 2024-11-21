@@ -56,6 +56,3 @@ server:
       enabled: false
 ```
 
-
-## 修改 banner
-
