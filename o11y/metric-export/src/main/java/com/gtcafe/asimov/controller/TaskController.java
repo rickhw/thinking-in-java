@@ -25,6 +25,9 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    @Timed(value = "task.creation.time", 
+        percentiles = {0.5, 0.95, 0.99}, 
+        description = "Time taken to create a task")
     @PostMapping
     @Timed(value = "tasks.creation.time", description = "Time taken to create task")
     public Task createTask(@RequestBody Task task) {
