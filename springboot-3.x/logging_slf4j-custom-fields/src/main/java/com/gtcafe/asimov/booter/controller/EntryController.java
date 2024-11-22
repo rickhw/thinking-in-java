@@ -18,8 +18,7 @@ public class EntryController {
     Logger logger = LoggerFactory.getLogger(EntryController.class);
 
     @GetMapping(value = "/", produces = { "text/plain" })
-    public ResponseEntity<String> getRootMessage(
-            HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity<String> getRootMessage() {
             
         logger.info("Entry Controller");
 

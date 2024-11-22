@@ -20,7 +20,3 @@ output:
 ```
 
 
-
-## Biz Data Point
-
-

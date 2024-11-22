@@ -2,8 +2,8 @@
 <configuration>
 
     <!-- 設定 log 檔案儲存路徑 -->
-    <property name="LOG_PATH" value="/var/log/appName" />
-    <property name="LOG_NAME_PATTERN" value="%d{yyyy-MM-dd}.log" />
+    <!-- <property name="LOG_PATH" value="/var/log/appName" /> -->
+    <!-- <property name="LOG_NAME_PATTERN" value="%d{yyyy-MM-dd}.log" /> -->
     
     <!-- 設定 log 格式 -->
     <encoder>
@@ -13,12 +13,12 @@
     <!-- 定義 ROOT logger 並輸出到檔案 -->
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- log 檔案位置與命名 -->
-        <file>${LOG_PATH}/${LOG_NAME_PATTERN}</file>
+        <file>${LOG_NAME_PATTERN}</file>
         
         <!-- 設定日誌滾動策略，設定檔案名稱和滾動規則 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- 保留半年內的 log -->
-            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>180</maxHistory>
             <!-- 可選：設定單檔案大小限制 -->
             <totalSizeCap>5GB</totalSizeCap>

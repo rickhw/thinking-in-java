@@ -3,10 +3,7 @@ package com.gtcafe.asimov.booter.filter;
 import java.io.IOException;
 import java.util.UUID;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +20,6 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 @Order(1)
 public class GlobalFilter implements Filter {
-
-    // private static final Logger logger = LoggerFactory.getLogger(GlobalFilter.class);
 
     // ref: https://stackoverflow.com/questions/29910074/how-to-get-client-ip-address-in-java-httpservletrequest
     private static final String[] HEADERS_TO_TRY = {
