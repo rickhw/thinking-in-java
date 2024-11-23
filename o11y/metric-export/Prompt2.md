@@ -190,12 +190,12 @@ curl http://localhost:8080/api/tasks
 curl http://localhost:8080/api/tasks/1
 
 # 更新任務狀態
-curl -X PUT http://localhost:8080/api/tasks/1/status \
+curl -X PUT http://localhost:8080/api/tasks/3/status \
   -H "Content-Type: application/json" \
   -d '"COMPLETED"'
 
 # 刪除任務
-curl -X DELETE http://localhost:8080/api/tasks/1
+curl -X DELETE http://localhost:8080/api/tasks/3
 ```
 
 這個範例提供了以下功能：
