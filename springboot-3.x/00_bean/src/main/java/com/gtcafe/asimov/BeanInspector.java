@@ -51,7 +51,8 @@ public class BeanInspector {
 
             // 輸出結果
             // System.out.println(beanName + ": " + beanInfo.toString());
-            System.out.println("  - [" + beanName + "]");
+            System.out.println("  - [" + beanName + "]"
+            );
         }
     }
 }
