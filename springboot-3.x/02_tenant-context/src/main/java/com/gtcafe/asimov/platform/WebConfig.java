@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addInterceptors(InterceptorRegistry registry) {
+    public void addInterceptors( InterceptorRegistry registry) {
         registry.addInterceptor(tenantContextInterceptor)
                 .addPathPatterns("/**")  // 攔截所有請求
                 .excludePathPatterns("/health", "/metrics");  // 排除

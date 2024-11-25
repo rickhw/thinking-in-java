@@ -32,19 +32,19 @@ public class TenantController {
     @Autowired
     private TenantService service;
 
-    @PostMapping(
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
-    public ResponseEntity<TenantTaskResponse> create(@RequestBody CreateTenantRequest request) {
+    // @PostMapping(
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
+    // public ResponseEntity<TenantTaskResponse> create(@RequestBody CreateTenantRequest request) {
         
-        Tenant tenant = service.createTenantAsync(request);
+    //     Tenant tenant = service.createTenantAsync(request);
 
-        TenantTaskResponse response = new TenantTaskResponse();
+    //     TenantTaskResponse response = new TenantTaskResponse();
 
-        log.info("Created new tenant with id: {}", tenant.getId());
-        return ResponseEntity.ok(response);
-    }
+    //     log.info("Created new tenant with id: {}", tenant.getId());
+    //     return ResponseEntity.ok(response);
+    // }
 
 
     // ------------------------------------------------------------------------
@@ -56,89 +56,85 @@ public class TenantController {
         System.out.println("Service - AppName: " + context.getAppName());
         System.out.println("Service - RoleName: " + context.getRoleName());
 
-        // QueryTenantResponse response = QueryTenantResponse.builder()
-        //         // .tenants(filteredTenants)
-        //         .build();
-
         return ResponseEntity.ok("ok");
     }
 
-    // ------------------------------------------------------------------------
-    @GetMapping(
-        value = "/{id}", 
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
-    public ResponseEntity<RetrieveTenantResponse> retrieve(@PathVariable String id) {
-        log.debug("Fetching tenant with id: {}", id);
+    // // ------------------------------------------------------------------------
+    // @GetMapping(
+    //     value = "/{id}", 
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
+    // public ResponseEntity<RetrieveTenantResponse> retrieve(@PathVariable String id) {
+    //     log.debug("Fetching tenant with id: {}", id);
 
-        Tenant tenant = service.getTenantById(id);
+    //     Tenant tenant = service.getTenantById(id);
 
-        RetrieveTenantResponse response = RetrieveTenantResponse.builder()
-                // .tenant(tenant)
-                .build();
+    //     RetrieveTenantResponse response = RetrieveTenantResponse.builder()
+    //             // .tenant(tenant)
+    //             .build();
 
-        return ResponseEntity.ok(response);
-    }
+    //     return ResponseEntity.ok(response);
+    // }
 
 
-    // ------------------------------------------------------------------------
-    @DeleteMapping(
-        value = "/{id}", 
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
-    public ResponseEntity<TenantTaskResponse> delete( @PathVariable String id) {
+    // // ------------------------------------------------------------------------
+    // @DeleteMapping(
+    //     value = "/{id}", 
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
+    // public ResponseEntity<TenantTaskResponse> delete( @PathVariable String id) {
 
-        // Tenant tenant = service.getTenantById(id);
-        log.info("Deleted tenant with id: {}", id);
+    //     // Tenant tenant = service.getTenantById(id);
+    //     log.info("Deleted tenant with id: {}", id);
 
-        TenantTaskResponse response = new TenantTaskResponse();
-        return ResponseEntity.ok(response);
-    }
+    //     TenantTaskResponse response = new TenantTaskResponse();
+    //     return ResponseEntity.ok(response);
+    // }
 
-    // ------------------------------------------------------------------------
-    @PutMapping(
-        value = "/{id}", 
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
-    public ResponseEntity<RetrieveTenantResponse> update(@PathVariable String id, @Valid @RequestBody UpdateTenantAttributeRequest request) {
+    // // ------------------------------------------------------------------------
+    // @PutMapping(
+    //     value = "/{id}", 
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
+    // public ResponseEntity<RetrieveTenantResponse> update(@PathVariable String id, @Valid @RequestBody UpdateTenantAttributeRequest request) {
 
-        RetrieveTenantResponse tenant = RetrieveTenantResponse.builder()
-                // .tenant(tenant)
-                .build();
+    //     RetrieveTenantResponse tenant = RetrieveTenantResponse.builder()
+    //             // .tenant(tenant)
+    //             .build();
 
-        log.info("Updated tenant with id: {}", id);
-        return ResponseEntity.ok(tenant);
-    }
+    //     log.info("Updated tenant with id: {}", id);
+    //     return ResponseEntity.ok(tenant);
+    // }
 
-    // ------------------------------------------------------------------------
-    @PatchMapping(
-        value = "/{id}:inactive", 
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
-    public ResponseEntity<TenantTaskResponse> setInactive(@PathVariable String id) {
+    // // ------------------------------------------------------------------------
+    // @PatchMapping(
+    //     value = "/{id}:inactive", 
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
+    // public ResponseEntity<TenantTaskResponse> setInactive(@PathVariable String id) {
 
-        log.info("Updated tenant with id: {}", id);
+    //     log.info("Updated tenant with id: {}", id);
 
-        TenantTaskResponse response = new TenantTaskResponse();
-        return ResponseEntity.ok(response);
-    }
+    //     TenantTaskResponse response = new TenantTaskResponse();
+    //     return ResponseEntity.ok(response);
+    // }
 
-    // ------------------------------------------------------------------------
-    @PatchMapping(
-        value = "/{id}:active", 
-        consumes = { MediaType.APPLICATION_JSON_VALUE }, 
-        produces = { MediaType.APPLICATION_JSON_VALUE }
-    )
+    // // ------------------------------------------------------------------------
+    // @PatchMapping(
+    //     value = "/{id}:active", 
+    //     consumes = { MediaType.APPLICATION_JSON_VALUE }, 
+    //     produces = { MediaType.APPLICATION_JSON_VALUE }
+    // )
 
-    public ResponseEntity<TenantTaskResponse> setActive(@PathVariable String id) {
+    // public ResponseEntity<TenantTaskResponse> setActive(@PathVariable String id) {
 
-        log.info("Updated tenant with id: {}", id);
+    //     log.info("Updated tenant with id: {}", id);
 
-        TenantTaskResponse response = new TenantTaskResponse();
-        return ResponseEntity.ok(response);
-    }
+    //     TenantTaskResponse response = new TenantTaskResponse();
+    //     return ResponseEntity.ok(response);
+    // }
 }
