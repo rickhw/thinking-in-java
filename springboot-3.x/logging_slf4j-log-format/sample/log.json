@@ -1,0 +1,12 @@
+{
+    "timestamp": "2024-05-13T19:32:54.871",
+    "scheme": "http",
+    "method": "GET",
+    "uri": "/",
+    "clientIp": "0:0:0:0:0:0:0:1",
+    "level": "INFO",
+    "message": "Entry Controller",
+    "thread": "http-nio-8080-exec-1",
+    "class": "c.g.r.b.controller.EntryController",
+    "requestId": "a65fa626-0dcd-4a94-b55a-5638a68d9c62"
+}
