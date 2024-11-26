@@ -19,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 @Order(1)
-public class GlobalFilter implements Filter {
+public class MdcHttpRequestFilter implements Filter {
 
     // ref: https://stackoverflow.com/questions/29910074/how-to-get-client-ip-address-in-java-httpservletrequest
     private static final String[] HEADERS_TO_TRY = {
