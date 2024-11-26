@@ -1,0 +1,75 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+}
+
+group = 'com.gtcafe.asimov'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+def buildVersionPropsDir = layout.buildDirectory.dir('generated/resources/main')
+
+
+// 自定义 task 用于生成版本信息
+task generateVersionProperties {
+    doLast {
+        // def versionPropertiesFile = file('build/generated/resources/mainversion.properties')
+        def versionPropertiesFile = new File(buildVersionPropsDir.get().asFile, 'version.properties')
+    
+        outputs.file versionPropertiesFile
+        versionPropertiesFile.parentFile.mkdirs()
+        
+
+        def timestamp = new Date().format('yyyyMMdd_HHmm')
+        
+        // 从 Git 获取最新的 commit hash
+        def gitHash = 'unknown'
+        try {
+            def gitProcess = ['git', 'rev-parse', '--short', 'HEAD'].execute()
+            gitHash = gitProcess.text.trim()
+        } catch (Exception e) {
+            // 如果获取 Git hash 失败，保持 'unknown'
+        }
+
+        def props = [
+            'build.githash': gitHash,
+            'build.timestamp': timestamp,
+            'build.os.name': System.properties['os.name'],
+            'build.os.version': System.properties['os.version'],
+            'build.java.version': System.properties['java.version'],
+            'build.java.provider': System.properties['java.vendor']
+        ]
+
+        versionPropertiesFile.withWriter { writer ->
+            props.each { key, value ->
+                writer.writeLine("${key}=${value}")
+            }
+        }
+    }
+}
+
+// 在 processResources 前执行
+processResources.dependsOn generateVersionProperties
+
+// 自定义 jar 名称
+jar {
+    archiveFileName = "${project.name}-${project.version}-${new Date().format('yyyyMMdd_HHmm')}.jar"
+}
+
+bootJar {
+    archiveFileName = "${project.name}-${project.version}-${new Date().format('yyyyMMdd_HHmm')}.jar"
+}

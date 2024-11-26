@@ -1,0 +1,90 @@
+# -----------------------------------------------------------------------------
+# Server (Tomcat)
+# -----------------------------------------------------------------------------
+## Product Metadata
+server:
+  port: ${port:8080}
+
+  # Disable Whitelabel Error Page
+  # see: https://websparrow.org/spring/how-to-resolve-whitelabel-error-page-in-spring-boot
+  error:
+    whitelabel:
+      enabled: false
+
+
+# -----------------------------------------------------------------------------
+# Sprinboot 3.1
+# -----------------------------------------------------------------------------
+## see: https://stackoverflow.com/questions/26585959/how-to-disable-spring-boot-logo-in-stdout
+#spring.main.banner-mode=off
+spring:
+  application:
+    name: @pom.artifactId@
+  datasource:
+    url: jdbc:mysql://localhost:3306/rws_booter?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: medusa
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+
+      # https://stackoverflow.com/questions/51136693/how-to-check-hikaricp-connection-pooling-is-working-or-not-in-java
+      # lsof -nP -i :3306 -sTCP:ESTABLISHED
+      # ss -46 -np state established dport = :3306 | grep 'java' | sort -r -k 3,3 | nl
+      # netstat -ant | grep 3306
+      # hikari:
+      #   maximumPoolSize: 5
+      #   minimumIdle: 5
+      ddl-auto: update
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: medusa
+
+  # https://www.baeldung.com/spring-data-redis-properties
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
+      # password: mypass
+      # timeout: 60000
+
+# -----------------------------------------------------------------------------
+# SpringDoc
+# -----------------------------------------------------------------------------
+# springdoc.show-actuator: true
+springdoc:
+  api-docs:
+    enabled: true
+    path: /openapi.yaml
+
+  #packagesToScan: com.package1, com.package2
+  #pathsToMatch: /v1, /api/balance/**
+
+  swagger-ui:
+    enabled: true
+#    path: /swagger-ui-custom.html
+#    operationsSorter: method
+
+# -----------------------------------------------------------------------------
+# Security: JWT
+# -----------------------------------------------------------------------------
+# gtcafe.app.jwtCookieName=gtcafe
+# gtcafe.app.jwtSecret= ======================Gtcafe=Spring===========================
+# gtcafe.app.jwtExpirationMs=86400000
+app:
+  rabbitmq:
+    exchange: app.exchange1.topic1
+    queue: app.queue
+    routingkey: app.routingkey
+
+
+# -----------------------------------------------------------------------------
+# logback
+# -----------------------------------------------------------------------------
+logging:
+  path: ./logs
+  level.com.gtcafe.rws.booter: INFO

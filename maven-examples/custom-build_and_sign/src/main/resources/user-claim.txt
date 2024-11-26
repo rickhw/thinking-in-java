@@ -1,0 +1,5 @@
+::: User Info :::
+TenantId: [<TenantName>] (<TenandId>)
+UserName: [<UserName>] (<UserId>)
+RoleName: [<RoleName>] (<RoleId>)
+
