@@ -13,21 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
-// @ref: https://howtodoinjava.com/spring-boot2/read-file-from-resources/
 @Configuration
 public class Utils {
 
     private static final Logger logger = LoggerFactory.getLogger(Utils.class.getName());
 
-    // approach # 1, not work
-    // @Autowired
-    // private ResourceLoader _resourceLoader;
-
-    // // approach # 2, not work
-    // @Autowired
-    // private ApplicationContext ctx;
-
-    // // approach # 3, not work
     @Value("classpath:slogan.txt")
     Resource _slogan;
 
@@ -37,43 +27,8 @@ public class Utils {
     @Value("classpath:user-claim.txt")
     Resource _userClaim;
 
-    @Value("classpath:release-notes.txt")
-    Resource _releaseNotes;
-
     @Autowired
     private Releng releng;
-
-    // private static String CLASSPATH = "classpath:slogan.txt";
-    // private static String FILE_PATH = "file:slogan.txt";
-
-    // public String getSlogan() {
-    // String content = "";
-    // try {
-    // // approach # 1
-    // // logger.info("approach # 1");
-    // // Resource resource = _resourceLoader.getResource(CLASSPATH);
-
-    // // _resource = new ClassPathResource("slogan.txt");
-
-    // // logger.info("approach # 2");
-    // // Resource res = _resourceLoader.getResource(CLASSPATH);
-    // // File file = res.getFile();
-    // // content = new String(Files.readAllBytes(file.toPath()));
-
-    // // logger.info("approach # 3");
-    // // Resource resource = ctx.getResource(CLASSPATH);
-
-    // File file = _resource.getFile();
-
-    // System.out.println("File Found : " + file.exists());
-
-    // content = new String(Files.readAllBytes(file.toPath()));
-
-    // } catch (IOException e) {
-    // logger.error(e.getMessage());
-    // }
-    // return content;
-    // }
 
     private String getFileContent(Resource resource) {
         try {
@@ -126,10 +81,5 @@ public class Utils {
         return buf.toString();
     }
 
-    public String releaseNotes() {
-        String content = getFileContent(_releaseNotes);
-
-        return content;
-    }
 
 }

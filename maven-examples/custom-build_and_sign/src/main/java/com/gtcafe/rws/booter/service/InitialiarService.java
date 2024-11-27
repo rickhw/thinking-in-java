@@ -1,10 +1,7 @@
 package com.gtcafe.rws.booter.service;
 
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -21,13 +18,6 @@ public class InitialiarService implements CommandLineRunner, ApplicationRunner  
 
 	@Autowired
     private Utils utils;
-
-    @Autowired
-    private DataSource dataSource;
-
-    @Autowired
-	private AmqpTemplate rabbitTemplate;
-
 
     private final Environment env;
 
@@ -46,15 +36,8 @@ public class InitialiarService implements CommandLineRunner, ApplicationRunner  
     @Override
     public void run(ApplicationArguments args) throws Exception {
         logger.info("ApplicationRunner.run()");
-        // 1. show environment variables of application
 
-        // 2. show config path from ...
-        System.out.println(String.format("Datasource: [%s]", dataSource));
-        System.out.println(String.format("Message: [%s]", rabbitTemplate));
-
-        // 3. show slogan, and tell user the application is ready.
         System.out.println(utils.slogan());
-
     }
 
 }
