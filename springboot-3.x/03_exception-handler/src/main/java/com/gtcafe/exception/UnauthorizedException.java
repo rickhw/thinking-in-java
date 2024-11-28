@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.exception;
 
 public class UnauthorizedException extends RuntimeException {
     public UnauthorizedException(String message) {

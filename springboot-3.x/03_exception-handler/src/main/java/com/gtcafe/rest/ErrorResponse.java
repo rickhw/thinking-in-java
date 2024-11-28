@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.rest;
 
 import java.time.LocalDateTime;
 import java.util.List;
