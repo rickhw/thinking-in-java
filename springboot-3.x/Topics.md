@@ -14,8 +14,13 @@
     - crud
     - exception
 - rdbms
-    - JPA
+    - JPP
     - repository
+    - hibernate
+    - jooq: https://www.jooq.org/
+- data
+    - neo4j (graphic)
+    - elasticsearch
 - cache
 - batch jobs
 - queue
@@ -36,5 +41,11 @@
 - api gateway
     - [ ] version control
 - metrics
+    - health check
+    - actuator: db, cache
+- go live
+    - jvm
+    - performance
+    - OOM
 
 
