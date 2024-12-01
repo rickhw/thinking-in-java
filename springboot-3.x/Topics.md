@@ -47,11 +47,8 @@
     - 實作一個 transaction，for access both cache, queue, database.
 - api gateway
     - [ ] version control
-- go live
-    - jvm
-    - performance
-    - OOM
 - cqrs
+- cache pattern
 
 
 ## advanced 2 - o11y
@@ -62,6 +59,13 @@
     - actuator: version
 - tracing
 
+
+## advanced 3 - go live and performance
+
+- jvm
+- performance
+- OOM
+- stress
 
 ## advanced 2 - AWS
 
