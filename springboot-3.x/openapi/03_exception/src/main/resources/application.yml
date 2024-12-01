@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+
+# -----------------------------------------------------------------------------
+# Sprinboot
+# -----------------------------------------------------------------------------
+# spring:
+
+#   datasource:
+#     url: jdbc:mysql://localhost:3306/asimov?allowPublicKeyRetrieval=true&useSSL=false
+#     username: root
+#     password: password
+
+#   jpa:
+#     hibernate:
+#       dialect: org.hibernate.dialect.MySQLDialect
+#       ddl-auto: update
+
+springdoc:
+  api-docs:
+    enabled: true
+
+  ## http://localhost:8080/swagger-ui/index.html
+  swagger-ui:
+    path: /swagger-ui.html
+    # operationsSorter: name
+  
+  ## Not Work
+  # openapi:
+  #   info:
+  #     title: "Asimov"
+  #     description: "Asimov"
+  #     version: "v1.0"
+  #   servers:
+  #     - url: "http://localhost:8080"
+  #       description: "Development Server"
+  #     - url: "http://gtcafe.com/api"
+  #       description: "Production Server"
+
+logging:
+  level:
+    com.gtcafe.app: DEBUG
+
+  
+app:
+  openapi:
+    version: v1
+    title: Asimov
+    description: Asimov API
+
+
+    # servers:
+    #   - url: "http://localhost:8080"
+    #     description: "Development Server"
+    #   - url: "http://gtcafe.com/api"
+    #     des
