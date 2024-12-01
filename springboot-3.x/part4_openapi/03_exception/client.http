@@ -1,0 +1,23 @@
+@HOST=http://localhost:8080
+
+### --- Fail Case#1: Create Tenant ---
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1",
+  "description": "Tenant 1"
+}
+
+
+### --- Fail Case#2: Create Tenant ---
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1",
+  "email": "tenant1",
+  "description": "Tenant 1"
+}
+
+
