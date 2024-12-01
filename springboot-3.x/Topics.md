@@ -22,9 +22,9 @@
     - [ ] rdbms as queue
     - [ ] redis as queue
     - [ ] rabbit as queue    
+- logging
 
 ## advanced
-
 
 - rest api
     - openapi docs
@@ -35,3 +35,6 @@
     - 實作一個 transaction，for access both cache, queue, database.
 - api gateway
     - [ ] version control
+- metrics
+
+

@@ -28,6 +28,7 @@ public class TenantExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 // .error("Not Found")
+                .errorCode("TenantException")
                 .message(ex.getMessage())
                 .path(request.getDescription(false))
                 .build();
