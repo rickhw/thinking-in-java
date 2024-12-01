@@ -1,0 +1,6 @@
+@HOST=http://localhost:8080
+
+
+### HttpMediaTypeNotSupportedException
+POST {{HOST}}/api/tenants
+

@@ -19,16 +19,23 @@ public class TenantService {
 
     private HashMap<String, Tenant> tenants = new HashMap<>();
 
-    public Tenant createTenantAsync(CreateTenantRequest tenant) {
+    public Tenant createTenantAsync(CreateTenantRequest request) {
 
-        // tenants.put(tenant, null)
         // 1. validate input
-        throw new TenantException("INPUT_INVALID");
+        if (!request.getName().matches("^[a-zA-Z0-9-]+$")) {
+            throw new TenantException("INVALID_TENANT_NAME");
+        }
+
+        if (!request.getEmail().matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$")) {
+            throw new TenantException("INVALID_EMAIL_FORMAT");
+        }
+
 
         // 2. validate association
         // throw new TenantException("INVALID_ASSOCIATION");
 
         // return tenantRepository.findAll();
+        throw new NotImplementedException();
     }
 
 

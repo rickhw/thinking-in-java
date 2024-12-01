@@ -1,0 +1,35 @@
+@HOST=http://localhost:8080
+
+### --- Fail Case#1: 400 Bad Request
+### validation error: INVALID_TENANT_NAME
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "\/ 343",
+  "email": "tenant1@abc.com",
+  "description": "Tenant 1"
+}
+
+
+### --- Fail Case#1: 400 Bad Request
+### validation error: INVALID_EMAIL
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1",
+  "email": "tenant1",
+  "description": "Tenant 1"
+}
+
+### --- Fail Case#3: 400 Bad Request
+### multiple validation errors: INVALID_TENANT_NAME, INVALID_EMAIL
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1",
+  "email": "tenant1",
+  "description": "Tenant 1"
+}

@@ -1,0 +1,13 @@
+@HOST=http://localhost:8080
+
+### --- Fail Case#1: 400 Bad Request
+### validation error: for
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "rick",
+  "email": "rick@abc.com",
+  "description": "Tenant 1"
+}
+

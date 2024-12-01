@@ -1,0 +1,32 @@
+@HOST=http://localhost:8080
+
+
+### --- Fail Case#1-1: expect: 400 Bad Request
+### missing required field
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1",
+  "description": "Tenant 1"
+}
+
+### --- Fail Case#1-2: expect: 400 Bad Request
+### missing required field
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "email": "tenant1",
+  "description": "Tenant 1"
+}
+
+### --- Fail Case#1-3: expect: 400 Bad Request
+### missing required field
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "description": "Tenant 1"
+}
+

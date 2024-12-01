@@ -19,7 +19,10 @@ public class TenantExceptionHandler {
 
     @ExceptionHandler(TenantException.class)
     public ResponseEntity<ExceptionModel> handleTenantException(TenantException ex, WebRequest request) {
-        log.error("handleTenantException hrown by TenantService", ex);
+        // log.error("handleTenantException thrown by TenantService", ex);
+        log.error("exceptions thrown by TenantService, errorNo: {}", ex.getErrorNo());
+
+        // ex.getErrorNo()
         
         ExceptionModel error = ExceptionModel.builder()
                 .timestamp(LocalDateTime.now())
@@ -29,7 +32,7 @@ public class TenantExceptionHandler {
                 .path(request.getDescription(false))
                 .build();
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }

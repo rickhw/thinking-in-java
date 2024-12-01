@@ -1,0 +1,42 @@
+@HOST=http://localhost:8080
+
+
+### JsonParseException
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+asdfer
+234
+
+### JsonMappingException
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+)((&&
+
+
+### JsonMappingException
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  ,
+}
+
+### JsonMappingException
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1"
+  "description": "Tenant 1"
+}
+
+### JsonMappingException
+POST {{HOST}}/api/tenants
+Content-Type: application/json
+
+{
+  "name": "tenant1,
+  "description": "Tenant 1"
+}
