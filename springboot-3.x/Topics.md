@@ -4,6 +4,9 @@
 
 - @Bean, @Component, @Service
 - @Configuration
+    - secret
+    - enum as config
+- Spring Profile
 - Build
 - Deploy
 - container, dockerfile
@@ -24,7 +27,7 @@
 ## essential 2: data access
 
 - rdbms
-    - JPP
+    - JPA
     - repository
     - hibernate
     - jooq: https://www.jooq.org/
@@ -36,11 +39,10 @@
 
 ## essential 3 - go live and performance
 
-- jvm
+- jvm / OOM
 - performance
-- OOM
-
 - stress
+- 火焰圖
 
 ## Advanced 1
 

@@ -1,0 +1,4 @@
+@HOST=http://localhost:8080
+
+GET {{HOST}}/api/regions/US_EAST_1/ec2/instances
+Content-Type: application/json
