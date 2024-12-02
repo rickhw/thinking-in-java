@@ -1,5 +1,18 @@
 
 
+## development
+
+1. linux
+    - docker
+2. sdk
+    - java
+    - gradle
+    - maven
+3. ide
+4. client: 
+    - browser, rest client, postman
+    - db client
+
 ## essential 0: springboot
 
 - @Bean, @Component, @Service
