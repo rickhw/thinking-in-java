@@ -1,6 +1,6 @@
 
 
-## springboot essential
+## essential 0: springboot
 
 - @Bean, @Component, @Service
 - @Configuration
@@ -8,7 +8,7 @@
 - Deploy
 - container, dockerfile
 
-## essential
+## essential 1 - development
 
 - test
     - [ ] unit test
@@ -16,27 +16,44 @@
 - exception handler
 - rest api
     - crud
+    - pagination
     - exception
+- logging
+- rest client
+
+## essential 2: data access
+
 - rdbms
     - JPP
     - repository
     - hibernate
     - jooq: https://www.jooq.org/
+- batch jobs
+- security
+    - oauth
+    - oidc
+
+
+## essential 3 - go live and performance
+
+- jvm
+- performance
+- OOM
+
+- stress
+
+## Advanced 1
+
+- cache
 - data
     - neo4j (graphic)
     - elasticsearch
-- cache
-- batch jobs
 - queue
     - [ ] rdbms as queue
     - [ ] redis as queue
     - [ ] rabbit as queue    
-- logging
-- security
-- rest client
 
-
-## advanced 1
+## advanced 2 - topics
 
 - rest api
     - openapi docs
@@ -50,8 +67,7 @@
 - cqrs
 - cache pattern
 
-
-## advanced 2 - o11y
+## advanced 3 - o11y
 
 - metrics
     - health check
@@ -60,14 +76,7 @@
 - tracing
 
 
-## advanced 3 - go live and performance
-
-- jvm
-- performance
-- OOM
-- stress
-
-## advanced 2 - AWS
+## integration 1 - AWS
 
 - S3
 - secrutiy management (vault)
