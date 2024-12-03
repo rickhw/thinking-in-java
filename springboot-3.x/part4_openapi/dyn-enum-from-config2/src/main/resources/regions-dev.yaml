@@ -1,0 +1,4 @@
+regions:
+  - name: US_EAST_1
+    displayName: "Development US East"
+    endpoint: "dev-ec2.us-east-1.amazonaws.com"
