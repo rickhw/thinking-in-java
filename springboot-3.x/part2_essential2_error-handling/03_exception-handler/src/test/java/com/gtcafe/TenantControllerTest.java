@@ -8,6 +8,9 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import com.gtcafe.rest.TenantController;
+import com.gtcafe.rest.TenantDTO;
+
 @SpringBootTest(
     classes = Main.class,
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT

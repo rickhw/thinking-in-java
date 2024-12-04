@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.rest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gtcafe.exception.UnauthorizedException;
+import com.gtcafe.domain.exception.DomainException;
 
 import jakarta.validation.Valid;
 
@@ -27,10 +27,12 @@ public class TenantController {
 
     // 模擬簡單的授權檢查
     private void checkAuthorization() {
+        
         // 這裡你可以加入實際的授權邏輯
         boolean isAuthorized = Math.random() > 0.2; // 80% 成功授權
+
         if (!isAuthorized) {
-            throw new UnauthorizedException("Unauthorized access");
+            throw new DomainException("ERROR_CODE");
         }
     }
 

@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.system;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.gtcafe.exception.UnauthorizedException;
-import com.gtcafe.rest.ErrorResponse;
+import com.gtcafe.system.exception.UnauthorizedException;
+import com.gtcafe.system.response.StandardErrorResponse;
 
 import jakarta.validation.ConstraintViolationException;
 
@@ -18,14 +18,14 @@ import jakarta.validation.ConstraintViolationException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<StandardErrorResponse> handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<String> errors = ex.getBindingResult()
             .getFieldErrors()
             .stream()
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
             .collect(Collectors.toList());
 
-        ErrorResponse errorResponse = ErrorResponse.of(
+        StandardErrorResponse errorResponse = StandardErrorResponse.of(
             HttpStatus.BAD_REQUEST.value(), 
             "Validation Error", 
             errors
@@ -35,13 +35,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleConstraintViolationExceptions(ConstraintViolationException ex) {
+    public ResponseEntity<StandardErrorResponse> handleConstraintViolationExceptions(ConstraintViolationException ex) {
         List<String> errors = ex.getConstraintViolations()
             .stream()
             .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
             .collect(Collectors.toList());
 
-        ErrorResponse errorResponse = ErrorResponse.of(
+        StandardErrorResponse errorResponse = StandardErrorResponse.of(
             HttpStatus.BAD_REQUEST.value(), 
             "Constraint Violation", 
             errors
@@ -51,8 +51,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(
+    public ResponseEntity<StandardErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        StandardErrorResponse errorResponse = StandardErrorResponse.of(
             HttpStatus.UNAUTHORIZED.value(), 
             "Unauthorized", 
             List.of(ex.getMessage())
@@ -62,8 +62,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneralExceptions(Exception ex) {
-        ErrorResponse errorResponse = ErrorResponse.of(
+    public ResponseEntity<StandardErrorResponse> handleGeneralExceptions(Exception ex) {
+        StandardErrorResponse errorResponse = StandardErrorResponse.of(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), 
             "Internal Server Error", 
             List.of(ex.getMessage())
