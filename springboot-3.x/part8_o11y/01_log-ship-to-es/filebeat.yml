@@ -1,0 +1,13 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /logs/*.log
+    fields:
+      app_name: api-app
+    fields_under_root: true
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  protocol: "http"
+setup.kibana:
+  host: "kibana:5601"
