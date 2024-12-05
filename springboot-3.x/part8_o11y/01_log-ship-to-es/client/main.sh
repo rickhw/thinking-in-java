@@ -22,6 +22,6 @@ while true; do
     echo "Sent: $PAYLOAD, Response: $RESPONSE"
     
     # 隨機暫停 1-3 秒
-    SLEEP_TIME=$((RANDOM % 3 + 1))
+    SLEEP_TIME=$((RANDOM % 1 + 1))
     sleep "$SLEEP_TIME"
 done

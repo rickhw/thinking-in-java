@@ -2,7 +2,7 @@
 <configuration>
 
     <!-- 設定 log 檔案儲存路徑 -->
-    <property name="LOG_PATH" value="log" />
+    <property name="LOG_PATH" value="logs" />
     
     <appender name="ConsoleJsonLine" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -15,7 +15,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- 初始 log 檔案位置，僅用於當前日誌 -->
         <!-- <file>${LOG_PATH}/current.log</file> -->
-        <file>current.log</file>
+        <file>${LOG_PATH}/current.log</file>
         
         <!-- 設定日誌滾動策略，設定檔案名稱和滾動規則 -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
