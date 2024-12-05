@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/demo_db
+    username: demo_user
+    password: demo_pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.gtcafe.asimov.model
+  mapper-locations: classpath:mapper/**/*.xml
