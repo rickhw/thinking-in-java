@@ -17,3 +17,6 @@ credentials.json
 gradle
 bin/
 build/
+
+current.log
+*.log
