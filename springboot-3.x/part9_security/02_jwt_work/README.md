@@ -205,17 +205,51 @@ public class JwtApiApplication {
 
 ---
 
-❯ curl -X POST "http://localhost:8080/api/generate-token?username=testuser"
+## create access token
 
-{"accessToken":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzM5ODkxOCwiZXhwIjoxNzMzNDAyNTE4fQ.TssT7XMo5XpsBf57PeZ0n-oNWNXxEnD5WjS3rONRYgJVeopzcrKy2IjH7lIcW5BHcSUAHYh9DQqcKkjg9fx-mMBU3quzXNNGFB36-Pizn3WCvo56_4EzumrmBbfjOzfyqGrkXfsLkV1IIsuF2Vhvu2BrI9CgUGRQwAmuz1rSl2FvYxFxIZ-ZdUV1tEM1qpJpa5XlJQs7b5AOOZieDvCvz2TEIH4PyHYwMlilNZ3JnNcSZZxS7spVYShO_LCFAwiCfFPSjPqUr-lBFf_Y8SoLE0P_GBITngZ2xejnC7r0zOpwAfJKcLqH2laY1vRJ4JyxV2ZsCB7mKu5JtsBZAMNncg"}%
-❯ curl -X GET "http://localhost:8080/api/public-key"
+curl -X POST http://localhost:8080/api/generate-token?username=testuser
+
+{"accessToken":"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzM5ODkxOCwiZXhwIjoxNzMzNDAyNTE4fQ.TssT7XMo5XpsBf57PeZ0n-oNWNXxEnD5WjS3rONRYgJVeopzcrKy2IjH7lIcW5BHcSUAHYh9DQqcKkjg9fx-mMBU3quzXNNGFB36-Pizn3WCvo56_4EzumrmBbfjOzfyqGrkXfsLkV1IIsuF2Vhvu2BrI9CgUGRQwAmuz1rSl2FvYxFxIZ-ZdUV1tEM1qpJpa5XlJQs7b5AOOZieDvCvz2TEIH4PyHYwMlilNZ3JnNcSZZxS7spVYShO_LCFAwiCfFPSjPqUr-lBFf_Y8SoLE0P_GBITngZ2xejnC7r0zOpwAfJKcLqH2laY1vRJ4JyxV2ZsCB7mKu5JtsBZAMNncg"}
+
+
+## get public key
+
+curl -X GET "http://localhost:8080/api/public-key"
 
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyBztvhQEEKJzsovoTlkfG9vxuJhD13TY5c2XyGdi/oqQxADH+nLrBra4Q1/oZhbI+jtyK4Jh/4DWcCtHcSy2rxj9xKU1cITrpvvkyECezzQzsy5MZYmXBWAD4Z+VyV4zZ/tp+AWdVZ1jIzVRZk1M9cQv/su32qsbkVE8qtqrIEc359GQnkNNtBjisMyacR3BjE12f9rViwWhZrJX+HmeTWFIHRgeaMWYtSy/dYP+AIWFmm7UHvSDEwSTKK6C1bS668TMBxwyMuDfd2hZ8ljCQqk6n8WUOUUIfQw0w6bALINMcGCSdv6UVa54TJwWURoc5doCWApXGNcFbUeqpmBtBQIDAQAB
 -----END PUBLIC KEY-----%
-❯ curl -H "Authorization: Bearer <YOUR_TOKEN>" "http://localhost:8080/api/secure-data"
 
-Invalid or expired token.%
-❯ curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzM5ODkxOCwiZXhwIjoxNzMzNDAyNTE4fQ.TssT7XMo5XpsBf57PeZ0n-oNWNXxEnD5WjS3rONRYgJVeopzcrKy2IjH7lIcW5BHcSUAHYh9DQqcKkjg9fx-mMBU3quzXNNGFB36-Pizn3WCvo56_4EzumrmBbfjOzfyqGrkXfsLkV1IIsuF2Vhvu2BrI9CgUGRQwAmuz1rSl2FvYxFxIZ-ZdUV1tEM1qpJpa5XlJQs7b5AOOZieDvCvz2TEIH4PyHYwMlilNZ3JnNcSZZxS7spVYShO_LCFAwiCfFPSjPqUr-lBFf_Y8SoLE0P_GBITngZ2xejnC7r0zOpwAfJKcLqH2laY1vRJ4JyxV2ZsCB7mKu5JtsBZAMNncg" "http://localhost:8080/api/secure-data"
 
-Secure data accessed.%
+
+## pass
+
+~$ curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzQ2MTcwMiwiZXhwIjoxNzMzNDY1MzAyfQ.LPU_rjFsFfwqo4TeTtMIhC0T1iUAxix5SMHIren0Jx7pnzeauf-fztC4ybLeKjbvBp7xg9yfjgDj3Ddb1P4hz03Nx8-QZjuoP6ZGIoVLoFlwx0udh5mNUn8XlnwBYCvhwuDH1xFMzppEaW0rxZ7C1rnqZqjd0_FSR8cJ27YQ7Q3xU_wjpFbW1sp8bcz5ya3HWzoxNvmcvRidaPrgNSZiBUtAVXszRDi1GVG-_AgfMOYqMN-V9W6AZylEfal4ClKK7VjPn9VTL0UlnaLKsaaVij0D-wObcMnVhSv1pytgripd6AexvYPL2qkxHrbJQKo1dW3bPeCAEwy6ntTXPVUUog" "http://localhost:8080/api/validate"
+
+Secure data accessed.
+
+
+## error: JWT strings must contain exactly 2 period characters. Found: 0
+
+~$ curl  -H "Authorization: Bearer " "http://localhost:8080/api/validate"
+
+Invalid or expired token.
+
+
+## length not enough: Unable to verify RSA signature using configured PublicKey. Signature length not correct: got 255 but was expecting 256
+
+curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzQ2MTcwMiwiZXhwIjoxNzMzNDY1MzAyfQ.LPU_rjFsFfwqo4TeTtMIhC0T1iUAxix5SMHIrn0Jx7pnzeauf-fztC4ybLeKjbvBp7xg9yfjgDj3Ddb1P4hz03Nx8-QZjuoP6ZGIoVLoFlwx0udh5mNUn8XlnwBYCvhwuDH1xFMzppEaW0rxZ7C1rnqZqjd0_FSR8cJ27YQ7Q3xU_wjpFbW1sp8bcz5ya3HWzoxNvmcvRidaPrgNSZiBUtAVXszRDi1GVG-_AgfMOYqMN-V9W6AZylEfal4ClKK7VjPn9VTL0UlnaLKsaaVij0D-wObcMnVhSv1pytgripd6AexvYPL2qkxHrbJQKo1dW3bPeCAEwy6ntTXPVUUog" "http://localhost:8080/api/validate"
+
+
+## header: error JWT string has a digest/signature, but the header does not reference a valid signature algorithm.
+
+~$ curl -H "Authorization: Bearer eyJhb3ciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzQ2MTcwMiwiZXhwIjoxNzMzNDY1MzAyfQ.LPU_rjFsFfwqo4TeTtMIhC0T1iUAxix5SMHIren0Jx7pnzeauf-fztC4ybLeKjbvBp7xg9yfjgDj3Ddb1P4hz03Nx8-QZjuoP6ZGIoVLoFlwx0udh5mNUn8XlnwBYCvhwuDH1xFMzppEaW0rxZ7C1rnqZqjd0_FSR8cJ27YQ7Q3xU_wjpFbW1sp8bcz5ya3HWzoxNvmcvRidaPrgNSZiBUtAVXszRDi1GVG-_AgfMOYqMN-V9W6AZylEfal4ClKK7VjPn9VTL0UlnaLKsaaVij0D-wObcMnVhSv1pytgripd6AexvYPL2qkxHrbJQKo1dW3bPeCAEwy6ntTXPVUUog" "http://localhost:8080/api/validate"
+
+
+## payload: JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.
+curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzQ2MTc3MiwiZXhwIjoxNzMzNDY1MzAyfQ.LPU_rjFsFfwqo4TeTtMIhC0T1iUAxix5SMHIren0Jx7pnzeauf-fztC4ybLeKjbvBp7xg9yfjgDj3Ddb1P4hz03Nx8-QZjuoP6ZGIoVLoFlwx0udh5mNUn8XlnwBYCvhwuDH1xFMzppEaW0rxZ7C1rnqZqjd0_FSR8cJ27YQ7Q3xU_wjpFbW1sp8bcz5ya3HWzoxNvmcvRidaPrgNSZiBUtAVXszRDi1GVG-_AgfMOYqMN-V9W6AZylEfal4ClKK7VjPn9VTL0UlnaLKsaaVij0D-wObcMnVhSv1pytgripd6AexvYPL2qkxHrbJQKo1dW3bPeCAEwy6ntTXPVUUog" "http://localhost:8080/api/validate"
+
+
+## signture: JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.
+
+~$ curl -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTczMzQ2MTcwMiwiZXhwIjoxNzMzNDY1MzAyfQ.LPU_rjFsFfwqo4TeTtMIhC0T1iUAxix5SMHIren0Jx7pnzeauf-fztC4ybLeKjbvBp7xg9yfjgDj3Ddb1P4hz03Nx8-QZjuoP6ZGIoVLoFlwx0udh5mNUn8XlnwBYCvhwuDH1xFMzppEaW0rxZ7C1rnqZqjd0_FSR8cJ27YQ7Q3xU_wjpFbW1sp8bcz5ya3HWzoxNvmcvRidaPrgNSZiBUtAVXszRDi1GVG-_AgfMOYqMN-V9W6AZylEfal4ClKK7VjPn9VTL0UlnaLKsaaeij0D-wObcMnVhSv1pytgripd6AexvYPL2qkxHrbJQKo1dW3bPeCAEwy6ntTXPVUUog" "http://localhost:8080/api/validate"

@@ -1,19 +1,27 @@
 package com.gtcafe.asimov.controller;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.security.KeyPair;
 import java.security.PublicKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class JwtController {
 
     @Autowired
@@ -45,16 +53,25 @@ public class JwtController {
     }
 
     // 3. 需要透過 Token 操作的 API
-    @GetMapping("/secure-data")
+    @GetMapping("/validate")
     public ResponseEntity<String> secureData(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.replace("Bearer ", "");
+
+            log.info("token: [{}]", token);
+
             Jwts.parserBuilder()
                     .setSigningKey(keyPair.getPublic())
                     .build()
                     .parseClaimsJws(token); // 驗證 JWT
-            return ResponseEntity.ok("Secure data accessed.");
+
+                    log.info("validate token pass");
+            return ResponseEntity.ok("validate token pass.");
         } catch (Exception e) {
+            log.info("validate token failure");
+            log.info("ex: {}", e.getMessage());
+            e.printStackTrace();
+
             return ResponseEntity.status(401).body("Invalid or expired token.");
         }
     }
