@@ -1,4 +1,4 @@
-package com.gtcafe.asimov.platform.security;
+package com.gtcafe.asimov.security;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
