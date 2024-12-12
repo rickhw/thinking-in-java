@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: timezone-restful-api
+
+app:
+  timezone:
+    default: UTC
+  timeformat:
+    default: ISO8601
