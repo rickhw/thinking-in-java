@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: rate-limit-demo
+
+ratelimit:
+  enabled: true
+  requests-per-second: 10

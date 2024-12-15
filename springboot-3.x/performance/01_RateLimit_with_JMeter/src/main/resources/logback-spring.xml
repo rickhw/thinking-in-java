@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 設定 log 檔案儲存路徑 -->
+    <property name="LOG_PATH" value="./logs" />
+    
+    <appender name="ConsoleJsonLine" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- <pattern>{ "timestamp":"%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "scheme": "%X{Protocol}", "method": "%X{Method}", "uri": "%X{RequestURI}", "clientIp": "%X{ClientIP}", "level":"%level", "message": "%message", "thread":"%thread", "class":"%logger{36}", "requestId": "%X{R-Request-Id}" }%n</pattern> -->
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %highlight(%-5level) %green([%thread]) %logger{36}#%M\(%line\) %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 定義 ROOT logger 並輸出到檔案 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 初始 log 檔案位置，僅用於當前日誌 -->
+        <file>${LOG_PATH}/current.log</file>
+        <!-- <file>current.log</file> -->
+        
+        <!-- 設定日誌滾動策略，設定檔案名稱和滾動規則 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 每天創建新檔案，依據日期命名 -->
+            <fileNamePattern>${LOG_PATH}/%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- <fileNamePattern>%d{yyyy-MM-dd}.log</fileNamePattern> -->
+            <!-- 保留半年內的 log -->
+            <!-- <maxHistory>180</maxHistory> -->
+            <maxHistory>2</maxHistory>
+            <!-- 可選：設定單檔案大小限制 -->
+            <!-- <totalSizeCap>1GB</totalSizeCap> -->
+            <totalSizeCap>1MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>{ "timestamp": "%d{yyyy-MM-dd'T'HH:mm:ss.SSS}", "level": "%level", "thread": "%thread", "class": "%logger", "method": "%M", "message": "%message", "X-Tenant-Id": "%X{X-Tenant-Id}" }%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 根 logger 設定 -->
+    <root level="INFO">
+        <appender-ref ref="ConsoleJsonLine" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>

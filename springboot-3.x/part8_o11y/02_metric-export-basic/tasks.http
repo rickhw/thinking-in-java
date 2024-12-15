@@ -1,0 +1,21 @@
+
+### --
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+    "title": "test2",
+    "description": "test2"
+}
+
+
+
+### --
+GET http://localhost:8080/api/tasks/1
+
+
+### --
+PUT http://localhost:8080/api/tasks/2/status
+Content-Type: application/json
+
+COMPLETED

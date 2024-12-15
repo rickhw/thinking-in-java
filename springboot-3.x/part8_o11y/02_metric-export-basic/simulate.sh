@@ -12,7 +12,7 @@ generate_payload() {
 # 隨機執行 API 請求
 simulate_requests() {
   # 隨機決定請求數量
-  local request_count=$((RANDOM % 20 + 1))
+  local request_count=$((RANDOM % 2000 + 1))
   echo "Sending $request_count requests..."
 
   for ((i = 1; i <= request_count; i++)); do
@@ -29,20 +29,22 @@ simulate_requests() {
         curl "$API_BASE_URL" -s -o /dev/null
         ;;
       2)
-        echo "Fetching a specific task..."
         TASK_ID=${TASK_IDS[$((RANDOM % ${#TASK_IDS[@]}))]}
+
+        echo "Fetching a specific task: [${TASK_ID}]"
         curl "$API_BASE_URL/$TASK_ID" -s -o /dev/null
         ;;
       3)
-        echo "Updating a task status..."
         TASK_ID=${TASK_IDS[$((RANDOM % ${#TASK_IDS[@]}))]}
+
+        echo "Updating a task status to COMPLETED: [${TASK_ID}]"
         curl -X PUT "$API_BASE_URL/$TASK_ID/status" \
           -H "Content-Type: application/json" \
-          -d '"COMPLETED"' -s -o /dev/null
+          -d 'COMPLETED' -s -o /dev/null
         ;;
       4)
-        echo "Deleting a task..."
         TASK_ID=${TASK_IDS[$((RANDOM % ${#TASK_IDS[@]}))]}
+        echo "Deleting a task: [${TASK_ID}]"
         curl -X DELETE "$API_BASE_URL/$TASK_ID" -s -o /dev/null
         ;;
     esac
