@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+starter:
+  web:
+    enabled: true
+    base-uri: /custom/tasks
+    
+# spring:
+#   data:
+#     redis:
+#       database: 0
+#       host: localhost
+#       port: 6379
+#       # password: password
+#       # timeout: 60000
