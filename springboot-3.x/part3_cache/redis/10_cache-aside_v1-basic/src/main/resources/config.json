@@ -1,0 +1,5 @@
+{
+    "maxUsers": 13300,
+    "maxConnections": 50,
+    "timeoutSeconds": 30
+}

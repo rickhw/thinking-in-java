@@ -1,0 +1,68 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'java'
+}
+
+group = 'com.gtcafe.asimov'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // openapi
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
+    // rdb: mysql or maria, or pgsql
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    // message queue
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+
+    // cache: redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    
+    // // Add jjwt
+    // implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    // runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    // runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // for JSON processing
+
+
+    implementation 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+    // template engine
+    // implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+     // 測試相關依賴
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.jayway.jsonpath:json-path'  // 支持 jsonPath
+    testImplementation 'org.hamcrest:hamcrest'          // Hamcrest 用於匹配
+
+
+}
+
+//test {
+//    useJUnitPlatform()
+//}
+
+
+// def getTimestamp() {
+//     def date = new Date()
+//     def formattedDate = date.format('yyyyMMdd-HHmm')
+//     return formattedDate
+// }
+
+// bootJar {
+//     mainClassName = 'com.gtcafe.asimov.apiserver.Main'
+// }
