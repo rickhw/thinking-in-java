@@ -1,4 +1,4 @@
-package com.gtcafe.asimov.region;
+package com.gtcafe.asimov.region.domain;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

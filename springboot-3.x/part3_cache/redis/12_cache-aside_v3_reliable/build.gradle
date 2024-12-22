@@ -12,6 +12,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -50,3 +51,18 @@ dependencies {
 
 
 }
+
+//test {
+//    useJUnitPlatform()
+//}
+
+
+// def getTimestamp() {
+//     def date = new Date()
+//     def formattedDate = date.format('yyyyMMdd-HHmm')
+//     return formattedDate
+// }
+
+// bootJar {
+//     mainClassName = 'com.gtcafe.asimov.apiserver.Main'
+// }

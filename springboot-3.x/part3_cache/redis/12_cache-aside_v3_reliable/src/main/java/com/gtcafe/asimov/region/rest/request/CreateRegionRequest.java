@@ -1,16 +1,11 @@
-package com.gtcafe.asimov.region.schema;
-
-import java.util.UUID;
+package com.gtcafe.asimov.region.rest.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class Region {
-
-    @Size(max = 50, message = "UUID")
-    private String resourceId;
+public class CreateRegionRequest {
 
 	@NotBlank(message = "regionCode cannot empty")
     @Size(max = 50, message = "regionCode max lenght is 50.")
@@ -20,7 +15,4 @@ public class Region {
     @Size(max = 255, message = "description max lenght is 255.")
     private String description;
 
-    public Region() {
-        this.resourceId = UUID.randomUUID().toString();
-    }
 }

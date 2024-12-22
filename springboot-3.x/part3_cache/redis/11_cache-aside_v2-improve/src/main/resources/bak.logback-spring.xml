@@ -4,8 +4,7 @@
     <springProperty name="PID" source="PID" />
 
     <!-- 定義日誌模式 -->
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %-5level ${PID:-NA} --- [%thread] [%
-    {36}.%M:%L] : %msg%n" />
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSZ} %-5level ${PID:-NA} --- [%thread] [%logger{36}.%M:%L] : %msg%n" />
 
     <!-- 控制台輸出 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">

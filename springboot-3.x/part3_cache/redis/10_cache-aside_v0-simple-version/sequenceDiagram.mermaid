@@ -1,0 +1,19 @@
+sequenceDiagram
+    participant Client
+    participant Controller
+    participant Service
+    participant Redis
+    participant MySQL
+
+    Client->>Controller: GET /products/{id}
+    Controller->>Service: getProduct(id)
+    Service->>Redis: Check Cache
+    alt Cache Hit
+        Redis-->>Service: Return Product
+    else Cache Miss
+        Service->>MySQL: Query Product
+        MySQL-->>Service: Return Product
+        Service->>Redis: Update Cache
+    end
+    Service-->>Controller: Return Product
+    Controller-->>Client: 200 OK

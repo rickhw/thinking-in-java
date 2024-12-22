@@ -1,0 +1,40 @@
+# -----------------------------------------------------------------------------
+# Sprinboot
+# -----------------------------------------------------------------------------
+spring:
+
+  application:
+    name: WebAPI Server
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/asimov?allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: password
+
+  jpa:
+    hibernate:
+      dialect: org.hibernate.dialect.MySQLDialect
+
+      # https://stackoverflow.com/questions/51136693/how-to-check-hikaricp-connection-pooling-is-working-or-not-in-java
+      # lsof -nP -i :3306 -sTCP:ESTABLISHED
+      # ss -46 -np state established dport = :3306 | grep 'java' | sort -r -k 3,3 | nl
+      # netstat -ant | grep 3306
+      # hikari:
+      #   maximumPoolSize: 5
+      #   minimumIdle: 5
+      ddl-auto: update
+
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
+      # password: password
+      # timeout: 60000
+
+# -----------------------------------------------------------------------------
+# logback
+# -----------------------------------------------------------------------------
+logging:
+  path: ./logs
+  level.com.gtcafe.asimov: INFO
