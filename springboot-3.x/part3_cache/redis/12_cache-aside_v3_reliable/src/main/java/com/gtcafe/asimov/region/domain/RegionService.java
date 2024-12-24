@@ -36,7 +36,7 @@ public class RegionService {
     private static final String CACHE_KEY_PREFIX = "region:";
 
     // for query/read cache
-    private static final Duration CACHE_TTL = Duration.ofMinutes(3);
+    private static final Duration CACHE_TTL = Duration.ofSeconds(10);
     private static final Duration LOCK_TIMEOUT = Duration.ofSeconds(10);
     
     // for flush cache
@@ -61,7 +61,7 @@ public class RegionService {
                 throw new ConcurrentOperationException("Another flush operation is in progress");
             }
 
-            log.info("Starting region cache flush operation");
+            log.debug("Starting region cache flush operation");
             
             // 2. 從資料庫獲取所有資料（使用分頁避免內存溢出）
             int pageNumber = 0;
@@ -69,14 +69,14 @@ public class RegionService {
             Set<String> processedKeys = new HashSet<>();
             
             do {
-                log.info("1. find all with pagination, pageNumber: {}, batchSize: {}", pageNumber, BATCH_SIZE);
+                log.debug("1. find all with pagination, pageNumber: {}, batchSize: {}", pageNumber, BATCH_SIZE);
                 batch = dbRepos.findAllWithPagination(pageNumber, BATCH_SIZE);
                 if (batch.isEmpty()) {
                     break;
                 }
 
                 // 3. 處理每一批次資料
-                log.info("2. processBatch, pageNumber: {}, batchSize: {}", pageNumber, batch.size());
+                log.debug("2. processBatch, pageNumber: {}, batchSize: {}", pageNumber, batch.size());
                 flushBatchProcess(batch, processedKeys);
                 pageNumber++;
                 
@@ -84,7 +84,7 @@ public class RegionService {
             } while (!batch.isEmpty());
 
             // 4. 清理過期的快取項（清除那些在資料庫中已不存在的項）
-            log.info("3. cleanupStaleCache");
+            log.debug("3. cleanupStaleCache");
             flushCleanupStaleCache(processedKeys);
             
             log.info("Region cache flush completed successfully. Total processed: {}", processedKeys.size());
@@ -150,13 +150,13 @@ public class RegionService {
 
     // Cache-aside pattern
     @Retryable(value = DataAccessException.class, maxAttempts = 3)
-    public Region retrieve(String regionCode) {
+    public Region retrieve(String regionCode, int retryCount) {
         String cacheKey = generateCacheKey(regionCode);
         
         // 1. Try cache first
         Optional<Region> cachedRegion = getFromCache(cacheKey);
         if (cachedRegion.isPresent()) {
-            log.debug("Cache hit for region: [{}]", regionCode);
+            log.info("Cache hit for region: [{}], retryCount: [{}]", regionCode, retryCount);
             return cachedRegion.get();
         }
 
@@ -166,7 +166,7 @@ public class RegionService {
         
         try {
             lockAcquired = cacheRepos.setIfNotExists(lockKey, getLockString(), LOCK_TIMEOUT);
-            log.debug("Lock acquired: [{}]", lockAcquired);
+            log.debug("Lock acquired: [{}], retryCount: [{}]", lockAcquired, retryCount);
             
             if (lockAcquired) {
                 // Double check cache after acquiring lock
@@ -179,14 +179,17 @@ public class RegionService {
                 Region region = loadFromDatabase(regionCode);
                 if (region != null) {
                     updateCache(region);
+
+                    log.info("Cache miss, load from db for region: [{}], retryCount: [{}]", regionCode, retryCount);
                     return region;
                 }
                 
                 throw new ResourceNotFoundException("Region not found: " + regionCode);
             } else {
                 // Wait for other thread to load data
+                log.info("Cache locked, waiting 100ms for retry: [{}], retryCount: [{}]", regionCode, retryCount);
                 Thread.sleep(100);
-                return retrieve(regionCode);
+                return retrieve(regionCode, retryCount + 1);
             }
             
         } catch (InterruptedException e) {

@@ -19,13 +19,17 @@ spring:
     name: WebAPI Server
 
   datasource:
-    url: jdbc:mysql://localhost:3306/asimov?allowPublicKeyRetrieval=true&useSSL=false
+    # url: jdbc:mysql://localhost:3306/asimov?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mariadb://localhost:3306/asimov?allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password: password
+    password: medusa
+    driver-class-name: org.mariadb.jdbc.Driver
 
   jpa:
+    open-in-view: false
     hibernate:
-      dialect: org.hibernate.dialect.MySQLDialect
+      # dialect: org.hibernate.dialect.MySQLDialect
+      dialect: org.hibernate.dialect.MariaDBDialect
 
       # https://stackoverflow.com/questions/51136693/how-to-check-hikaricp-connection-pooling-is-working-or-not-in-java
       # lsof -nP -i :3306 -sTCP:ESTABLISHED
@@ -55,7 +59,7 @@ spring:
 # -----------------------------------------------------------------------------
 logging:
   path: ./logs
-  level.com.gtcafe.asimov: DEBUG
+  level.com.gtcafe.asimov: INFO
 
 springdoc:
   api-docs:

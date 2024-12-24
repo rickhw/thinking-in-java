@@ -69,7 +69,7 @@ public class RegionController {
   public ResponseEntity<RetrieveRegionResponse> retrieve(
     @Parameter(name ="code", description = "region code", required = true) @PathVariable("code") String regionCode) {
 
-    Region region = service.retrieve(regionCode);
+    Region region = service.retrieve(regionCode, 0);
     
     return ResponseEntity.ok(RegionMapper.mapDomainToResponse(region));
   }
