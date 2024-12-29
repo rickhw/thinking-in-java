@@ -11,7 +11,7 @@ management:
     web:
       exposure:
         # include: health,metrics,prometheus
-        include: metrics,prometheus
+        include: "*"
 
     # health:
     #   show-details: always

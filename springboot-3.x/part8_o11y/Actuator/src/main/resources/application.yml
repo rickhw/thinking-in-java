@@ -1,0 +1,27 @@
+# spring:
+#   datasource:
+#     url: jdbc:mariadb://localhost:3306/configdb
+#     username: root
+#     password: root
+#     driver-class-name: org.mariadb.jdbc.Driver
+#   jpa:
+#     hibernate:
+#       ddl-auto: update
+#     show-sql: true
+
+# app:
+#   config:
+#     default.quota: "20"
+#     max.connections: "100"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # include: health,info,beans,conditions
+        include: '*'
+        # exclude: threaddump,heapdump
+
+  endpoint:
+    health:
+      show-details: always

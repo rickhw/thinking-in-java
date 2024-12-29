@@ -19,4 +19,6 @@ public interface RegionRepository extends JpaRepository<RegionEntity, Long>{
     default List<RegionEntity> findAllWithPagination(int pageNumber, int pageSize) {
         return findAllWithPagination(PageRequest.of(pageNumber, pageSize));
     }
+
+    // RegionEntity findByRegionCode(String regionCode);
 }
