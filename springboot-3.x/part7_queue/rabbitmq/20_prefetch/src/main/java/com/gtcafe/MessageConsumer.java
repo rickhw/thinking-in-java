@@ -20,7 +20,7 @@ public class MessageConsumer {
         try {
             // 處理訊息
             log.info("Processing event, delay: [{}ms]", DELAY);
-            Thread.sleep(DELAY);
+            // Thread.sleep(DELAY);
 
             // 處理完成，手動 ACK
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
