@@ -8,6 +8,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -30,9 +31,9 @@ public class RabbitMqInitializer {
     public List<QueueConfig> getQueues() { return queues; }
     public void setQueues(List<QueueConfig> queues) { this.queues = queues; }
 
-    public RabbitQueueConfig getQueueConfig(String queueName) {
-		return queueMap.get(queueName);
-	}
+    // public QueueConfig getQueueConfig(String queueName) {
+	// 	return queueMap.get(queueName);
+	// }
 
 
     @Bean
