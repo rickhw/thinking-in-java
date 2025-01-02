@@ -30,7 +30,6 @@ public class MessageConsumer {
             // 如果失敗，拒絕訊息，並讓 RabbitMQ 決定是否重新投遞
             channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
         }
-
     }
 
 }

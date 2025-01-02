@@ -5,6 +5,8 @@ filebeat.inputs:
     fields:
       app_name: api-app
     fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
 
 output.elasticsearch:
   hosts: ["elasticsearch:9200"]
