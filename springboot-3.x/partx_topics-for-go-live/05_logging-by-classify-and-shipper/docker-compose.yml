@@ -1,0 +1,46 @@
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.1
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.16.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+
+  # kibana:
+  #   image: docker.elastic.co/kibana/kibana:8.16.1
+  #   container_name: kibana
+  #   ports:
+  #     - "5601:5601"
+  #   depends_on:
+  #     - elasticsearch
+  #   volumes:
+  #     - ./kibana/kibana_filters.ndjson:/kibana_filters.ndjson
+  #   command: >
+  #     sh -c "
+  #     /bin/kibana &
+  #     until curl -s http://localhost:5601/api/saved_objects/_import -H 'kbn-xsrf: true' -F file=@/kibana_filters.ndjson; do sleep 5; done"
+
+  grafana:
+    image: grafana/grafana:10.1.0
+    container_name: grafana
+    ports:
+      - "3000:3000"
+
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.17.26
+    container_name: filebeat
+    volumes:
+      - ./filebeat.yml:/usr/share/filebeat/filebeat.yml
+      - ./logs:/logs
+    depends_on:
+      - elasticsearch
