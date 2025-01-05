@@ -23,6 +23,8 @@ public class EncryptionController {
 
     private final EncryptionService encryptionService;
 
+    private static int counter = 0;
+
     public EncryptionController(EncryptionService encryptionService) {
         this.encryptionService = encryptionService;
     }
@@ -32,8 +34,10 @@ public class EncryptionController {
     public ResponseEntity<?> uploadFileOnly(@RequestParam("file") MultipartFile file) throws Exception {
         Instant start = Instant.now();
         long t1 = System.currentTimeMillis();
+
+        counter++;
         
-        log.info("Received file: {}, startTime: [{}], t1: [{}]", file.getOriginalFilename(), start, t1);        
+        log.info("Received file: {}, startTime: [{}], counter: [{}]", file.getOriginalFilename(), start, counter);        
 
         // long maxFileSize = 1L * 1024 * 1024 * 1024; // 1 GiB
         // if (file.getSize() > maxFileSize) {

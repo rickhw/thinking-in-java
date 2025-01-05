@@ -1,7 +1,8 @@
 #!/bin/bash
 
-SERVER_URL=http://localhost:8080/api/encryption/encrypt
-FILE_PATH=./genfile_1G.bin
+# SERVER_URL=http://localhost:8080/api/encryption/encrypt
+SERVER_URL=http://localhost:8080/api/encryption/upload
+FILE_PATH=./genfile_1M.bin
 LOOP_COUNT=$1
 RPS=$2
 
