@@ -32,12 +32,12 @@ public class EncryptionController {
 
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFileOnly(@RequestParam("file") MultipartFile file) throws Exception {
-        Instant start = Instant.now();
+        // Instant start = Instant.now();
         long t1 = System.currentTimeMillis();
 
         counter++;
         
-        log.info("Received file: {}, startTime: [{}], counter: [{}]", file.getOriginalFilename(), start, counter);        
+        log.info("Received file: {}, size: [{}], time: [{}] counter: [{}]", file.getOriginalFilename(), file.getSize(), t1, counter);        
 
         // long maxFileSize = 1L * 1024 * 1024 * 1024; // 1 GiB
         // if (file.getSize() > maxFileSize) {
@@ -57,10 +57,11 @@ public class EncryptionController {
 
     @PostMapping("/encrypt")
     public ResponseEntity<?> encryptFile(@RequestParam("file") MultipartFile file) throws Exception {
-        Instant start = Instant.now();
+        // Instant start = Instant.now();
         long t1 = System.currentTimeMillis();
+        counter++;
         
-        log.info("Received file: {}, startTime: [{}], t1: [{}]", file.getOriginalFilename(), start, t1);        
+        log.info("Received file: {}, size: [{}], time: [{}] counter: [{}]", file.getOriginalFilename(), file.getSize(), t1, counter);        
 
         long maxFileSize = 1L * 1024 * 1024 * 1024; // 1 GiB
         if (file.getSize() > maxFileSize) {

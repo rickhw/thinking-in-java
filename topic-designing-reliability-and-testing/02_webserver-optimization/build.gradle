@@ -35,8 +35,9 @@ dependencies {
 
 bootRun {
     jvmArgs = [
-         '-Xmx4096m'
-        ,'-Xms1024m'
+        '-Xms1024m'
+        ,'-Xmx4096m'
+        ,'-Xmx8192m'
         ,'-XX:+UseG1GC'
         // ,'-XX:+PrintGCDetails'
         // ,'-XX:+PrintGCDateStamps' 

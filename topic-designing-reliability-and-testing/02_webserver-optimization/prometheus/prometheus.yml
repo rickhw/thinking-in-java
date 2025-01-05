@@ -6,6 +6,7 @@ global:
 scrape_configs:
   - job_name: 'spring-boot-app'
     metrics_path: '/actuator/prometheus'
+    scrape_interval: 1s       # 單獨設置該任務的取樣頻率為每秒
     static_configs:
       - targets: ['host.docker.internal:8080']
 
