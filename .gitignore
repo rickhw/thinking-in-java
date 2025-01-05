@@ -20,3 +20,7 @@ build/
 
 current.log
 *.log
+
+
+*.bin
+*.enc

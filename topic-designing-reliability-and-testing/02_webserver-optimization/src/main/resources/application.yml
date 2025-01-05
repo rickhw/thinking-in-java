@@ -1,0 +1,20 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: 2GB       # 單個檔案最大大小
+      max-request-size: 2GB    # 整個請求最大大小
+      file-size-threshold: 10MB # 提高緩衝閾值，這可以讓 Spring Boot 更早進行處理而不是等到檔案寫入磁碟後再處理
+      location: /tmp            # 存儲上傳檔案的臨時目錄
+
+server:
+  port: 8080
+  # tomcat:
+  #   max-threads: 200
+  #   accept-count: 100
+  #   max-http-header-size: 65536
+  #   connection-timeout: 20000 # 增加連線逾時（毫秒）
+  undertow:
+    io-threads: 8         # 增加 I/O 執行緒數量
+    worker-threads: 400   # 增加工作執行緒數量
+    buffer-size: 32768    # 增加緩衝區大小
+    direct-buffers: true  # 使用直接緩衝區以提升性能

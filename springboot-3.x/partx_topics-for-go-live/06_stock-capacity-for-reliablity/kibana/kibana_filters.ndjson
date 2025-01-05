@@ -1,1 +1,0 @@
-{"type":"visualization","visualization":{"title":"Class Filter","filters":[{"meta":{"index":"capacity*","type":"phrase","key":"class","value":"com.gtcafe.asimov.platform.capacity.*"},"query":{"wildcard":{"class.keyword":"com.gtcafe.asimov.platform.capacity.*"}}}]}}

@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.gtcafe.asimov'
+version = '0.1.0-SNAPSHOT'
+description = 'Booter Service'
+sourceCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 添加 Spring Boot Web 依賴並排除 Tomcat
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+
+    // 加入 Undertow 依賴
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+    // Add Lombok
+    implementation 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+}
+
+
+bootRun {
+    jvmArgs = ['-Xmx4096m'
+        ,'-Xms1024m'
+        ,'-XX:+UseG1GC'
+        // ,'-XX:+PrintGCDetails'
+        // ,'-XX:+PrintGCDateStamps' 
+    ]
+}

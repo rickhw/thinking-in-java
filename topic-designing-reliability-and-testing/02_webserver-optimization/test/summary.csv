@@ -1,0 +1,3 @@
+Label,# Samples,Average,Min,Max,Std. Dev.,Error %,Throughput,Received KB/sec,Sent KB/sec,Avg. Bytes
+Upload File,25,1,0,4,1.02,100.000%,1.03558,1.24,0.00,1229.0
+TOTAL,25,1,0,4,1.02,100.000%,1.03558,1.24,0.00,1229.0
