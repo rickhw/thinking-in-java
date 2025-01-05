@@ -21,16 +21,21 @@ dependencies {
 
     // 加入 Undertow 依賴
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
+
     // Add Lombok
     implementation 'org.projectlombok:lombok:1.18.36'
     compileOnly 'org.projectlombok:lombok:1.18.36'
     annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 
 bootRun {
-    jvmArgs = ['-Xmx4096m'
+    jvmArgs = [
+         '-Xmx4096m'
         ,'-Xms1024m'
         ,'-XX:+UseG1GC'
         // ,'-XX:+PrintGCDetails'

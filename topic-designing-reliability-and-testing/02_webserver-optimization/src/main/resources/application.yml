@@ -18,3 +18,16 @@ server:
     worker-threads: 400   # 增加工作執行緒數量
     buffer-size: 32768    # 增加緩衝區大小
     direct-buffers: true  # 使用直接緩衝區以提升性能
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        # include: health,info,beans,conditions
+        include: '*'
+        # exclude: threaddump,heapdump
+
+  endpoint:
+    health:
+      show-details: always
