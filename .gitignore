@@ -24,3 +24,5 @@ current.log
 
 *.bin
 *.enc
+
+.docker-data
