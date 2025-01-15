@@ -24,7 +24,7 @@ public class ApiInterceptor implements HandlerInterceptor {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
 
             // 解析 ExecMode 注解
-            ApiMeta meta = handlerMethod.getMethodAnnotation(ApiMeta.class);
+            ApiMethodMeta meta = handlerMethod.getMethodAnnotation(ApiMethodMeta.class);
             if (meta != null) {
                 System.out.printf("ExecMode: [%s], Kind: [%s]\n", meta.execMode(), meta.kind());
             } else {
@@ -35,7 +35,7 @@ public class ApiInterceptor implements HandlerInterceptor {
             Class<?> controllerClass = handlerMethod.getBeanType();
 
             // 检查类上是否有 @ControllerInfo 注解
-            ControllerInfo controllerInfo = controllerClass.getAnnotation(ControllerInfo.class);
+            ApiClassMeta controllerInfo = controllerClass.getAnnotation(ApiClassMeta.class);
             if (controllerInfo != null) {
                 System.out.println("Controller Info: " + controllerInfo.description());
             } else {

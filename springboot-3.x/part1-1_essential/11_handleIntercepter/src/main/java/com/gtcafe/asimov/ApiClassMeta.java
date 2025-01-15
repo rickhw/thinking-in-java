@@ -6,10 +6,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface ApiMeta {
-    String execMode() default "sync"; // 默认模式为同步
+public @interface ApiClassMeta {
+    String description() default ""; // 描述信息
+    boolean tenantAware() default true;
     String kind();
+    // boolean serviceAware() default false;
 }
