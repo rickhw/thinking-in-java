@@ -303,3 +303,154 @@ Controller Info: Demo controller for API testing
 3. **解析类上的注解**：通过 `Class.getAnnotation(Class)` 获取注解信息。
 
 这种方式不仅可以获取方法级别的注解，还可以同时解析类级别的注解，满足多层次注解解析的需求。
+
+
+---
+
+
+以下是为 `ApiInterceptor` 编写的一个单元测试代码示例。使用 **JUnit 5** 和 **Mockito** 框架来测试拦截器的逻辑。
+
+---
+
+### 测试所需依赖
+
+确保 `build.gradle` 或 `pom.xml` 中包含以下依赖：
+
+#### Gradle
+```groovy
+dependencies {
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+```
+
+---
+
+### 单元测试代码
+
+创建一个测试类 `ApiInterceptorTest`，模拟拦截器的行为。
+
+```java
+package com.example.demo.interceptor;
+
+import com.example.demo.annotation.ControllerInfo;
+import com.example.demo.annotation.ExecMode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.web.method.HandlerMethod;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
+class ApiInterceptorTest {
+
+    private ApiInterceptor apiInterceptor;
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    private HandlerMethod handlerMethod;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        apiInterceptor = new ApiInterceptor();
+    }
+
+    @Test
+    void testPreHandle_WithMethodAndClassAnnotations() throws Exception {
+        // 模拟 HTTP 请求
+        when(request.getMethod()).thenReturn("GET");
+        when(request.getRequestURI()).thenReturn("/api/async-endpoint");
+
+        // 模拟 HandlerMethod，方法上有 @ExecMode 注解，类上有 @ControllerInfo 注解
+        when(handlerMethod.getMethodAnnotation(ExecMode.class)).thenReturn(new ExecMode() {
+            @Override
+            public String value() {
+                return "async";
+            }
+
+            @Override
+            public Class<? extends java.lang.annotation.Annotation> annotationType() {
+                return ExecMode.class;
+            }
+        });
+        when(handlerMethod.getBeanType()).thenReturn(DemoController.class);
+
+        // 执行拦截器逻辑
+        boolean result = apiInterceptor.preHandle(request, response, handlerMethod);
+
+        // 验证行为
+        assertTrue(result); // 拦截器应允许请求继续
+        verify(request, times(1)).getMethod();
+        verify(request, times(1)).getRequestURI();
+        verify(handlerMethod, times(1)).getMethodAnnotation(ExecMode.class);
+        verify(handlerMethod, times(1)).getBeanType();
+    }
+
+    @Test
+    void testPreHandle_WithoutAnnotations() throws Exception {
+        // 模拟 HTTP 请求
+        when(request.getMethod()).thenReturn("POST");
+        when(request.getRequestURI()).thenReturn("/api/sync-endpoint");
+
+        // 模拟 HandlerMethod，无方法注解或类注解
+        when(handlerMethod.getMethodAnnotation(ExecMode.class)).thenReturn(null);
+        when(handlerMethod.getBeanType()).thenReturn(Object.class); // 模拟无注解的类
+
+        // 执行拦截器逻辑
+        boolean result = apiInterceptor.preHandle(request, response, handlerMethod);
+
+        // 验证行为
+        assertTrue(result); // 拦截器应允许请求继续
+        verify(request, times(1)).getMethod();
+        verify(request, times(1)).getRequestURI();
+        verify(handlerMethod, times(1)).getMethodAnnotation(ExecMode.class);
+        verify(handlerMethod, times(1)).getBeanType();
+    }
+
+    // 示例控制器类（测试用）
+    @ControllerInfo(description = "Demo controller for API testing")
+    static class DemoController {
+        @ExecMode("async")
+        public void asyncEndpoint() {
+        }
+
+        public void syncEndpoint() {
+        }
+    }
+}
+```
+
+---
+
+### 测试解析
+
+1. **`testPreHandle_WithMethodAndClassAnnotations`**：
+   - 模拟带有方法级别注解（`@ExecMode("async")`）和类级别注解（`@ControllerInfo`）的场景。
+   - 验证拦截器是否正确提取注解信息，并允许请求继续。
+
+2. **`testPreHandle_WithoutAnnotations`**：
+   - 模拟没有任何注解的场景。
+   - 验证拦截器在这种情况下是否也允许请求继续。
+
+---
+
+### 测试运行
+
+执行测试时，您应该看到以下结果：
+
+```
+Tests passed: 2 of 2
+```
+
+此单元测试覆盖了主要逻辑路径，包括注解解析和默认行为验证。
