@@ -26,7 +26,7 @@ public class ApiInterceptor implements HandlerInterceptor {
             // 解析 ExecMode 注解
             ApiMethodMeta meta = handlerMethod.getMethodAnnotation(ApiMethodMeta.class);
             if (meta != null) {
-                System.out.printf("ExecMode: [%s], Kind: [%s]\n", meta.execMode(), meta.kind());
+                System.out.printf("ExecMode: [%s]\n", meta.execMode());
             } else {
                 System.out.println("ExecMode: not specified");
             }
