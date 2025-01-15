@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+# spring:
+#   data:
+#     redis:
+#       database: 0
+#       host: localhost
+#       port: 6379
+#       # password: password
+#       # timeout: 60000
+
+# spring:
+#   main:
+#     allow-circular-references: true
+
+# logging:
+#   level.org.springframework: DEBUG
+
+# management:
+#   endpoints:
+#     web:
+#       exposure:
+#         include: beans
