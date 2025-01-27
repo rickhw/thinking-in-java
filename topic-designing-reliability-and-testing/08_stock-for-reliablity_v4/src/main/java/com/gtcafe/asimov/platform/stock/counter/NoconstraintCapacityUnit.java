@@ -10,7 +10,7 @@ public class NoconstraintCapacityUnit implements ICapacityUnit {
     private int capacityUnit = DEFAULT_MAX_CAPACITY_UNIT;
 
     @Override
-    public int getValue() {
+    public int getRemaining() {
         return capacityUnit;
     }
 

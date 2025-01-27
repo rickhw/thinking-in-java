@@ -4,7 +4,7 @@ import com.gtcafe.asimov.platform.stock.counter.excpetion.StockInsufficientExcep
 import com.gtcafe.asimov.platform.stock.counter.excpetion.StockResumingException;
 
 public interface IStockCounter {
-    int DEFAULT_MAX_COUNTER = 1000;
+    int DEFAULT_MAX_COUNTER = 40;
 
     int getValue();
     void reset();

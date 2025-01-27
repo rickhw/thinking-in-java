@@ -16,7 +16,7 @@ public class ReentrantCapacityUnit implements ICapacityUnit {
     private ReentrantLock locker = new ReentrantLock();
 
     @Override
-    public int getValue() {
+    public int getRemaining() {
         return capacityUnit;
     }
 

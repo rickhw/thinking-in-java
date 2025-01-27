@@ -4,12 +4,10 @@ import com.gtcafe.asimov.platform.stock.counter.excpetion.CapacityInsufficientEx
 import com.gtcafe.asimov.platform.stock.counter.excpetion.CapacityResumingException;
 
 public interface ICapacityUnit {
-    int DEFAULT_MAX_CAPACITY_UNIT = 1000;
+    int DEFAULT_MAX_CAPACITY_UNIT = 40;
 
-    int getValue();
+    int getRemaining();
     void reset();
-
     void consume(int value) throws CapacityInsufficientException;
     void resume(int value) throws CapacityResumingException;
-
 }

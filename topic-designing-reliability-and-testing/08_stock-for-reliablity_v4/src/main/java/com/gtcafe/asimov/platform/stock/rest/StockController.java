@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.gtcafe.asimov.platform.stock.StockContext;
-import com.gtcafe.asimov.platform.stock.StockService;
 import com.gtcafe.asimov.platform.stock.counter.ICapacityUnit;
+import com.gtcafe.asimov.platform.stock.domain.StockContext;
+import com.gtcafe.asimov.platform.stock.domain.StockService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class StockController {
 		@RequestHeader(name = "X-JMeter-Thread-Name") String jmThreadName
 	) throws Exception {
 
-		int consumedUnit = (int) ((Math.random() * 1000) + 1) % 200;	// max: 200 unit
+		int consumedUnit = (int) ((Math.random() * 1000) + 1) % 14;	// max: 200 unit
 		long processTime = (long) (Math.random() * 20000);				// max: 20s
 
 		StockContext context = new StockContext();
@@ -42,13 +42,13 @@ public class StockController {
 
 		service.acquire(context);
 
-		return capacityUnit.getValue();
+		return capacityUnit.getRemaining();
 	}
 
 	@GetMapping("/value")
 	public int getValue() {
-		log.info("capacity unit is [{}", capacityUnit.getValue());
+		log.info("capacity unit is [{}", capacityUnit.getRemaining());
 
-		return capacityUnit.getValue();
+		return capacityUnit.getRemaining();
 	}
 }

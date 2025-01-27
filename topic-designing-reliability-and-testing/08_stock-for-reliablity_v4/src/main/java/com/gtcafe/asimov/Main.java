@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.gtcafe.asimov.platform.stock.counter.ICapacityUnit;
-import com.gtcafe.asimov.platform.stock.counter.NolockCapacityUnit;
+import com.gtcafe.asimov.platform.stock.counter.ReentrantCapacityUnit;
 
 @SpringBootApplication
 @EnableScheduling
@@ -18,7 +18,7 @@ public class Main {
 	@Bean
     public ICapacityUnit capacityUnit() {
 		// return new NoconstraintCapacityUnit();
-		return new NolockCapacityUnit();
-        // return new ReentrantStockCounter();
+		// return new NolockCapacityUnit();
+        return new ReentrantCapacityUnit();
     }
 }

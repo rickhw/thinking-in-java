@@ -1,0 +1,16 @@
+{
+    "@timestamp": "2025-01-27T19:40:41.218+08:00",
+    "class": "com.gtcafe.asimov.crypto.domain.CryptoService",
+    "thread": "http-nio-8080-exec-10",
+    "level": "INFO",
+    "capacity": {
+        "requestId": "eef541ee-927f-4416-ba49-3bf3fd92e231",
+        "jmThreadHame": "",
+        "consumed": 3,
+        "beforeRemaining": 4,
+        "afterRemaining": 1,
+        "accepted": 0,
+        "processTime": 82,
+        "returnedCapacity": 0
+    }
+}

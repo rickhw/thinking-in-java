@@ -28,7 +28,7 @@ public class StockController {
 	@GetMapping("/consume")
 	public int operate(@RequestHeader(name = "X-Request-Id") String requestId, @RequestHeader(name = "X-JMeter-Thread-Name") String jmThreadName) throws Exception {
 
-		int consumedUnit = (int) ((Math.random() * 1000) + 1) % 200;	// max: 200 unit
+		int consumedUnit = (int) ((Math.random() * 1000) + 1) % 15;	// max: 200 unit
 		long processTime = (long) (Math.random() * 20000);				// max: 20s
 
 		StockContext context = new StockContext();

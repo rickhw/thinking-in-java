@@ -1,0 +1,35 @@
+apiVersion: 1
+
+datasources:
+  - name: elasticsearch-sampling
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    isDefault: true
+    jsonData:
+      esVersion: 8
+      maxConcurrentShardRequests: 256
+      timeField: "@timestamp"
+      index: "crypto-sampling*"
+
+  - name: elasticsearch-request
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    isDefault: false
+    jsonData:
+      esVersion: 8
+      maxConcurrentShardRequests: 256
+      timeField: "@timestamp"
+      index: "crypto-request*"
+
+  - name: elasticsearch-consumer
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    isDefault: false
+    jsonData:
+      esVersion: 8
+      maxConcurrentShardRequests: 256
+      timeField: "@timestamp"
+      index: "crypto-consumer*"

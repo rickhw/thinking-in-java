@@ -1,0 +1,53 @@
+filebeat.inputs:
+  - type: log
+    paths:
+      - /logs/crypto.consumer*.json
+    fields:
+      app_name: crypto-app
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    index: "crypto-consumer"  # 自定義索引標記
+
+  - type: log
+    paths:
+      - /logs/crypto.request*.json
+    fields:
+      app_name: crypto-app
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    index: "crypto-request"  # 自定義索引標記
+
+  - type: log
+    paths:
+      - /logs/crypto.sampling*.json
+    fields:
+      app_name: crypto-app
+    fields_under_root: true
+    json.keys_under_root: true
+    json.add_error_key: true
+    index: "crypto-sampling"  # 自定義索引標記
+
+output.elasticsearch:
+  hosts: ["elasticsearch:9200"]
+  protocol: "http"
+  indices:
+    # - index: "capacity-%{+yyyy.MM.dd}"
+    #   when.equals:
+    #     index: "capacity"
+
+    - index: "crypto-%{+yyyy.MM.dd}"
+      when.equals:
+        index: "crypto"
+
+setup.kibana:
+  host: "kibana:5601"
+
+# 可選：自動設置索引模板
+setup.template:
+  name: "custom-filebeat"
+  pattern: "crypto-*"
+  settings:
+    index.number_of_shards: 1
+    index.number_of_replicas: 1
