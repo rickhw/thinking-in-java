@@ -3,7 +3,7 @@ package com.gtcafe.asimov.crypto;
 public interface CryptoConstants {
     String X__REQUEST_ID = "X-Request-Id";
 
-    // Fields
+    // Fields of MDC object
     String F__CAPACITY_CONSUMED = "capacity.consumed";
     String F__CAPACITY_REMAINING_BEFORE = "capacity.remaining.before";
     String F__CAPACITY_REMAINING_AFTER = "capacity.remaining.after";

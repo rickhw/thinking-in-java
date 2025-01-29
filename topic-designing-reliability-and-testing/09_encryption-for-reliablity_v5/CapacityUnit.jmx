@@ -105,7 +105,7 @@ vars.put(&quot;threadName&quot;, ctx.getThread().getThreadName());
         <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_up">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.duration">60000</stringProp>
+        <stringProp name="ThreadGroup.duration">600000</stringProp>
         <stringProp name="ThreadGroup.delay"></stringProp>
         <stringProp name="ThreadGroup.ramp_time"></stringProp>
       </ThreadGroup>

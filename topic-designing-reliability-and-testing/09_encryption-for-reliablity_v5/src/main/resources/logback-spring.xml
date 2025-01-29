@@ -64,7 +64,7 @@
         </encoder>
     </appender>
 
-    <appender name="StockRequestAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="StockRequestJsonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/crypto.request.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/crypto.request.%d{yyyy-MM-dd}.json</fileNamePattern>
@@ -77,8 +77,20 @@
         </encoder>
     </appender>
 
+    <appender name="StockRequestCsvAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/crypto.request.csv</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/crypto.request.%d{yyyy-MM-dd}.csv</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        
+        <encoder>
+            <pattern>"%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}","%logger","%thread","%level","%X{X-Request-Id}",%X{capacity.consumed},%X{capacity.remaining.before},%X{capacity.remaining.after},%X{capacity.accepted},%X{capacity.processTime},%X{capacity.returnedCapacity}%n</pattern>
+        </encoder>
+    </appender>
 
-    <appender name="StockConsumerAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="StockConsumerJsonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/crypto.consumer.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/crypto.consumer.%d{yyyy-MM-dd}.json</fileNamePattern>
@@ -91,7 +103,20 @@
         </encoder>
     </appender>
 
-    <appender name="StockSamplingAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="StockConsumerCsvAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/crypto.consumer.csv</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/crypto.consumer.%d{yyyy-MM-dd}.csv</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        
+        <encoder>
+            <pattern>"%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}","%logger","%thread","%level","%X{X-Request-Id}",%X{capacity.consumed},%X{capacity.remaining.before},%X{capacity.remaining.after},%X{capacity.accepted},%X{capacity.processTime},%X{capacity.returnedCapacity}%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="StockSamplingJsonAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_PATH}/crypto.sampling.json</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_PATH}/crypto.sampling.%d{yyyy-MM-dd}.json</fileNamePattern>
@@ -104,27 +129,43 @@
         </encoder>
     </appender>
 
+    <appender name="StockSamplingCsvAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/crypto.sampling.csv</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/crypto.sampling.%d{yyyy-MM-dd}.csv</fileNamePattern>
+            <maxHistory>180</maxHistory>
+            <totalSizeCap>5GB</totalSizeCap>
+        </rollingPolicy>
+        
+        <encoder>
+            <pattern>"%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}","%logger","%thread","%level","%X{X-Request-Id}",%X{capacity.remaining}%n</pattern>
+        </encoder>
+    </appender>
+
     <!-- StockRequest Logger -->
     <logger name="com.gtcafe.asimov.crypto.domain.CryptoService" level="DEBUG" additivity="false">
-        <appender-ref ref="StockRequestAppender" />
+        <appender-ref ref="StockRequestJsonAppender" />
+        <appender-ref ref="StockRequestCsvAppender" />
         <appender-ref ref="ConsoleAppender" />
     </logger>
 
     <!-- StockConsumer Logger -->
     <logger name="com.gtcafe.asimov.crypto.domain.CryptoConsumer" level="DEBUG" additivity="false">
-        <appender-ref ref="StockConsumerAppender" />
+        <appender-ref ref="StockConsumerJsonAppender" />
+        <appender-ref ref="StockConsumerCsvAppender" />
         <appender-ref ref="ConsoleAppender" />
     </logger>
 
     <!-- StockSamplerService Logger -->
     <logger name="com.gtcafe.asimov.crypto.domain.CryptoSamplerService" level="DEBUG" additivity="false">
-        <appender-ref ref="StockSamplingAppender" />
+        <appender-ref ref="StockSamplingJsonAppender" />
+        <appender-ref ref="StockSamplingCsvAppender" />
         <appender-ref ref="ConsoleAppender" />
     </logger>
 
     <!-- Root Logger -->
     <root level="INFO">
         <appender-ref ref="ConsoleAppender" />
-        <appender-ref ref="GeneralJsonFileAppender" />
+        <!-- <appender-ref ref="GeneralJsonFileAppender" /> -->
     </root>
 </configuration>
