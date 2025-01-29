@@ -1,7 +1,0 @@
-{
-    "@timestamp": "2025-01-27T19:40:55.392+08:00",
-    "class": "com.gtcafe.asimov.crypto.domain.CryptoSamplerService",
-    "thread": "scheduling-1",
-    "level": "INFO",
-    "capacity": 27
-}
