@@ -1,6 +1,5 @@
 package rpg.entity;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -64,7 +63,7 @@ public class Player extends Entity {
     
             // animation 
             spriteCounter++;
-            if(spriteCounter > 30) {
+            if(spriteCounter > 10) {
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {
