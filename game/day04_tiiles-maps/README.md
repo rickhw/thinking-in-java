@@ -1,6 +1,5 @@
 
-https://youtu.be/wT9uNGzMEM4?si=sXEVApeCmZX1MKi1
+https://www.youtube.com/watch?v=ugzxCcpoSdE&t=2s
 
 
-1. add player and entity
-2. add tiles and map
+add tiles and map
