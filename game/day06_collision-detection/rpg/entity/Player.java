@@ -56,13 +56,13 @@ public class Player extends Entity {
         // if (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed) {
             if(keyHandler.upPressed) {
                 direction = "up";
-            }
+            } else
             if(keyHandler.downPressed) {
                 direction = "down";
-            }
+            } else
             if(keyHandler.leftPressed) {
                 direction = "left";
-            }
+            } else
             if(keyHandler.rightPressed) {
                 direction = "right";
             }

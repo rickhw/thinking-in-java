@@ -36,7 +36,6 @@ public class GamePanel extends JPanel implements Runnable {
     KeyHandler keyHandler = new KeyHandler();
     public Player player = new Player(this, keyHandler);    
 
-
     // set player's default position
     int playerX = 100;
     int playerY = 100;
