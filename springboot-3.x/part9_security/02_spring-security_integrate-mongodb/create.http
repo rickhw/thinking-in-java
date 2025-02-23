@@ -1,0 +1,29 @@
+### ----------------------------
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+    "username": "user1",
+    "password": "111",
+    "authorities": ["STUDENT"]
+}
+
+### ----------------------------
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+    "username": "user2",
+    "password": "222",
+    "authorities": ["TEACHER"]
+}
+
+### ----------------------------
+POST http://localhost:8080/members
+Content-Type: application/json
+
+{
+    "username": "user3",
+    "password": "333",
+    "authorities": ["TEACHER", "ADMIN"]
+}
