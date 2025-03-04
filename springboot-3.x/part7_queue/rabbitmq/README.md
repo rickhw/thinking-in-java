@@ -1,4 +1,18 @@
 
+- init
+    - config queue
+- consumer: 
+    - ack/nack
+    - 保證訊息處理的次數
+    - 控制每次有幾個訊息被處理
+    - 例外處理：訊息處理過程中，失敗的 requeue
+    - 一個訊息, 同時給多個 consumer 處理, 只要其中一個完成即可
+    - 一個訊息, 同時給多個 consumer 處理, 全部要完成才算完成
+    - 訓息傳遞過程的資料結構, context
+- 例外處理
+    - MQ 停機的時候
+- design patterns
+
 
 ## Prompt
 

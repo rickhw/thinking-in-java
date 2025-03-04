@@ -4,7 +4,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 
 import com.rabbitmq.client.Channel;
-
+import org.springframework.amqp.core.Message;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -14,7 +14,7 @@ public class MessageConsumer {
     private static final int DELAY = 50;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME, ackMode = "MANUAL")
-    public void consumeHelloQueue(String eventString, Channel channel, org.springframework.amqp.core.Message message) throws Exception {
+    public void consumeHelloQueue(String eventString, Channel channel, Message message) throws Exception {
         log.info("Dequeue, message: [{}]", eventString);
 
         try {

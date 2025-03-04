@@ -1,0 +1,8 @@
+@contentType = application/json
+@hostname = http://localhost:8080/api/messages
+
+
+### apply a new tenant
+POST {{hostname}}
+
+Tears-of-The-Kingdom
