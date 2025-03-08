@@ -14,7 +14,7 @@
 </head>
 <body>
     <!-- 通用的 header fragment -->
-    <header th:fragment="header(pageTitle)" class="site-header">
+    <header th:fragment="commonHeader(pageTitle)" class="site-header">
         <div class="header-container">
             <div class="logo-container">
                 <h1 th:text="${pageTitle}">系統名稱</h1>
@@ -40,8 +40,8 @@
     <!-- 通用的 footer fragment -->
     <footer th:fragment="footer" class="site-footer">
         <div class="footer-container">
-            <p>© 2025 我的公司名稱 - 版權所有</p>
-            <p>如有問題，請聯繫：support@example.com</p>
+            <p>© 2025 GTCafe - 版權所有</p>
+            <p>如有問題，請聯繫：support@gtcafe.com</p>
         </div>
     </footer>
 </body>
