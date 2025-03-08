@@ -9,9 +9,14 @@
     - 一個訊息, 同時給多個 consumer 處理, 只要其中一個完成即可
     - 一個訊息, 同時給多個 consumer 處理, 全部要完成才算完成
     - 訓息傳遞過程的資料結構, context
+    - message event
 - 例外處理
     - MQ 停機的時候
 - design patterns
+
+
+
+---
 
 
 ## Prompt

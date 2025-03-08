@@ -22,8 +22,8 @@ public class RabbitMQConfig {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
 
-        // 設置 prefetch 為 3
-        factory.setPrefetchCount(50);
+        // 設置 prefetch count 為 3
+        factory.setPrefetchCount(3);
 
         // 啟用手動確認模式
         factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- 通用的 head fragment -->
+    <th:block th:fragment="commonHead(title)">
+        <title th:text="${title}">系統名稱</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" th:href="@{/css/common.css}">
+    </th:block>
+</head>
+<body>
+    <!-- 通用的 header fragment -->
+    <header th:fragment="header(pageTitle)" class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <h1 th:text="${pageTitle}">系統名稱</h1>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 登入後的 header fragment (包含登出按鈕) -->
+    <header th:fragment="authHeader(pageTitle, username)" class="site-header">
+        <div class="header-container">
+            <div class="logo-container">
+                <h1 th:text="${pageTitle}">系統名稱</h1>
+            </div>
+            <div class="user-info" th:if="${username != null}">
+                <span th:text="${'歡迎, ' + username}">歡迎, 用戶</span>
+                <form th:action="@{/perform-logout}" method="post">
+                    <button type="submit" class="logout-button">登出</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    
+    <!-- 通用的 footer fragment -->
+    <footer th:fragment="footer" class="site-footer">
+        <div class="footer-container">
+            <p>© 2025 我的公司名稱 - 版權所有</p>
+            <p>如有問題，請聯繫：support@example.com</p>
+        </div>
+    </footer>
+</body>
+</html>

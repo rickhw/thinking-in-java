@@ -1,0 +1,89 @@
+/* 通用樣式 */
+body {
+    font-family: 'Microsoft JhengHei', Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* 通用 Header 樣式 */
+.site-header {
+    background-color: #4285f4;
+    color: white;
+    padding: 15px 20px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo-container h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-info span {
+    margin-right: 15px;
+}
+
+.logout-button {
+    background-color: white;
+    color: #4285f4;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #f0f0f0;
+}
+
+/* 通用 Footer 樣式 */
+.site-footer {
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+    border-top: 1px solid #eee;
+    font-size: 14px;
+    color: #666;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.site-footer p {
+    margin: 5px 0;
+}
+
+/* 錯誤和提示訊息 */
+.error-message {
+    background-color: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.logout-message, .success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
