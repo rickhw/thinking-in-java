@@ -1,17 +1,26 @@
 package com.gtcafe.asimov.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.gtcafe.asimov.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    @Autowired
+    private  JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -23,9 +32,11 @@ public class SecurityConfig {
                 // .requestMatchers(HttpMethod.GET, "/members").hasAuthority(MemberAuthority.ADMIN.toString())
                 // .requestMatchers(HttpMethod.GET, "/selected-courses").hasAuthority(MemberAuthority.STUDENT.toString())
                 // .requestMatchers(HttpMethod.GET, "/course-feedback").hasAnyAuthority(MemberAuthority.TEACHER.toString(), MemberAuthority.ADMIN.toString())
+                // .requestMatchers("/login").permitAll()
                 
                 .anyRequest().authenticated()
             )
+            // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // 無狀態模式
             .formLogin(form -> form
                 .loginPage("/login") // 指定自定義登入頁面的URL
                 .loginProcessingUrl("/process-login") // 登入表單提交的URL
@@ -41,6 +52,7 @@ public class SecurityConfig {
                 .permitAll()
             )
             .csrf(csrf -> csrf.disable())
+            // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
    
@@ -50,5 +62,10 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         // return NoOpPasswordEncoder.getInstance();
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 }
