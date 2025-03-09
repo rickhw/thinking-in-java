@@ -19,6 +19,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // 允許訪問靜態資源
                 .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
+                .requestMatchers(HttpMethod.GET, "/_/**").permitAll()
                 // .requestMatchers(HttpMethod.GET, "/members").hasAuthority(MemberAuthority.ADMIN.toString())
                 // .requestMatchers(HttpMethod.GET, "/selected-courses").hasAuthority(MemberAuthority.STUDENT.toString())
                 // .requestMatchers(HttpMethod.GET, "/course-feedback").hasAnyAuthority(MemberAuthority.TEACHER.toString(), MemberAuthority.ADMIN.toString())
