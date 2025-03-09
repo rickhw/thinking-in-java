@@ -1,8 +1,5 @@
 package com.gtcafe.asimov.config;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,17 +7,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-    @Value("${app.cors.allowed-origins}")
-    private List<String> allowedOrigins;
-
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -53,18 +43,18 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public CorsFilter corsFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(allowedOrigins); // 允許的來源
-        config.addAllowedMethod("*"); // 允許所有 HTTP 方法
-        config.addAllowedHeader("*"); // 允許所有請求 Header
-        config.setAllowCredentials(true); // 允許攜帶 Cookie
+    // @Bean
+    // public CorsFilter corsFilter() {
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     CorsConfiguration config = new CorsConfiguration();
+    //     config.setAllowedOrigins(allowedOrigins); // 允許的來源
+    //     config.addAllowedMethod("*"); // 允許所有 HTTP 方法
+    //     config.addAllowedHeader("*"); // 允許所有請求 Header
+    //     config.setAllowCredentials(true); // 允許攜帶 Cookie
 
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
+    //     source.registerCorsConfiguration("/**", config);
+    //     return new CorsFilter(source);
+    // }
 
    
     // 密碼加密，這裡使用 NoOpPasswordEncoder，不做任何加密
