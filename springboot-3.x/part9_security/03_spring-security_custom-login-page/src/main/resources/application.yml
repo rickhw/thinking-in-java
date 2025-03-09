@@ -5,3 +5,9 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/school
       # uri: mongodb://host.docker.internal:27017/school
+
+app:
+  cors:
+    allowed-origins:
+      - "http://localhost:3000"
+      - "http://35.166.206.169"
