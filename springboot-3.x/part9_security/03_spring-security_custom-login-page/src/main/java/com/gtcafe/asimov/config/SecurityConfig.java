@@ -2,6 +2,7 @@ package com.gtcafe.asimov.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,7 +18,7 @@ public class SecurityConfig {
         return httpSecurity
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // 允許訪問靜態資源
-                // .requestMatchers(HttpMethod.POST, "/members").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
                 // .requestMatchers(HttpMethod.GET, "/members").hasAuthority(MemberAuthority.ADMIN.toString())
                 // .requestMatchers(HttpMethod.GET, "/selected-courses").hasAuthority(MemberAuthority.STUDENT.toString())
                 // .requestMatchers(HttpMethod.GET, "/course-feedback").hasAnyAuthority(MemberAuthority.TEACHER.toString(), MemberAuthority.ADMIN.toString())
@@ -41,21 +42,6 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .build();
     }
-
-
-    // @Bean
-    // public CorsFilter corsFilter() {
-    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    //     CorsConfiguration config = new CorsConfiguration();
-    //     config.setAllowedOrigins(allowedOrigins); // 允許的來源
-    //     config.addAllowedMethod("*"); // 允許所有 HTTP 方法
-    //     config.addAllowedHeader("*"); // 允許所有請求 Header
-    //     config.setAllowCredentials(true); // 允許攜帶 Cookie
-
-    //     source.registerCorsConfiguration("/**", config);
-    //     return new CorsFilter(source);
-    // }
-
    
     // 密碼加密，這裡使用 NoOpPasswordEncoder，不做任何加密
     // 實際應用中，應該使用 BCryptPasswordEncoder 或其他安全的加密方式

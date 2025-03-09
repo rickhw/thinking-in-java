@@ -1,7 +1,8 @@
-HOST=http://35.166.206.169:8080
+#@HOST = http://35.166.206.169:8080
+@HOST = http://localhost:8080
 
 ### ----------------------------
-POST http://35.166.206.169:8080/members
+POST {{ HOST }}/api/members
 Content-Type: application/json
 
 {
@@ -11,7 +12,7 @@ Content-Type: application/json
 }
 
 ### ----------------------------
-POST http://localhost:8080/members
+POST {{ HOST }}/api/members
 Content-Type: application/json
 
 {
@@ -21,7 +22,7 @@ Content-Type: application/json
 }
 
 ### ----------------------------
-POST http://localhost:8080/members
+POST {{ HOST }}/api/members
 Content-Type: application/json
 
 {

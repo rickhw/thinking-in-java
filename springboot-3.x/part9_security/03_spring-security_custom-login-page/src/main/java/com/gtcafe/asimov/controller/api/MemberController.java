@@ -1,4 +1,4 @@
-package com.gtcafe.asimov.controller;
+package com.gtcafe.asimov.controller.api;
 
 import java.util.List;
 
@@ -7,12 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.gtcafe.asimov.model.Member;
 import com.gtcafe.asimov.repository.MemberRepository;
 
 @RestController
+@RequestMapping("/api")
 public class MemberController {
 
     @Autowired
