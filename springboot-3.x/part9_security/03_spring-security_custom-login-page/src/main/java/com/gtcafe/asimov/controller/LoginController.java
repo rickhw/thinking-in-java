@@ -21,7 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController {
 
     @GetMapping("/login")
-    public String showLoginPage(HttpServletRequest request) {
+    public String showLoginPage(Model model, HttpServletRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String hostname = getHostName();
+        String clientIp = getClientIp(request);
+        
+        model.addAttribute("username", auth.getName());
+        model.addAttribute("computeNodeHostname", hostname);
+        model.addAttribute("clientIp", clientIp);
 
         SessionUtil.printSessionInfo(request);
 
