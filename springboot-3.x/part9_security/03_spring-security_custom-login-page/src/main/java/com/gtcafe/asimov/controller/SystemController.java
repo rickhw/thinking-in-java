@@ -16,5 +16,4 @@ public class SystemController {
         log.info("Health check");
         return "OK";
     }
-
 }

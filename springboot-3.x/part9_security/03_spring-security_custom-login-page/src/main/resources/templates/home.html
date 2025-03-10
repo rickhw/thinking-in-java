@@ -41,6 +41,6 @@
     </div>
     
     <!-- 引入共用 footer -->
-    <footer th:replace="~{fragments/common :: footer}"></footer>
+    <footer th:replace="~{fragments/common :: footer(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname})}"></footer>
 </body>
 </html>
