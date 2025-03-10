@@ -13,10 +13,13 @@
 - Authorized
     - 11. hasAuthorizy
 - Distirbuted
-    - 21. Multiple Process (K8s Pod or EC2 Instance)
+    - 21. Multiple Process (K8s Pod or EC2 Instance) of session
+- API auth
 - SSO
     - Google
     - Github
     - Facebook
+- secret vault
+
 
 
