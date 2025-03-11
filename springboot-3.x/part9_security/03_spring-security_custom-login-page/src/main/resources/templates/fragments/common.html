@@ -47,11 +47,12 @@
     </footer>
 
     <!-- 通用的 footer fragment -->
-    <footer th:fragment="loginFooter(clientIp, computeNodeHostname)" class="site-footer">
+    <footer th:fragment="loginFooter(clientIp, computeNodeHostname, sessionId, roles)" class="site-footer">
         <div class="footer-container">
             <p>© 2025 GTCafe - 版權所有</p>
             <p>如有問題，請聯繫：support@gtcafe.com</p>
             <p>Your IP: [<span th:text="${clientIp}"></span>], Backend Host: [<span th:text="${computeNodeHostname}"></span>]</p>
+            <p>SessionId: [<span th:text="${sessionId}"></span>], Roles: [<span th:text="${roles}"></span>]</p>
         </div>
     </footer>
 </body>

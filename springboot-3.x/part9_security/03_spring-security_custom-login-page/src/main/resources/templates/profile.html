@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- 引入共用 head -->
-    <th:block th:replace="~{fragments/common :: commonHead('首頁 - 系統名稱')}"></th:block>
+    <th:block th:replace="~{fragments/common :: commonHead('首頁 - Profile')}"></th:block>
     <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
@@ -20,11 +20,11 @@
                 <h3>系統功能</h3>
                 <div class="feature-grid">
                     <div class="feature-card">
-                        <h4>Profile</h4>
+                        <h4>Username</h4>
                         <p>功能描述內容...</p>
                     </div>
                     <div class="feature-card">
-                        <h4>API Token</h4>
+                        <h4>Roles</h4>
                         <p>功能描述內容...</p>
                     </div>
                     <div class="feature-card">
@@ -41,6 +41,6 @@
     </div>
     
     <!-- 引入共用 footer -->
-    <footer th:replace="~{fragments/common :: loginFooter(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname}, sessionId=${sessionId}, roles=${roles})}"></footer>
+    <footer th:replace="~{fragments/common :: loginFooter(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname}, sessionId=${sessionId})}"></footer>
 </body>
 </html>

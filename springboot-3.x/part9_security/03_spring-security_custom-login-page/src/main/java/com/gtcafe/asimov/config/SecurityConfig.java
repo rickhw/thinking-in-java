@@ -28,7 +28,7 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                 .loginPage("/login") // 指定自定義登入頁面的URL
-                .loginProcessingUrl("/process-login") // 登入表單提交的URL
+                .loginProcessingUrl("/process-login") // 登入表單提交的URL, 改動的話, 要自己處理. Method=POST, 建議不要動, 但是也不能不寫
                 .defaultSuccessUrl("/home", true) // 登入成功後跳轉的頁面
                 .failureUrl("/login?error=true") // 登入失敗後跳轉的頁面
                 .permitAll()

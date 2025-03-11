@@ -26,12 +26,12 @@ public class LoginController {
 
         String hostname = getHostName();
         String clientIp = getClientIp(request);
-        
+
         model.addAttribute("username", auth.getName());
         model.addAttribute("computeNodeHostname", hostname);
         model.addAttribute("clientIp", clientIp);
 
-        SessionUtil.printSessionInfo(request);
+        SessionUtil.printSessionInfo(model, request);
 
         return "login"; // 返回模板名稱
     }
@@ -42,15 +42,18 @@ public class LoginController {
 
         String hostname = getHostName();
         String clientIp = getClientIp(request);
-        
+
         model.addAttribute("username", auth.getName());
         model.addAttribute("computeNodeHostname", hostname);
         model.addAttribute("clientIp", clientIp);
 
-        SessionUtil.printSessionInfo(request);
+        SessionUtil.printSessionInfo(model, request);
 
         return "home"; // 返回首頁模板
     }
+
+
+
 
     private String getHostName() {
         try {
@@ -86,7 +89,8 @@ public class LoginController {
         }
         byte[] ipv4Bytes = inetAddress.getAddress();
         if (ipv4Bytes.length == 16) {
-            return String.format("%d.%d.%d.%d", ipv4Bytes[12] & 0xFF, ipv4Bytes[13] & 0xFF, ipv4Bytes[14] & 0xFF, ipv4Bytes[15] & 0xFF);
+            return String.format("%d.%d.%d.%d", ipv4Bytes[12] & 0xFF, ipv4Bytes[13] & 0xFF, ipv4Bytes[14] & 0xFF,
+                    ipv4Bytes[15] & 0xFF);
         }
         return inetAddress.getHostAddress(); // 若非 IPv6，直接回傳
     }

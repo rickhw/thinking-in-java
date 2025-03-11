@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import com.gtcafe.asimov.model.Member;
 import com.gtcafe.asimov.repository.MemberRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -23,6 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberRepository.findByUsername(username);
         if (member == null) {
+            log.error("Can't find member: {}", username);
             throw new UsernameNotFoundException("Can't find member: " + username);
         }
 
