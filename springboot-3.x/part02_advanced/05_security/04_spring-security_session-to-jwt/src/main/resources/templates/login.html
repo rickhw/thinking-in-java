@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入共用 head -->
+    <th:block th:replace="~{fragments/common :: commonHead('登入 - 系統名稱')}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+    <!-- 引入共用 header -->
+    <header th:replace="~{fragments/common :: commonHeader('歡迎使用我的系統')}"></header>
+    
+    <div class="login-container">
+        <div class="login-form-wrapper">
+            <div class="login-description">
+                <p>請輸入您的帳號密碼進行登入</p>
+            </div>
+            
+            <div class="login-form">
+                <!-- 顯示錯誤訊息 -->
+                <div class="error-message" th:if="${param.error}">
+                    <p>帳號或密碼不正確，請重新輸入。</p>
+                </div>
+                
+                <!-- 顯示登出訊息 -->
+                <div class="logout-message" th:if="${param.logout}">
+                    <p>您已成功登出系統。</p>
+                </div>
+                
+                <form th:action="@{/process-login}" method="post">
+                    <div class="form-group">
+                        <label for="username">帳號：</label>
+                        <input type="text" id="username" name="username" required autofocus>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">密碼：</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="checkbox" id="remember-me" name="remember-me">
+                        <label for="remember-me">記住我</label>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="login-button">登入</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入共用 footer -->
+    <footer th:replace="~{fragments/common :: nonLoginFooter}"></footer>
+    
+    <script th:src="@{/js/login.js}"></script>
+</body>
+</html>
