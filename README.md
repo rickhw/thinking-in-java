@@ -2,9 +2,9 @@
 
 # Topic
 
-- Java Language
+- 00: Java Language
     - synchrionmzie
-- Java SDK
+- 01: Java SDK
     - IO
     - Utils
     - Threads: Virtual Thread, Platform Thread
@@ -12,15 +12,18 @@
     - Generic
     - Collection
     - Date Time 
-- JVM
-- XML / JSON
-- SpringBoot
+- 02: JVM
+- 03: algorithm
+- 10: Java Development
+- 11: Build and Pack: Maven, Gradle
+    - Build image name
+- 20: lib
+    - XML / JSON
+- 30: SpringBoot
     - Security
     - Log:
         - Custom Log: IP, Context
-- Build and Pack: Maven, Gradle
-    - Build image name
-
+- 50: topics
 
 
 # Reference
