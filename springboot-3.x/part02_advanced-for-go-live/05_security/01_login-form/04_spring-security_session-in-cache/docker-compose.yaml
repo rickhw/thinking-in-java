@@ -8,8 +8,8 @@ services:
     ports:
       - "27017:27017"
     command: ["mongod", "--noauth"]
-    volumes:
-      - mongo_data:/data/db
+    # volumes:
+    #   - mongo_data:/data/db
     networks:
       - net1
 
@@ -48,9 +48,9 @@ services:
       - net1
 
 
-volumes:
-  mongo_data:
-    driver: local
+# volumes:
+#   mongo_data:
+#     driver: local
 
 networks:
   net1:
