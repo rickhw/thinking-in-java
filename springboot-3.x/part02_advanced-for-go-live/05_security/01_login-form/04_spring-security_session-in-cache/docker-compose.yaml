@@ -23,6 +23,31 @@ services:
     depends_on:
       - mongo
 
+  cache_redis:
+    image: redis:7.2-alpine
+    ports:
+      - 6379:6379
+    volumes:
+      - ./.docker-data/cache_redis:/data
+    networks:
+      - net1
+
+
+  cache-adminer_phpRedisAdmin:
+    image: erikdubbelboer/phpredisadmin:1.19
+    ports:
+      - 9998:80
+    environment:
+      REDIS_1_HOST: cache_redis
+      REDIS_1_NAME: localhost
+    networks:
+      - net1
+
+
 volumes:
   mongo_data:
     driver: local
+
+networks:
+  net1:
+    driver: bridge
