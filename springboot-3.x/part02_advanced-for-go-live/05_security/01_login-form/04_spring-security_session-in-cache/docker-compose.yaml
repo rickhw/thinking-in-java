@@ -10,6 +10,8 @@ services:
     command: ["mongod", "--noauth"]
     volumes:
       - mongo_data:/data/db
+    networks:
+      - net1
 
   mongo-express:
     image: mongo-express:latest
@@ -22,6 +24,8 @@ services:
       ME_CONFIG_BASICAUTH: "false"
     depends_on:
       - mongo
+    networks:
+      - net1
 
   cache_redis:
     image: redis:7.2-alpine
