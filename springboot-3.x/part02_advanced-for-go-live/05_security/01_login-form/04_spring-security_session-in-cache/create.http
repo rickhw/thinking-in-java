@@ -1,6 +1,6 @@
 #@HOST = http://35.166.206.169:8080
-@HOST = http://localhost:8080
-# @HOST = http://rws.lab.gtcafe.com
+# @HOST = http://localhost:8080
+@HOST = http://rws.lab.gtcafe.com
 
 ### ----------------------------
 POST {{ HOST }}/api/members
