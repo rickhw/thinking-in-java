@@ -3,9 +3,21 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/school
 
-  session:
-    store-type: redis
+    redis:
+      host: localhost
+      port: 6379
 
-  # redis:
-  #   host: localhost
-  #   port: 6379
+  session:
+    store-type: redis  # 指定 session 存儲類型，可選 none, redis, jdbc, hazelcast
+    timeout: 30m       # 會話超時時間（全局設定，預設 30 分鐘）
+    tracking-mode: cookie  # 設定會話追蹤模式，可選 cookie, url, session
+    # cookie:
+    #   name: RSESSIONID  # 設定 Session Cookie 名稱
+    #   http-only: true  # 限制 Cookie 只能透過 HTTP 存取，防止 JavaScript 讀取
+    #   secure: false    # 是否僅限 HTTPS 傳輸
+    #   same-site: lax   # 控制 SameSite 設定，可選 none, lax, strict
+
+    # redis:
+    #   namespace: rws:session  # Redis 存儲 session 的 key 前綴
+    #   flush-mode: on_save        # session 變更時才同步到 Redis
+    #   save-mode: on_set_attribute # 只同步被修改的 attribute，可選 on_set_attribute, on_get_attribute, always
