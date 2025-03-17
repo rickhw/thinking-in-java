@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/home", true) // 登入成功後跳轉的頁面
                 .failureUrl("/login?error=true") // 登入失敗後跳轉的頁面
             .failureHandler((request, response, exception) -> {
-                log.error("Authentication failed: {}", exception.getMessage());
+                log.error("Authentication failed: [{}]", exception.getMessage());
                 response.sendRedirect("/login?error=true");
             })
             .permitAll()
