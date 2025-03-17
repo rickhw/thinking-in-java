@@ -8,16 +8,51 @@ spring:
       port: 6379
 
   session:
-    store-type: redis  # 指定 session 存儲類型，可選 none, redis, jdbc, hazelcast
-    timeout: 30m       # 會話超時時間（全局設定，預設 30 分鐘）
-    tracking-mode: cookie  # 設定會話追蹤模式，可選 cookie, url, session
-    # cookie:
-    #   name: RSESSIONID  # 設定 Session Cookie 名稱
-    #   http-only: true  # 限制 Cookie 只能透過 HTTP 存取，防止 JavaScript 讀取
-    #   secure: false    # 是否僅限 HTTPS 傳輸
-    #   same-site: lax   # 控制 SameSite 設定，可選 none, lax, strict
+    # 存儲類型，可選值有 none, jdbc, redis, hazelcast, mongodb
+    store-type: redis
 
-    # redis:
-    #   namespace: rws:session  # Redis 存儲 session 的 key 前綴
-    #   flush-mode: on_save        # session 變更時才同步到 Redis
-    #   save-mode: on_set_attribute # 只同步被修改的 attribute，可選 on_set_attribute, on_get_attribute, always
+    # session 超時時間，預設 30 分鐘
+    timeout: 30m
+
+    # 是否在啟動時創建 session 存儲需要的表/結構
+    initialize-schema: always
+
+    # Redis 配置
+    redis:
+      namespace: asimov:session
+      flush-mode: on-save
+      cleanup-cron: "0 * * * * *"
+
+server:
+  servlet:
+    session:
+      cookie:
+        # Cookie 名稱，預設 JSESSIONID
+        name: tSessionId
+
+        # Cookie 持續時間，默認為 -1 (瀏覽器關閉後失效)
+        max-age: 3600
+
+        # 是否僅通過 HTTPS 傳輸
+        # secure: true
+
+        # 是否僅限 HTTP 訪問（不允許 JavaScript 訪問）
+        # http-only: true
+
+        # Cookie 路徑
+        # path: /
+
+        # Cookie 域
+        # domain: example.com
+
+        # Cookie SameSite 屬性
+        # same-site: lax
+
+      # 是否持續性 session，預設 false
+      # persistent: false
+
+      # 追蹤模式，可選值有 cookie(默認)、url、ssl
+      # tracking-modes: cookie
+
+      # 超時時間，預設 30 分鐘
+      timeout: 30m

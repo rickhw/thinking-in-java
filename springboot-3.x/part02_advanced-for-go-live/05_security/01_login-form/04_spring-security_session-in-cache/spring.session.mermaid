@@ -1,0 +1,33 @@
+sequenceDiagram
+    participant Client
+    participant Filter as SessionRepositoryFilter
+    participant Controller
+    participant Repository as SessionRepository
+    participant Storage as SessionStorage(Redis/JDBC/etc)
+    
+    Client->>Filter: HTTP Request
+    
+    alt 第一次請求（無 Session Cookie）
+        Filter->>Repository: 創建新 Session
+        Repository->>Storage: 存儲 Session 數據
+        Repository-->>Filter: 返回 Session 對象
+        Filter->>Controller: 轉發請求（附帶 Session）
+        Controller-->>Filter: 返回響應
+        Filter-->>Client: 返回響應（設置 Session Cookie）
+    else 已有 Session Cookie
+        Filter->>Repository: 根據 Cookie 獲取 Session
+        Repository->>Storage: 查詢 Session 數據
+        Storage-->>Repository: 返回 Session 數據
+        Repository-->>Filter: 返回 Session 對象
+        Filter->>Controller: 轉發請求（附帶 Session）
+        Controller-->>Filter: 返回響應
+        
+        alt Session 被修改
+            Filter->>Repository: 保存修改後的 Session
+            Repository->>Storage: 更新 Session 數據
+        end
+        
+        Filter-->>Client: 返回響應
+    end
+    
+    note over Client,Storage: 當 Session 過期時，由定時任務清理
