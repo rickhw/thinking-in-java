@@ -28,7 +28,7 @@ server:
     session:
       cookie:
         # Cookie 名稱，預設 JSESSIONID
-        name: tSessionId
+        name: rSessionId
 
         # Cookie 持續時間，默認為 -1 (瀏覽器關閉後失效)
         max-age: 3600
