@@ -11,15 +11,16 @@ document.addEventListener("DOMContentLoaded", function() {
             const attributesBody = document.getElementById('attributesBody');
             for (const [key, value] of Object.entries(data.attributes)) {
                 if (key === 'SPRING_SECURITY_CONTEXT') {
-                    const context = JSON.stringify(value, null, 2);
-                    const row = document.createElement('tr');
-                    const nameCell = document.createElement('td');
-                    const valueCell = document.createElement('td');
-                    nameCell.textContent = key;
-                    valueCell.textContent = context;
-                    row.appendChild(nameCell);
-                    row.appendChild(valueCell);
-                    attributesBody.appendChild(row);
+                    for (const [innerKey, innerValue] of Object.entries(value)) {
+                        const row = document.createElement('tr');
+                        const nameCell = document.createElement('td');
+                        const valueCell = document.createElement('td');
+                        nameCell.textContent = `${key}.${innerKey}`;
+                        valueCell.textContent = JSON.stringify(innerValue);
+                        row.appendChild(nameCell);
+                        row.appendChild(valueCell);
+                        attributesBody.appendChild(row);
+                    }
                 } else {
                     const row = document.createElement('tr');
                     const nameCell = document.createElement('td');
