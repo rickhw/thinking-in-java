@@ -12,14 +12,27 @@ document.addEventListener("DOMContentLoaded", function() {
             for (const [key, value] of Object.entries(data.attributes)) {
                 if (key === 'SPRING_SECURITY_CONTEXT') {
                     for (const [innerKey, innerValue] of Object.entries(value)) {
-                        const row = document.createElement('tr');
-                        const nameCell = document.createElement('td');
-                        const valueCell = document.createElement('td');
-                        nameCell.textContent = `${key}.${innerKey}`;
-                        valueCell.textContent = JSON.stringify(innerValue);
-                        row.appendChild(nameCell);
-                        row.appendChild(valueCell);
-                        attributesBody.appendChild(row);
+                        if (innerKey === 'authentication') {
+                            for (const [authKey, authValue] of Object.entries(innerValue)) {
+                                const row = document.createElement('tr');
+                                const nameCell = document.createElement('td');
+                                const valueCell = document.createElement('td');
+                                nameCell.textContent = `${key}.${innerKey}.${authKey}`;
+                                valueCell.textContent = JSON.stringify(authValue);
+                                row.appendChild(nameCell);
+                                row.appendChild(valueCell);
+                                attributesBody.appendChild(row);
+                            }
+                        } else {
+                            const row = document.createElement('tr');
+                            const nameCell = document.createElement('td');
+                            const valueCell = document.createElement('td');
+                            nameCell.textContent = `${key}.${innerKey}`;
+                            valueCell.textContent = JSON.stringify(innerValue);
+                            row.appendChild(nameCell);
+                            row.appendChild(valueCell);
+                            attributesBody.appendChild(row);
+                        }
                     }
                 } else {
                     const row = document.createElement('tr');
