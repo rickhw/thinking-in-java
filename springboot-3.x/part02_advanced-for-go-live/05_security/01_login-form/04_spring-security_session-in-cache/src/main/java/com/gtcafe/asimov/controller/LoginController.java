@@ -3,6 +3,10 @@ package com.gtcafe.asimov.controller;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.security.core.Authentication;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.gtcafe.asimov.SessionUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -52,7 +57,46 @@ public class LoginController {
         return "home"; // 返回首頁模板
     }
 
+    @GetMapping("/session")
+    public String showSession(Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession();
 
+        setSessionInfo(model, session);
+
+        return "session"; // 返回首頁模板
+    }
+
+    public void setSessionInfo(Model model, HttpSession session) {
+        // Map<String, Object> sessionInfo = new HashMap<>();
+
+        // 獲取 Session ID
+        model.addAttribute("sessionId", session.getId());
+
+        // 獲取 Session 創建時間
+        model.addAttribute("creationTime", new Date(session.getCreationTime()));
+
+        // 獲取最後訪問時間
+        model.addAttribute("lastAccessedTime", new Date(session.getLastAccessedTime()));
+
+        // 獲取 Session 最大閒置時間（秒）
+        model.addAttribute("maxInactiveInterval", session.getMaxInactiveInterval());
+
+        // 獲取 Session 是否為新建
+        model.addAttribute("isNew", session.isNew());
+
+        // 獲取 Session 中所有屬性
+        Enumeration<String> attributeNames = session.getAttributeNames();
+        Map<String, Object> attributes = new HashMap<>();
+
+        while (attributeNames.hasMoreElements()) {
+            String name = attributeNames.nextElement();
+            attributes.put(name, session.getAttribute(name));
+        }
+
+        model.addAttribute("attributes", attributes);
+
+        // return sessionInfo;
+    }
 
 
     private String getHostName() {

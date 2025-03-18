@@ -1,0 +1,36 @@
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/session-info')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('sessionId').textContent = data.sessionId;
+            document.getElementById('creationTime').textContent = data.creationTime;
+            document.getElementById('lastAccessedTime').textContent = data.lastAccessedTime;
+            document.getElementById('maxInactiveInterval').textContent = data.maxInactiveInterval;
+            document.getElementById('isNew').textContent = data.isNew;
+
+            const attributesBody = document.getElementById('attributesBody');
+            for (const [key, value] of Object.entries(data.attributes)) {
+                if (key === 'SPRING_SECURITY_CONTEXT') {
+                    const context = JSON.stringify(value, null, 2);
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    const valueCell = document.createElement('td');
+                    nameCell.textContent = key;
+                    valueCell.textContent = context;
+                    row.appendChild(nameCell);
+                    row.appendChild(valueCell);
+                    attributesBody.appendChild(row);
+                } else {
+                    const row = document.createElement('tr');
+                    const nameCell = document.createElement('td');
+                    const valueCell = document.createElement('td');
+                    nameCell.textContent = key;
+                    valueCell.textContent = value;
+                    row.appendChild(nameCell);
+                    row.appendChild(valueCell);
+                    attributesBody.appendChild(row);
+                }
+            }
+        })
+        .catch(error => console.error('Error fetching session info:', error));
+});
