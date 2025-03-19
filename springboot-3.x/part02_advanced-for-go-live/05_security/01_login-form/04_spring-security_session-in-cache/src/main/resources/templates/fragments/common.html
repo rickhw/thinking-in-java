@@ -37,6 +37,20 @@
         </div>
     </header>
     
+
+    <!-- 登入後的 header fragment (包含登出按鈕) -->
+    <nav th:fragment="authMenubar(username)" class="menubar">
+        <ul class="menu-left">
+            <li><a th:href="@{/home}">Home</a></li>
+            <li><a th:href="@{/func1}">Func1</a></li>
+            <li><a th:href="@{/func2}">Func2</a></li>
+            <li><a th:href="@{/func3}">Func3</a></li>
+        </ul>
+        <ul class="menu-right">
+            <li><a th:href="@{/profile}">Profile</a></li>
+        </ul>
+    </nav>
+
     <!-- 通用的 footer fragment -->
     <footer th:fragment="nonLoginFooter" class="site-footer">
         <div class="footer-container">

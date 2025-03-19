@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- 引入共用 head -->
+    <th:block th:replace="~{fragments/common :: commonHead('Session Information')}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <script th:src="@{/js/session.js}"></script>
+</head>
+<body>
+    <!-- 引入帶有登出按鈕的 header -->
+    <header th:replace="~{fragments/common :: authHeader('Session Information', ${username})}"></header>
+    <nav th:replace="~{fragments/common :: authMenubar(${username})}"></nav>
+    
+    <div class="home-container">
+        <main class="home-content">
+            <div class="welcome-message">
+                <h2>Session Information</h2>
+            </div>
+            
+            <div class="session-info">
+                <table id="sessionTable">
+                    <tr>
+                        <th>Session ID</th>
+                        <td id="sessionId"></td>
+                    </tr>
+                    <tr>
+                        <th>Creation Time</th>
+                        <td id="creationTime"></td>
+                    </tr>
+                    <tr>
+                        <th>Last Accessed Time</th>
+                        <td id="lastAccessedTime"></td>
+                    </tr>
+                    <tr>
+                        <th>Max Inactive Interval (seconds)</th>
+                        <td id="maxInactiveInterval"></td>
+                    </tr>
+                    <tr>
+                        <th>Is New</th>
+                        <td id="isNew"></td>
+                    </tr>
+                </table>
+                
+                <h3>Session Attributes</h3>
+                <table id="attributesTable">
+                    <thead>
+                        <tr>
+                            <th>Attribute Name</th>
+                            <th>Attribute Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attributesBody">
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+    
+    <!-- 引入共用 footer -->
+    <footer th:replace="~{fragments/common :: loginFooter(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname}, sessionId=${sessionId}, roles=${roles})}"></footer>
+</body>
+</html>

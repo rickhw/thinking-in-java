@@ -8,6 +8,7 @@
 <body>
     <!-- 引入帶有登出按鈕的 header -->
     <header th:replace="~{fragments/common :: authHeader('系統首頁', ${username})}"></header>
+    <nav th:replace="~{fragments/common :: authMenubar(${username})}"></nav>
     
     <div class="home-container">
         <main class="home-content">
