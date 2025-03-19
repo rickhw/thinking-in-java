@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <!-- 引入共用 head -->
-    <th:block th:replace="~{fragments/common :: commonHead('首頁 - Profile')}"></th:block>
+    <th:block th:replace="~{fragments/common :: commonHead('Profile')}"></th:block>
     <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
@@ -12,35 +12,13 @@
     <div class="home-container">
         <main class="home-content">
             <div class="welcome-message">
-                <h2>登入成功！</h2>
-                <p>您已成功登入系統，可以開始使用各項功能。</p>
+                <h2>Profile</h2>
             </div>
             
-            <div class="feature-section">
-                <h3>系統功能</h3>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <h4>Username</h4>
-                        <p>功能描述內容...</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>Roles</h4>
-                        <p>功能描述內容...</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>功能三</h4>
-                        <p>功能描述內容...</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>功能四</h4>
-                        <p>功能描述內容...</p>
-                    </div>
-                </div>
-            </div>
         </main>
     </div>
     
     <!-- 引入共用 footer -->
-    <footer th:replace="~{fragments/common :: loginFooter(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname}, sessionId=${sessionId})}"></footer>
+    <footer th:replace="~{fragments/common :: loginFooter(clientIp=${clientIp}, computeNodeHostname=${computeNodeHostname}, sessionId=${sessionId}, roles=${roles})}"></footer>
 </body>
 </html>

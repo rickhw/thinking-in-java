@@ -28,7 +28,6 @@ public class LoginController {
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpServletRequest request) {
         setHeaderInfo(model, request);
-
         return "login"; // 返回模板名稱
     }
 
@@ -45,6 +44,12 @@ public class LoginController {
         setSessionInfo(model, request.getSession());
 
         return "session"; // 返回首頁模板
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, HttpServletRequest request) {
+        setHeaderInfo(model, request);
+        return "profile"; // 返回首頁模板
     }
 
     private void setHeaderInfo(Model model, HttpServletRequest request) {
@@ -133,5 +138,4 @@ public class LoginController {
         }
         return inetAddress.getHostAddress(); // 若非 IPv6，直接回傳
     }
-
 }
