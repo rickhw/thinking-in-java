@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                                 const row = document.createElement('tr');
                                 const nameCell = document.createElement('td');
                                 const valueCell = document.createElement('td');
-                                nameCell.textContent = `${key}.${innerKey}.${authKey}`;
+                                nameCell.textContent = `${authKey}`;
                                 valueCell.textContent = JSON.stringify(authValue);
                                 row.appendChild(nameCell);
                                 row.appendChild(valueCell);

@@ -2,7 +2,6 @@ spring:
   data:
     mongodb:
       uri: mongodb://localhost:27017/school
-
     redis:
       host: localhost
       port: 6379
@@ -15,7 +14,7 @@ spring:
     timeout: 30m
 
     # 是否在啟動時創建 session 存儲需要的表/結構
-    initialize-schema: always
+    # initialize-schema: always
 
     # Redis 配置
     redis:
@@ -56,3 +55,7 @@ server:
 
       # 超時時間，預設 30 分鐘
       timeout: 30m
+
+# logging:
+#   level:
+#     org.springframework.session: DEBUG

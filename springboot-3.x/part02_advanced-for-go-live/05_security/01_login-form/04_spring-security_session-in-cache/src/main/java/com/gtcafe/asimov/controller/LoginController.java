@@ -27,22 +27,27 @@ public class LoginController {
 
     @GetMapping("/login")
     public String showLoginPage(Model model, HttpServletRequest request) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        String hostname = getHostName();
-        String clientIp = getClientIp(request);
-
-        model.addAttribute("username", auth.getName());
-        model.addAttribute("computeNodeHostname", hostname);
-        model.addAttribute("clientIp", clientIp);
-
-        SessionUtil.printSessionInfo(model, request);
+        setHeaderInfo(model, request);
 
         return "login"; // 返回模板名稱
     }
 
     @GetMapping("/home")
     public String home(Model model, HttpServletRequest request) {
+        
+        setHeaderInfo(model, request);
+        return "home"; // 返回首頁模板
+    }
+
+    @GetMapping("/session")
+    public String showSession(Model model, HttpServletRequest request) {
+        setHeaderInfo(model, request);
+        setSessionInfo(model, request.getSession());
+
+        return "session"; // 返回首頁模板
+    }
+
+    private void setHeaderInfo(Model model, HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         String hostname = getHostName();
@@ -53,18 +58,8 @@ public class LoginController {
         model.addAttribute("clientIp", clientIp);
 
         SessionUtil.printSessionInfo(model, request);
-
-        return "home"; // 返回首頁模板
     }
 
-    @GetMapping("/session")
-    public String showSession(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession();
-
-        setSessionInfo(model, session);
-
-        return "session"; // 返回首頁模板
-    }
 
     public void setSessionInfo(Model model, HttpSession session) {
         // Map<String, Object> sessionInfo = new HashMap<>();
