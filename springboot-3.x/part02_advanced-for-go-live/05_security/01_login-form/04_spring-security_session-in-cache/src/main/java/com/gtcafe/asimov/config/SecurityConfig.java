@@ -24,6 +24,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(requests -> requests
                 .requestMatchers("/css/**", "/js/**", "/images/**").permitAll() // 允許訪問靜態資源
                 .requestMatchers(HttpMethod.POST, "/api/members").permitAll()
+                .requestMatchers("/api/tokens").permitAll()
                 .requestMatchers(HttpMethod.GET, "/_/**").permitAll()
                 
                 .anyRequest().authenticated()

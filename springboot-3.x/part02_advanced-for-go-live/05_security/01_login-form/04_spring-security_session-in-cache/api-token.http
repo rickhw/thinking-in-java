@@ -1,0 +1,20 @@
+@HOST=http://localhost:8080
+@TOKEN=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTc0MjUwODg1NCwiZXhwIjoxNzQyNTEyNDU0fQ.WGjfqd0nnoeOZTyQfaVTfOGJyndOIJRtwuZ60XapjFVlfsrQ5t-bSCQbVoXIrnuRzBsQC5rcHwB1B1x-xfzCpg
+
+### Generate Token
+POST {{HOST}}/api/tokens
+Content-Type: application/x-www-form-urlencoded
+
+username=testuser
+
+### Validate Token
+GET {{HOST}}/api/tokens:validate
+Content-Type: application/x-www-form-urlencoded
+
+token={{TOKEN}}
+
+### Revoke Token
+POST {{HOST}}/api/tokens:revoke
+Content-Type: application/x-www-form-urlencoded
+
+token={{TOKEN}}

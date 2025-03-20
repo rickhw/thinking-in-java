@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById('fetchSessionInfo').addEventListener('click', function() {
+        fetchSessionInfo();
+    });
+});
+
+function fetchSessionInfo() {
     fetch('/session-info')
         .then(response => response.json())
         .then(data => {
@@ -9,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('isNew').textContent = data.isNew;
 
             const attributesBody = document.getElementById('attributesBody');
+            attributesBody.innerHTML = ''; // Clear existing rows
             for (const [key, value] of Object.entries(data.attributes)) {
                 if (key === 'SPRING_SECURITY_CONTEXT') {
                     for (const [innerKey, innerValue] of Object.entries(value)) {
@@ -47,4 +54,4 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .catch(error => console.error('Error fetching session info:', error));
-});
+}
