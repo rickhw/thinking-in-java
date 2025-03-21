@@ -1,4 +1,5 @@
-@HOST=http://localhost:8080
+# @HOST=http://localhost:8080
+@HOST=https://rws.lab.gtcafe.com
 @TOKEN=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTc0MjUwODg1NCwiZXhwIjoxNzQyNTEyNDU0fQ.WGjfqd0nnoeOZTyQfaVTfOGJyndOIJRtwuZ60XapjFVlfsrQ5t-bSCQbVoXIrnuRzBsQC5rcHwB1B1x-xfzCpg
 
 ### Generate Token
