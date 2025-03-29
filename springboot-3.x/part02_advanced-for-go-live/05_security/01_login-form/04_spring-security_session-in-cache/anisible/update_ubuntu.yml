@@ -1,0 +1,20 @@
+# ansible-playbook -i hosts.ini update_ubuntu.yml
+# ansible-playbook -i hosts.ini update_ubuntu.yml --ask-pass --ask-become-pass
+- name: Update Ubuntu Servers
+  hosts: ubuntu_servers
+  become: true  # 以 root 權限執行
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: full
+        autoremove: yes
+        autoclean: yes
+
+    - name: Reboot if necessary
+      reboot:
+        post_reboot_delay: 30
+      when: ansible_facts['os_family'] == "Debian"

@@ -1,0 +1,41 @@
+# ansible-playbook -i hosts.ini deploy_spring_app.yml --ask-pass --ask-become-pass
+
+- name: Deploy Spring Boot App
+  hosts: ubuntu_servers
+  # become: true
+  tasks:
+    - name: 切換到目標目錄
+      ansible.builtin.shell:
+        cmd: cd /home/ubuntu/repos/thinking-in-java/springboot-3.x/part02_advanced-for-go-live/05_security/01_login-form/04_spring-security_session-in-cache
+
+    - name: 更新程式碼
+      ansible.builtin.git:
+        # cmd: "git pull"
+        # chdir: "/home/ubuntu/repos/thinking-in-java"
+
+        repo: "https://github.com/rickhw/thinking-in-java.git"
+        dest: "/home/ubuntu/repos/thinking-in-java"
+        version: main
+        force: true
+
+    - name: 清理並建置專案
+      ansible.builtin.shell:
+        cmd: "./gradlew clean build"
+        chdir: "/home/ubuntu/repos/thinking-in-java/springboot-3.x/part02_advanced-for-go-live/05_security/01_login-form/04_spring-security_session-in-cache"
+
+    - name: 設定環境變數
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        line: "{{ item }}"
+        create: yes
+      loop:
+        - 'SPRING_DATA_MONGODB_URI=mongodb://192.168.5.65:27017/school'
+        - 'SPRING_DATA_REDIS_HOST=192.168.5.65'
+
+    - name: 載入新的環境變數
+      ansible.builtin.shell: source /etc/environment
+
+    - name: 啟動 Spring Boot 應用
+      ansible.builtin.shell:
+        cmd: "nohup java -jar build/libs/04_spring-security_session-in-cache-1.0.0.jar > app.log 2>&1 &"
+        chdir: "/home/ubuntu/repos/thinking-in-java/springboot-3.x/part02_advanced-for-go-live/05_security/01_login-form/04_spring-security_session-in-cache"
