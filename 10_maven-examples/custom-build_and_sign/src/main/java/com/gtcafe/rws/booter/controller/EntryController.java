@@ -14,6 +14,8 @@ import com.gtcafe.rws.booter.config.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.UUID;
+
 @RestController
 public class EntryController {
 
@@ -26,8 +28,11 @@ public class EntryController {
     public ResponseEntity<String> getRootMessage(
             HttpServletRequest request, HttpServletResponse response) {
 
-            String reqId = response.getHeader(HttpHeaderConstants.R_REQUEST_ID);
-        logger.info("Entry Controller");
+        String reqId = response.getHeader(HttpHeaderConstants.R_REQUEST_ID);
+        if (reqId == null || "".equals(reqId)) {
+            reqId = UUID.randomUUID().toString();
+        }
+        // logger.info("Entry Controller");
 
         return new ResponseEntity<>(utils.apiSlogan(reqId), HttpStatus.OK);
     }

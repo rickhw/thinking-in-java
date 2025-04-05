@@ -1,9 +1,8 @@
 package com.gtcafe.rws.booter.config;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 
 import org.slf4j.Logger;
@@ -15,8 +14,6 @@ import org.springframework.core.io.Resource;
 
 @Configuration
 public class Utils {
-
-    private static final Logger logger = LoggerFactory.getLogger(Utils.class.getName());
 
     @Value("classpath:slogan.txt")
     Resource _slogan;
@@ -30,16 +27,14 @@ public class Utils {
     @Autowired
     private Releng releng;
 
-    private String getFileContent(Resource resource) {
-        try {
-            byte[] bytes = Files.readAllBytes(Paths.get(resource.getURI()));
-
-            return new String(bytes, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-            return e.getMessage();
-        }
+private String getFileContent(Resource resource) {
+    try (InputStream inputStream = resource.getInputStream()) {
+        byte[] bytes = inputStream.readAllBytes();
+        return new String(bytes, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+        return e.getMessage();
     }
+}
 
     public String slogan() {
         String content = getFileContent(_slogan);

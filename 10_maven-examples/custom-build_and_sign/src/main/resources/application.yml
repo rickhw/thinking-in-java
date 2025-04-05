@@ -17,9 +17,9 @@ server:
 # -----------------------------------------------------------------------------
 ## see: https://stackoverflow.com/questions/26585959/how-to-disable-spring-boot-logo-in-stdout
 #spring.main.banner-mode=off
-spring:
-  application:
-    name: @pom.artifactId@
+# spring:
+#   application:
+#     name: @pom.artifactId@
 
 # -----------------------------------------------------------------------------
 # logback
@@ -28,8 +28,8 @@ logging:
   path: ./logs
   level.com.gtcafe.rws.booter: INFO
 
-app:
-  rabbitmq:
-    exchange: app.exchange1.topic1
-    queue: app.queue
-    routingkey: app.routingkey
+# app:
+#   rabbitmq:
+#     exchange: app.exchange1.topic1
+#     queue: app.queue
+#     routingkey: app.routingkey
