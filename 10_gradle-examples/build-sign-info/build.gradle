@@ -1,14 +1,28 @@
 plugins {
-    id 'org.springframework.boot' version '3.2.0'
-    id 'io.spring.dependency-management' version '1.1.4'
     id 'java'
+    id 'org.springframework.boot' version '3.1.0'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'com.gtcafe.asimov'
-version = '0.0.1-SNAPSHOT'
+group = 'com.gtcafe.rws'
+version = '0.2.0-SNAPSHOT'
+description = 'RWS Booter Service'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// 動態時間戳記，用於 buildId 等
+def now = new Date()
+def buildId = now.format('yyyyMMdd-HHmm', TimeZone.getTimeZone('Asia/Taipei'))
+def hashCode = 'default_hashcode'
+def buildType = 'default_build_type'
+
+ext {
+    BUILD_ID = buildId
+    HASH_CODE = hashCode
+    BUILD_TYPE = buildType
 }
 
 repositories {
@@ -17,59 +31,29 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-def buildVersionPropsDir = layout.buildDirectory.dir('generated/resources/main')
-
-
-// 自定义 task 用于生成版本信息
-task generateVersionProperties {
-    doLast {
-        // def versionPropertiesFile = file('build/generated/resources/mainversion.properties')
-        def versionPropertiesFile = new File(buildVersionPropsDir.get().asFile, 'version.properties')
-    
-        outputs.file versionPropertiesFile
-        versionPropertiesFile.parentFile.mkdirs()
-        
-
-        def timestamp = new Date().format('yyyyMMdd_HHmm')
-        
-        // 从 Git 获取最新的 commit hash
-        def gitHash = 'unknown'
-        try {
-            def gitProcess = ['git', 'rev-parse', '--short', 'HEAD'].execute()
-            gitHash = gitProcess.text.trim()
-        } catch (Exception e) {
-            // 如果获取 Git hash 失败，保持 'unknown'
-        }
-
-        def props = [
-            'build.githash': gitHash,
-            'build.timestamp': timestamp,
-            'build.os.name': System.properties['os.name'],
-            'build.os.version': System.properties['os.version'],
-            'build.java.version': System.properties['java.version'],
-            'build.java.provider': System.properties['java.vendor']
-        ]
-
-        versionPropertiesFile.withWriter { writer ->
-            props.each { key, value ->
-                writer.writeLine("${key}=${value}")
-            }
-        }
-    }
-}
-
-// 在 processResources 前执行
-processResources.dependsOn generateVersionProperties
-
-// 自定义 jar 名称
-jar {
-    archiveFileName = "${project.name}-${project.version}-${new Date().format('yyyyMMdd_HHmm')}.jar"
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 
 bootJar {
-    archiveFileName = "${project.name}-${project.version}-${new Date().format('yyyyMMdd_HHmm')}.jar"
+    // 可在此加入 manifest 或 build info
+    manifest {
+        attributes(
+            'Implementation-Title': project.name,
+            'Implementation-Version': version,
+            'Build-Timestamp': BUILD_ID,
+            'Build-Type': BUILD_TYPE,
+            'Hash-Code': HASH_CODE
+        )
+    }
+}
+
+// Resource filtering 類似功能
+processResources {
+    filesMatching('**/*.properties') {
+        expand(
+            BUILD_ID: BUILD_ID,
+            HASH_CODE: HASH_CODE,
+            BUILD_TYPE: BUILD_TYPE
+        )
+    }
 }
