@@ -1,0 +1,8 @@
+spring:
+  task:
+    execution:
+      pool:
+        core-size: 2
+        max-size: 5
+        queue-capacity: 10
+      thread-name-prefix: "async-task-"

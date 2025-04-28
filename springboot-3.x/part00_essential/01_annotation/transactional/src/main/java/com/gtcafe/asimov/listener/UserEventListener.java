@@ -15,8 +15,8 @@ public class UserEventListener {
         System.out.println("✅ Transaction committed! User created: " + event.user().getName());
     }
 
-    @EventListener
     @Async
+    @EventListener
     public void handleUserCreatedAsync(UserCreatedEvent event) {
         System.out.println("📢 Async Event Triggered: " + event.user().getName());
     }
