@@ -3,8 +3,11 @@
 
 用 java17, springboot 3.2, gradle, 幫我寫一個處理 rabbitmq 的 message, 滿足以下需求:
 
-每一個 message 一次只被一個 consumer 處理, message 處理失敗, 會讓 message 回去 queue 重新排隊
-consumer 每次同時最多處理 N 個 message, 可以透過 application.yaml 配置, 同時不能有 thread-blocking
+1. 每一個 message 一次只被一個 consumer 處理
+2. message 處理失敗, 會讓 message 回去 queue 重新排隊
+3. consumer 每次同時最多處理 N 個 message, 可以透過 application.yaml 配置, 
+4. 同時不能有 thread-blocking
+
 請提供完整的範例程式給我
 
 ---

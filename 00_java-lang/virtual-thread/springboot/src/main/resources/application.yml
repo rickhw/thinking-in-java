@@ -1,0 +1,18 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+    max-connections: 10000
+    accept-count: 100
+    connection-timeout: 5000
+
+spring:
+  threads:
+    virtual:
+      enabled: true
+  
+logging:
+  level:
+    org.springframework.web: INFO
+    com.example: DEBUG

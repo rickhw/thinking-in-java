@@ -1,0 +1,44 @@
+plugins {
+    id 'org.springframework.boot' version '3.2.3'
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '21'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Lombok for reducing boilerplate code
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 添加一个任务运行使用平台线程的应用
+task runWithPlatformThreads(type: JavaExec) {
+    group = 'application'
+    description = 'Run the application with platform threads'
+    mainClass = 'com.example.virtualthread.VirtualThreadApplication'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['--spring.profiles.active=platform']
+}
+
+// 添加一个任务运行使用虚拟线程的应用
+task runWithVirtualThreads(type: JavaExec) {
+    group = 'application'
+    description = 'Run the application with virtual threads'
+    mainClass = 'com.example.virtualthread.VirtualThreadApplication'
+    classpath = sourceSets.main.runtimeClasspath
+    args = ['--spring.profiles.active=virtual']
+}

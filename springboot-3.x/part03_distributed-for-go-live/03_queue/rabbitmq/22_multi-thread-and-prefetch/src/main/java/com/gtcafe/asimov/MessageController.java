@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.asimov;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

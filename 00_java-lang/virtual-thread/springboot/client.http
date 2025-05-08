@@ -3,7 +3,6 @@
 
 
 ### apply a new tenant
-POST {{hostname}}/send
-Content-Type: application/json
+POST {{hostname}}
 
 Tears-of-The-Kingdom

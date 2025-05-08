@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.asimov;
 
 
 import java.io.IOException;
@@ -7,6 +7,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import com.rabbitmq.client.Channel;
@@ -20,7 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 public class MessageConsumer {
 
     private final MessageProcessor messageProcessor;
+    // private final ThreadPoolTaskExecutor asyncExecutor;
 
+    @Async
     @RabbitListener(
         queues = "${application.rabbitmq.queue-name}",
         containerFactory = "rabbitListenerContainerFactory"

@@ -1,4 +1,4 @@
-package com.gtcafe;
+package com.gtcafe.asimov;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
