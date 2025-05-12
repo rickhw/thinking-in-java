@@ -7,3 +7,5 @@ ServiceName: [<ServiceName>], Version: [<Version>]
 BuildType: [<BuildType>], BuildId: [<BuildId>]
 HashCode: [<HashCode>]
 
+Build OS: [<BuildOs>]
+Build SDK: [<BuildSdk>]

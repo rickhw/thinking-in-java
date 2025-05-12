@@ -24,4 +24,6 @@ public class Releng {
 
     private String hashcode;
 
+    private String buildSdk;
+    private String buildOs;
 }

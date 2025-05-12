@@ -58,10 +58,14 @@ public class Slogan {
         String content = getFileContent(_slogan);
 
         content = content.replaceAll("<ServiceName>", releng.getServiceName());
+
         content = content.replaceAll("<Version>", releng.getVersion());
         content = content.replaceAll("<BuildType>", releng.getBuildType());
         content = content.replaceAll("<BuildId>", releng.getBuildId());
         content = content.replaceAll("<HashCode>", releng.getHashcode());
+
+        content = content.replaceAll("<BuildOs>", releng.getBuildOs());
+        content = content.replaceAll("<BuildSdk>", releng.getBuildSdk());
 
         return content;
     }

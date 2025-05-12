@@ -4,12 +4,14 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.example'
-version = '0.0.1'
+group = 'com.gtcafe.asimov'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 def buildId = new Date().format("yyyyMMdd-HHmm")
 def buildType = project.hasProperty('buildType') ? project.property('buildType') : 'dev'
+def buildOs = 'uname -v'.execute().text.trim()
+def buildSdk = 'java -version'.execute().text.trim()
 
 // Git hash 取得（可選）
 def gitHash = 'unknown'
@@ -19,10 +21,12 @@ try {
 } catch (ignored) {}
 
 def replacements = [
+    VERSION  : version,
     BUILD_ID  : buildId,
     BUILD_TYPE: buildType,
     HASH_CODE : gitHash,
-    BUILD_SDK : System.getProperty("java.version")
+    BUILD_SDK : System.getProperty("java.runtime.version") + " " + System.getProperty("java.vm.vendor"), // System.getProperty("java.version"),
+    BUILD_OS : buildOs
 ]
 
 processResources {
@@ -34,7 +38,7 @@ processResources {
 
 bootJar {
     archiveBaseName.set(project.name)
-    archiveVersion.set("${version}-${buildType}-${buildId}")
+    archiveVersion.set("v${version}-${buildType}-b${buildId}")
 }
 
 repositories {
