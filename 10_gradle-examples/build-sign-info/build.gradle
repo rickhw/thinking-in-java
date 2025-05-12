@@ -1,28 +1,40 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.0'
-    id 'io.spring.dependency-management' version '1.1.0'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
-group = 'com.gtcafe.rws'
-version = '0.2.0-SNAPSHOT'
-description = 'RWS Booter Service'
+group = 'com.example'
+version = '0.0.1'
+sourceCompatibility = '17'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+def buildId = new Date().format("yyyyMMdd-HHmm")
+def buildType = project.hasProperty('buildType') ? project.property('buildType') : 'dev'
+
+// Git hash 取得（可選）
+def gitHash = 'unknown'
+try {
+    def proc = 'git rev-parse --short HEAD'.execute()
+    proc.in.eachLine { line -> gitHash = line.trim() }
+} catch (ignored) {}
+
+def replacements = [
+    BUILD_ID  : buildId,
+    BUILD_TYPE: buildType,
+    HASH_CODE : gitHash,
+    BUILD_SDK : System.getProperty("java.version")
+]
+
+processResources {
+    filesMatching(['**/*.properties', '**/*.txt']) {
+        filteringCharset = 'UTF-8'
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: replacements)
+    }
 }
 
-// 動態時間戳記，用於 buildId 等
-def now = new Date()
-def buildId = now.format('yyyyMMdd-HHmm', TimeZone.getTimeZone('Asia/Taipei'))
-def hashCode = 'default_hashcode'
-def buildType = 'default_build_type'
-
-ext {
-    BUILD_ID = buildId
-    HASH_CODE = hashCode
-    BUILD_TYPE = buildType
+bootJar {
+    archiveBaseName.set(project.name)
+    archiveVersion.set("${version}-${buildType}-${buildId}")
 }
 
 repositories {
@@ -31,29 +43,9 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-}
 
-bootJar {
-    // 可在此加入 manifest 或 build info
-    manifest {
-        attributes(
-            'Implementation-Title': project.name,
-            'Implementation-Version': version,
-            'Build-Timestamp': BUILD_ID,
-            'Build-Type': BUILD_TYPE,
-            'Hash-Code': HASH_CODE
-        )
-    }
-}
+    implementation 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
-// Resource filtering 類似功能
-processResources {
-    filesMatching('**/*.properties') {
-        expand(
-            BUILD_ID: BUILD_ID,
-            HASH_CODE: HASH_CODE,
-            BUILD_TYPE: BUILD_TYPE
-        )
-    }
 }

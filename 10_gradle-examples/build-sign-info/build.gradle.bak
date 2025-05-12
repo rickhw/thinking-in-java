@@ -1,0 +1,69 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.0'
+}
+
+group = 'com.gtcafe.asimov'
+version = '0.2.0'
+description = 'RWS Booter Service'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+def buildTime = new Date().format("yyyyMMdd-HHmm", TimeZone.getTimeZone("Asia/Taipei"))
+def buildType = project.hasProperty("buildType") ? project.getProperty("buildType") : "dev"
+def gitHash = 'git rev-parse --short HEAD'.execute().text.trim()
+
+// Step 1: 處理變數替換
+def generatedResources = "$buildDir/generated-resources"
+
+tasks.register('expandRelengProperties', Copy) {
+    from("src/main/resources") {
+        include "releng.properties"
+        filteringCharset = "UTF-8"
+        expand([
+            BUILD_ID  : buildTime,
+            BUILD_TYPE: buildType,
+            HASH_CODE : gitHash,
+            BUILD_SDK : System.getProperty("java.version")
+        ])
+    }
+    into("$generatedResources")
+}
+
+// Step 2: 告訴 Gradle build 用這份處理後的檔案
+sourceSets {
+    main {
+        resources {
+            srcDirs = [generatedResources, 'src/main/resources']
+            // 避免 src 中的 releng.properties 蓋掉處理後的
+            exclude "releng.properties"
+        }
+    }
+}
+
+tasks.named('processResources') {
+    dependsOn 'expandRelengProperties'
+}
+
+bootJar {
+    archiveBaseName.set(project.name)
+    archiveVersion.set("${version}-${buildType}-${buildTime}")
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'org.projectlombok:lombok:1.18.36'
+    compileOnly 'org.projectlombok:lombok:1.18.36'
+    annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+}
