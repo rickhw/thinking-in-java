@@ -1,0 +1,9 @@
+server:
+  port: 8080
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://YOUR_ISSUER_URI  # 例如 Okta, Auth0, Keycloak 等

@@ -69,7 +69,7 @@ docker run -d --name keycloak \
 ```bash
 curl -X POST http://localhost:8081/realms/demo-realm/protocol/openid-connect/token \
   -d "client_id=springboot-client" \
-  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "client_secret=TTKaiKDIa6a5vQMYDvAbGd0jlqHElPDS" \
   -d "username=testuser" \
   -d "password=testpass" \
   -d "grant_type=password"
