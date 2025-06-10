@@ -1,0 +1,77 @@
+# --- 第一次請求 ---
+# Status: 200
+# User: {"id":"u001","name":"Rick","email":"rick@example.com"}
+
+# --- 第二次（ETag / Last-Modified 快取）---
+# Status: 304
+# ✅ Not Modified. Using cache.
+
+# --- 更新使用者資訊 ---
+# Update Status: 204
+
+# --- 第三次（資料已變更）---
+# Status: 200
+# User: {"id":"u001","name":"Rick Hwang","email":"rick@gtcafe.com"}
+
+### 第一次請求
+GET http://localhost:8080/api/users/me
+
+## Response
+# HTTP/1.1 200 
+# ETag: "1829201b"
+# Cache-Control: max-age=0, must-revalidate
+# Content-Type: application/json
+# Transfer-Encoding: chunked
+# Date: Tue, 10 Jun 2025 10:39:25 GMT
+# Connection: close
+
+# {
+#   "id": "u001",
+#   "name": "Rick",
+#   "email": "rick@example.com"
+# }
+
+### Not Modified. Using cache.
+GET http://localhost:8080/api/users/me
+If-None-Match: "90533e74"
+
+## Response
+# HTTP/1.1 304 
+# ETag: "1829201b"
+# Date: Tue, 10 Jun 2025 10:39:12 GMT
+# Connection: close
+
+
+### 3. 更新使用者資訊
+PUT http://localhost:8080/api/users/me
+Content-Type: application/json
+
+{
+    "id":"u001",
+    "name":"Rick Hwang", 
+    "email":"rick@gtcafe.com"
+}
+
+## response
+# HTTP/1.1 204 
+# Date: Tue, 10 Jun 2025 10:58:22 GMT
+# Connection: close
+
+### 4. 第三次（資料已變更）---
+GET http://localhost:8080/api/users/me
+
+## response
+# HTTP/1.1 200 
+# Last-Modified: Tue, 10 Jun 2025 10:58:22 GMT
+# ETag: "90533e74"
+# Cache-Control: no-cache
+# Content-Type: application/json
+# Transfer-Encoding: chunked
+# Date: Tue, 10 Jun 2025 10:59:13 GMT
+# Connection: close
+
+# {
+#   "id": "u001",
+#   "name": "Rick Hwang",
+#   "email": "rick@gtcafe.com"
+# }

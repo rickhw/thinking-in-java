@@ -1,0 +1,27 @@
+###
+GET http://localhost:8080/api/users/me
+
+## Response
+# HTTP/1.1 200 
+# ETag: "1829201b"
+# Cache-Control: max-age=0, must-revalidate
+# Content-Type: application/json
+# Transfer-Encoding: chunked
+# Date: Tue, 10 Jun 2025 10:39:25 GMT
+# Connection: close
+
+# {
+#   "id": "u001",
+#   "name": "Rick",
+#   "email": "rick@example.com"
+# }
+
+### 
+GET http://localhost:8080/api/users/me
+If-None-Match: "1829201b"
+
+## Response
+# HTTP/1.1 304 
+# ETag: "1829201b"
+# Date: Tue, 10 Jun 2025 10:39:12 GMT
+# Connection: close
