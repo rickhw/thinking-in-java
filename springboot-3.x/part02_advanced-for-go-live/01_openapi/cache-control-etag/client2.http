@@ -15,6 +15,7 @@
 
 ### 第一次請求
 GET http://localhost:8080/api/users/me
+Accept: application/json
 
 ## Response
 # HTTP/1.1 200 
@@ -33,7 +34,7 @@ GET http://localhost:8080/api/users/me
 
 ### Not Modified. Using cache.
 GET http://localhost:8080/api/users/me
-If-None-Match: "90533e74"
+If-None-Match: "1829201b"
 
 ## Response
 # HTTP/1.1 304 
