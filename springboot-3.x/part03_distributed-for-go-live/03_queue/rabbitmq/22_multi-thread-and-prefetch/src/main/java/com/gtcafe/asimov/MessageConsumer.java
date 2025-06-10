@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MessageConsumer {
 
-    private final MessageProcessor messageProcessor;
+    private final MessageHandler handler;
     // private final ThreadPoolTaskExecutor asyncExecutor;
 
     @Async
@@ -36,7 +36,7 @@ public class MessageConsumer {
         String messageBody = new String(message.getBody());
         
         try {
-            boolean processed = messageProcessor.processMessage(messageBody);
+            boolean processed = handler.run(messageBody);
             
             if (processed) {
                 // 手動確認消息

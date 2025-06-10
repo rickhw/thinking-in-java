@@ -45,7 +45,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/tenants")
 @Tag(name = "Tenant", description = "Tenant management APIs")
 @Slf4j
-
 public class TenantController {
 
     @Autowired

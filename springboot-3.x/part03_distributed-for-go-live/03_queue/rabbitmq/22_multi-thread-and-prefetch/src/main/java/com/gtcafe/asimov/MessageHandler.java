@@ -6,13 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class MessageProcessor {
+public class MessageHandler {
 
-    public boolean processMessage(String message) {
+    public boolean run(String message) {
         try {
             // 模擬複雜的處理邏輯
             int sleep = (int) (Math.random() * 1000);
-            log.info("Processing: {}, sleep: [{}]", message, sleep);
+            log.info("message: {}, sleep: [{}]", message, sleep);
             
             // 這裡可以模擬處理失敗的情況
             if (message.contains("error")) {

@@ -33,10 +33,6 @@ output.elasticsearch:
   hosts: ["elasticsearch:9200"]
   protocol: "http"
   indices:
-    # - index: "capacity-%{+yyyy.MM.dd}"
-    #   when.equals:
-    #     index: "capacity"
-
     - index: "crypto-%{+yyyy.MM.dd}"
       when.equals:
         index: "crypto"
