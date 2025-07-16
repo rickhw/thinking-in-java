@@ -1,16 +1,16 @@
 package rpg.tile;
 
-import java.awt.Graphics2D;
+import rpg.Config;
+import rpg.GamePanel;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javax.imageio.ImageIO;
-
-import rpg.GamePanel;
-
 public class TileManager {
-    
+
     GamePanel gp;
     public Tile[] tiles;
     public int mapTileNum[][];
@@ -18,10 +18,9 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tiles = new Tile[10];
-        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+        mapTileNum = new int[Config.MAX_WORLD_COL][Config.MAX_WORLD_ROW];
 
         getTileImage();
-        // loadMap("/rpg/assets/maps/map01.txt");
         loadMap("/rpg/assets/maps/world01.txt");
     }
 
@@ -61,19 +60,18 @@ public class TileManager {
             int col = 0;
             int row = 0;
 
-            while (col < gp.maxWorldCol && row < gp.maxWorldRow) {
+            while (col < Config.MAX_WORLD_COL && row < Config.MAX_WORLD_ROW) {
                 String line = br.readLine();
-                while (col < gp.maxWorldCol) {
+                while (col < Config.MAX_WORLD_COL) {
                     String numbers[] = line.split(" ");
                     int num = Integer.parseInt(numbers[col]);
                     mapTileNum[col][row] = num;
                     col++;
                 }
-                if(col == gp.maxWorldCol) {
+                if (col == Config.MAX_WORLD_COL) {
                     col = 0;
                     row++;
                 }
-                System.out.println("col: " + col + " row: " + row);
             }
             br.close();
 
@@ -82,31 +80,30 @@ public class TileManager {
         }
     }
 
-    
+
     public void draw(Graphics2D g2) {
 
         int worldCol = 0;
         int worldRow = 0;
 
-        while (worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
+        while (worldCol < Config.MAX_WORLD_COL && worldRow < Config.MAX_WORLD_ROW) {
             int tileNum = mapTileNum[worldCol][worldRow];
 
-            int worldX = worldCol * gp.tileSize;
-            int worldY = worldRow * gp.tileSize;
+            int worldX = worldCol * Config.TILE_SIZE;
+            int worldY = worldRow * Config.TILE_SIZE;
             int screenX = worldX - gp.player.worldX + gp.player.screenX;
             int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-             if (worldX * gp.tileSize > gp.player.worldX - gp.player.screenX &&
-                     worldX - gp.tileSize < gp.player.worldX + gp.player.screenX &&
-                     worldY + gp.tileSize > gp.player.worldY - gp.player.screenY &&
-                     worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
-                
-                 g2.drawImage(tiles[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
-             }
-//            g2.drawImage(tiles[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            if (worldX + Config.TILE_SIZE > gp.player.worldX - gp.player.screenX &&
+                    worldX - Config.TILE_SIZE < gp.player.worldX + gp.player.screenX &&
+                    worldY + Config.TILE_SIZE > gp.player.worldY - gp.player.screenY &&
+                    worldY - Config.TILE_SIZE < gp.player.worldY + gp.player.screenY) {
+
+                g2.drawImage(tiles[tileNum].image, screenX, screenY, Config.TILE_SIZE, Config.TILE_SIZE, null);
+            }
             worldCol++;
 
-            if (worldCol == gp.maxWorldCol) {
+            if (worldCol == Config.MAX_WORLD_COL) {
                 worldCol = 0;
                 worldRow++;
             }

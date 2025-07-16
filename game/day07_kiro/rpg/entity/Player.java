@@ -1,28 +1,27 @@
 package rpg.entity;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
+import rpg.Config;
 import rpg.GamePanel;
 import rpg.KeyHandler;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyHandler;
 
-    public final int screenX; // camera position
-    public final int screenY; // camera position
+    public final int screenX;
+    public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyHandler) {
         this.gp = gp;
         this.keyHandler = keyHandler;
 
-        screenX = gp.screenWidth / 2 - (gp.tileSize/2); // camera position
-        screenY = gp.screenHeight / 2 - (gp.tileSize/2); // camera position
+        screenX = Config.SCREEN_WIDTH / 2 - (Config.TILE_SIZE / 2);
+        screenY = Config.SCREEN_HEIGHT / 2 - (Config.TILE_SIZE / 2);
 
         solidArea = new Rectangle(8, 16, 32, 32);
 
@@ -31,10 +30,10 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        worldX = gp.tileSize * 23;  // start position
-        worldY = gp.tileSize * 21;  // start position
+        worldX = Config.TILE_SIZE * 23;
+        worldY = Config.TILE_SIZE * 21;
         speed = 5;
-        direction = "down";
+        direction = Direction.DOWN;
     }
 
     public void getPlayerImages() {
@@ -52,19 +51,17 @@ public class Player extends Entity {
         }
     }
 
+    @Override
     public void update() {
         if (keyHandler.upPressed || keyHandler.downPressed || keyHandler.leftPressed || keyHandler.rightPressed) {
-            if(keyHandler.upPressed) {
-                direction = "up";
-            } else
-            if(keyHandler.downPressed) {
-                direction = "down";
-            } else
-            if(keyHandler.leftPressed) {
-                direction = "left";
-            } else
-            if(keyHandler.rightPressed) {
-                direction = "right";
+            if (keyHandler.upPressed) {
+                direction = Direction.UP;
+            } else if (keyHandler.downPressed) {
+                direction = Direction.DOWN;
+            } else if (keyHandler.leftPressed) {
+                direction = Direction.LEFT;
+            } else if (keyHandler.rightPressed) {
+                direction = Direction.RIGHT;
             }
 
             // check tile collision
@@ -74,24 +71,24 @@ public class Player extends Entity {
             // if no collision, move player
             if (!collisionOn) {
                 switch (direction) {
-                    case "up":
+                    case UP:
                         worldY -= speed;
                         break;
-                    case "down":
+                    case DOWN:
                         worldY += speed;
                         break;
-                    case "left":
+                    case LEFT:
                         worldX -= speed;
                         break;
-                    case "right":
+                    case RIGHT:
                         worldX += speed;
                         break;
                 }
             }
-    
-            // animation 
+
+            // animation
             spriteCounter++;
-            if(spriteCounter > 10) {
+            if (spriteCounter > 10) {
                 if (spriteNum == 1) {
                     spriteNum = 2;
                 } else if (spriteNum == 2) {
@@ -102,46 +99,27 @@ public class Player extends Entity {
         }
     }
 
+    @Override
     public void draw(Graphics2D g2) {
-        // g2.setColor(Color.white);
-        // g2.fillRect(x, y, gp.tileSize, gp.tileSize);
-
-        BufferedImage image = up1;
-        switch(direction) {
-            case "up":
-                if(spriteNum == 1) {
-                    image = up1;
-                } 
-                if (spriteNum == 2) {
-                    image = up2;
-                }
+        BufferedImage image = null;
+        switch (direction) {
+            case UP:
+                if (spriteNum == 1) image = up1;
+                else image = up2;
                 break;
-            case "down":
-                if (spriteNum == 1) {
-                    image = down1;
-                }
-                if (spriteNum == 2) {
-                    image = down2;
-                }
+            case DOWN:
+                if (spriteNum == 1) image = down1;
+                else image = down2;
                 break;
-            case "left":
-                if (spriteNum == 1) {
-                    image = left1;
-                }
-                if (spriteNum == 2) {
-                    image = left2;
-                }
+            case LEFT:
+                if (spriteNum == 1) image = left1;
+                else image = left2;
                 break;
-            case "right":
-                if (spriteNum == 1) {
-                    image = right1;
-                }
-                if (spriteNum == 2) {
-                    image = right2;
-                }
+            case RIGHT:
+                if (spriteNum == 1) image = right1;
+                else image = right2;
                 break;
         }
-
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);    }
-
+        g2.drawImage(image, screenX, screenY, Config.TILE_SIZE, Config.TILE_SIZE, null);
+    }
 }
