@@ -1,0 +1,18 @@
+server:
+  port: ${RAFT_PORT:8080}
+
+raft:
+  id: ${RAFT_ID:node1}
+  peers:
+    - http://localhost:8081
+    - http://localhost:8082
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true

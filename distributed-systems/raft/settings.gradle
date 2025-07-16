@@ -1,0 +1,2 @@
+rootProject.name = 'raft-demo'
+include 'raft-node'
