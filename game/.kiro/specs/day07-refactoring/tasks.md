@@ -33,14 +33,14 @@
   - Build component registration and lookup system
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [-] 2.1 Create Entity and Component base classes
+- [x] 2.1 Create Entity and Component base classes
   - Implement Entity class with component storage and management methods
   - Create abstract Component base class with lifecycle methods
   - Add component type registration and lookup mechanisms
   - Implement entity ID generation and management
   - _Requirements: 2.1, 2.2_
 
-- [ ] 2.2 Implement core component types
+- [x] 2.2 Implement core component types
   - Create TransformComponent for position, rotation, scale
   - Implement RenderComponent for sprite and animation data
   - Build MovementComponent for velocity and movement constraints
@@ -48,7 +48,7 @@
   - Add InputComponent for input bindings and state
   - _Requirements: 2.2, 2.3, 2.4_
 
-- [ ] 2.3 Build EntityManager and component systems
+- [-] 2.3 Build EntityManager and component systems
   - Implement EntityManager for entity creation, destruction, and queries
   - Create component query system for finding entities with specific components
   - Add entity lifecycle management (creation, update, destruction)
