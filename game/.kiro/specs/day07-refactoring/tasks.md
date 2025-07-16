@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [x] 1. Set up foundation architecture and core interfaces
+- [ ] 1. Set up foundation architecture and core interfaces
   - Create new package structure for refactored code
   - Implement base Entity-Component-System interfaces
   - Create ServiceLocator and dependency injection framework
@@ -26,7 +26,7 @@
   - Implement error reporting and logging to files
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [ ] 2. Implement Entity-Component-System architecture
+- [-] 2. Implement Entity-Component-System architecture
   - Create Entity class with component management
   - Implement core component types (Transform, Render, Movement, Collision)
   - Create EntityManager for entity lifecycle management
