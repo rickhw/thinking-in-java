@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [ ] 1. Set up foundation architecture and core interfaces
+- [x] 1. Set up foundation architecture and core interfaces
   - Create new package structure for refactored code
   - Implement base Entity-Component-System interfaces
   - Create ServiceLocator and dependency injection framework
@@ -55,14 +55,14 @@
   - Implement entity serialization for save/load functionality
   - _Requirements: 2.1, 2.5_
 
-- [ ] 3. Create game systems architecture
+- [-] 3. Create game systems architecture
   - Implement GameSystem base class with update lifecycle
   - Create SystemManager for system registration and execution order
   - Build event system for inter-system communication
   - Add system dependency management and initialization
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [ ] 3.1 Implement core game systems
+- [-] 3.1 Implement core game systems
   - Create MovementSystem for entity movement and physics
   - Implement RenderSystem with culling and layer management
   - Build CollisionSystem with spatial partitioning
