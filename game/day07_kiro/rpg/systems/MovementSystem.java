@@ -37,6 +37,10 @@ public class MovementSystem extends GameSystem {
             return;
         }
         
+        // Store old position for event
+        float oldX = transform.x;
+        float oldY = transform.y;
+        
         // Update movement component (applies acceleration, friction, etc.)
         movement.update(deltaTime);
         
@@ -61,6 +65,11 @@ public class MovementSystem extends GameSystem {
         
         // Update transform position
         transform.setPosition(newX, newY);
+        
+        // Publish movement event if position changed significantly
+        if (eventBus != null && (Math.abs(newX - oldX) > 0.1f || Math.abs(newY - oldY) > 0.1f)) {
+            eventBus.publish(new MovementEvent(entity.getId(), oldX, oldY, newX, newY));
+        }
     }
     
     @Override

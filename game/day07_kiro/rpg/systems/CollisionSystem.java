@@ -4,6 +4,7 @@ import rpg.components.CollisionComponent;
 import rpg.components.TransformComponent;
 import rpg.components.MovementComponent;
 import rpg.engine.Entity;
+
 import java.awt.Rectangle;
 import java.util.List;
 import java.util.ArrayList;
@@ -144,16 +145,28 @@ public class CollisionSystem extends GameSystem {
     private void handleCollision(Entity entityA, Entity entityB, 
                                CollisionComponent collisionA, CollisionComponent collisionB) {
         
+        // Check if this is a new collision
+        boolean wasCollidingA = collisionA.isCollidingWith(entityB.getId());
+        boolean wasCollidingB = collisionB.isCollidingWith(entityA.getId());
+        
         // Update collision state
         collisionA.addCurrentCollision(entityB.getId());
         collisionB.addCurrentCollision(entityA.getId());
+        
+        // Publish collision events
+        if (eventBus != null) {
+            CollisionEvent.CollisionType eventType = (!wasCollidingA && !wasCollidingB) ? 
+                CollisionEvent.CollisionType.ENTER : CollisionEvent.CollisionType.STAY;
+            
+            eventBus.publish(new CollisionEvent(entityA.getId(), entityB.getId(), eventType));
+        }
         
         // Handle solid collision response
         if (collisionA.isSolid() && collisionB.isSolid()) {
             resolveCollision(entityA, entityB, collisionA, collisionB);
         }
         
-        // Handle trigger events (implement event system later)
+        // Handle trigger events
         if (collisionA.isTrigger() || collisionB.isTrigger()) {
             handleTriggerCollision(entityA, entityB, collisionA, collisionB);
         }

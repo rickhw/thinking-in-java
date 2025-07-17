@@ -148,6 +148,13 @@ public class InputSystem extends GameSystem {
                     ((InputCommand) command).setJustPressed(justPressed);
                 }
                 
+                // Publish input event
+                if (eventBus != null) {
+                    InputEvent.InputType eventType = justPressed ? 
+                        InputEvent.InputType.PRESSED : InputEvent.InputType.HELD;
+                    eventBus.publish(new InputEvent(entity.getId(), action, eventType));
+                }
+                
                 // Add to queue if not full
                 if (commandQueue.size() < maxQueueSize) {
                     commandQueue.offer(command);

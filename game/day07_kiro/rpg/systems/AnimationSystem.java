@@ -115,6 +115,13 @@ public class AnimationSystem extends GameSystem {
         // In a full implementation, you would load animation data from files
         // For now, we'll work with the existing RenderComponent animation system
         
+        // Publish animation event for previous animation completion
+        if (eventBus != null && animState.currentAnimation != null && 
+            !animState.currentAnimation.equals(animationName)) {
+            eventBus.publish(new AnimationEvent(entity.getId(), 
+                animState.currentAnimation, AnimationEvent.AnimationEventType.COMPLETED));
+        }
+        
         // Check if the render component has animation frames
         if (render.isAnimating()) {
             // Animation is already set up, just ensure it's playing
@@ -127,6 +134,12 @@ public class AnimationSystem extends GameSystem {
         
         // Handle direction-based sprite flipping for simple animations
         handleDirectionFlipping(render, animationName);
+        
+        // Publish animation started event
+        if (eventBus != null) {
+            eventBus.publish(new AnimationEvent(entity.getId(), 
+                animationName, AnimationEvent.AnimationEventType.STARTED));
+        }
         
         animState.previousAnimation = animState.currentAnimation;
         animState.animationStartTime = System.currentTimeMillis();
