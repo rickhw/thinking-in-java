@@ -12,6 +12,7 @@ import java.util.HashSet;
  * Allows entities to respond to keyboard and other input events.
  */
 public class InputComponent extends Component {
+    private static final long serialVersionUID = 1L;
     // Input bindings - maps actions to key codes
     private Map<String, Integer> keyBindings;
     

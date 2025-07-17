@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.io.*;
-import java.lang.reflect.Constructor;
 
 /**
  * Manages all entities in the game world.
@@ -143,5 +142,110 @@ public class EntityManager {
         entities.clear();
         entitiesToAdd.clear();
         entitiesToRemove.clear();
+    }
+    
+    /**
+     * Serialize all entities to a file for save functionality.
+     * Note: This is a basic implementation. Components must be serializable.
+     */
+    public void saveToFile(String filename) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename))) {
+            // Save entity count
+            oos.writeInt(entities.size());
+            
+            // Save each entity
+            for (Entity entity : entities.values()) {
+                saveEntity(oos, entity);
+            }
+        }
+    }
+    
+    /**
+     * Deserialize entities from a file for load functionality.
+     * Note: This is a basic implementation. Components must be serializable.
+     */
+    public void loadFromFile(String filename) throws IOException, ClassNotFoundException {
+        clear(); // Clear existing entities
+        
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filename))) {
+            int entityCount = ois.readInt();
+            
+            for (int i = 0; i < entityCount; i++) {
+                Entity entity = loadEntity(ois);
+                if (entity != null) {
+                    entities.put(entity.getId(), entity);
+                }
+            }
+        }
+    }
+    
+    private void saveEntity(ObjectOutputStream oos, Entity entity) throws IOException {
+        // Save entity ID and active state
+        oos.writeInt(entity.getId());
+        oos.writeBoolean(entity.isActive());
+        
+        // Save components
+        Map<Class<? extends Component>, Component> components = entity.getComponents();
+        oos.writeInt(components.size());
+        
+        for (Map.Entry<Class<? extends Component>, Component> entry : components.entrySet()) {
+            oos.writeObject(entry.getKey().getName());
+            oos.writeObject(entry.getValue());
+        }
+    }
+    
+    private Entity loadEntity(ObjectInputStream ois) throws IOException, ClassNotFoundException {
+        try {
+            // Read entity ID (for future use if needed)
+            ois.readInt();
+            boolean isActive = ois.readBoolean();
+            
+            // Create entity
+            Entity entity = new Entity();
+            entity.setActive(isActive);
+            
+            // Load components
+            int componentCount = ois.readInt();
+            for (int i = 0; i < componentCount; i++) {
+                // Read component class name (for future use if needed)
+                ois.readObject();
+                Component component = (Component) ois.readObject();
+                
+                if (component != null) {
+                    entity.addComponent(component);
+                }
+            }
+            
+            return entity;
+        } catch (Exception e) {
+            System.err.println("Error loading entity: " + e.getMessage());
+            return null;
+        }
+    }
+    
+    /**
+     * Create a snapshot of the current entity state for debugging or rollback.
+     */
+    public Map<Integer, Entity> createSnapshot() {
+        Map<Integer, Entity> snapshot = new HashMap<>();
+        for (Map.Entry<Integer, Entity> entry : entities.entrySet()) {
+            // Note: This creates a shallow copy. For deep copy, would need to clone components
+            snapshot.put(entry.getKey(), entry.getValue());
+        }
+        return snapshot;
+    }
+    
+    /**
+     * Update all components of all entities.
+     * This should be called from the main game loop.
+     */
+    public void updateComponents(float deltaTime) {
+        for (Entity entity : entities.values()) {
+            if (entity.isActive()) {
+                for (Component component : entity.getComponents().values()) {
+                    component.update(deltaTime);
+                }
+            }
+        }
     }
 }

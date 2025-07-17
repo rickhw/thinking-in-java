@@ -47,6 +47,7 @@ public class Entity {
     public <T extends Component> void addComponent(T component) {
         components.put(component.getClass(), component);
         component.setEntity(this);
+        component.onAttach();
     }
     
     /**
@@ -63,6 +64,7 @@ public class Entity {
     public <T extends Component> void removeComponent(Class<T> componentType) {
         Component component = components.remove(componentType);
         if (component != null) {
+            component.onDetach();
             component.setEntity(null);
         }
     }

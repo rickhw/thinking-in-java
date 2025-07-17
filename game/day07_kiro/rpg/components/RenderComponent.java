@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
  * Includes sprite data, animation state, and rendering layer.
  */
 public class RenderComponent extends Component {
+    private static final long serialVersionUID = 1L;
     private BufferedImage sprite;
     private int layer;
     private boolean visible;

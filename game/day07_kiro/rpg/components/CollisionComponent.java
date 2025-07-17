@@ -10,6 +10,7 @@ import java.util.Set;
  * Includes collision bounds, layers, and collision response settings.
  */
 public class CollisionComponent extends Component {
+    private static final long serialVersionUID = 1L;
     // Collision bounds (relative to entity position)
     private Rectangle bounds;
     

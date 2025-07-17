@@ -6,6 +6,7 @@ import rpg.engine.Component;
  * Component that holds position, rotation, and scale information for an entity.
  */
 public class TransformComponent extends Component {
+    private static final long serialVersionUID = 1L;
     public float x;
     public float y;
     public float rotation;

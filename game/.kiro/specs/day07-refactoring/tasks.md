@@ -26,14 +26,14 @@
   - Implement error reporting and logging to files
   - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5_
 
-- [-] 2. Implement Entity-Component-System architecture
+- [ ] 2. Implement Entity-Component-System architecture
   - Create Entity class with component management
   - Implement core component types (Transform, Render, Movement, Collision)
   - Create EntityManager for entity lifecycle management
   - Build component registration and lookup system
   - _Requirements: 2.1, 2.2, 2.3, 2.4, 2.5_
 
-- [x] 2.1 Create Entity and Component base classes
+- [ ] 2.1 Create Entity and Component base classes
   - Implement Entity class with component storage and management methods
   - Create abstract Component base class with lifecycle methods
   - Add component type registration and lookup mechanisms
@@ -48,7 +48,7 @@
   - Add InputComponent for input bindings and state
   - _Requirements: 2.2, 2.3, 2.4_
 
-- [-] 2.3 Build EntityManager and component systems
+- [x] 2.3 Build EntityManager and component systems
   - Implement EntityManager for entity creation, destruction, and queries
   - Create component query system for finding entities with specific components
   - Add entity lifecycle management (creation, update, destruction)

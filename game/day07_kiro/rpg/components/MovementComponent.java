@@ -7,6 +7,7 @@ import rpg.engine.Component;
  * Includes velocity, acceleration, and movement constraints.
  */
 public class MovementComponent extends Component {
+    private static final long serialVersionUID = 1L;
     // Velocity
     public float velocityX;
     public float velocityY;

@@ -1,10 +1,13 @@
 package rpg.engine;
 
+import java.io.Serializable;
+
 /**
  * Base Component interface for the Entity-Component-System architecture.
  * Components hold data and state for entities.
  */
-public abstract class Component {
+public abstract class Component implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Entity entity;
     
     /**
