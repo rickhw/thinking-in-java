@@ -62,7 +62,7 @@
   - Add system dependency management and initialization
   - _Requirements: 3.1, 3.2, 3.3, 3.4_
 
-- [-] 3.1 Implement core game systems
+- [x] 3.1 Implement core game systems
   - Create MovementSystem for entity movement and physics
   - Implement RenderSystem with culling and layer management
   - Build CollisionSystem with spatial partitioning
@@ -70,7 +70,7 @@
   - Add AnimationSystem for sprite animation updates
   - _Requirements: 3.1, 3.2, 5.1, 5.2, 7.1, 8.1_
 
-- [ ] 3.2 Build event system for inter-system communication
+- [-] 3.2 Build event system for inter-system communication
   - Implement EventBus for decoupled system communication
   - Create event types for common game events (collision, input, state changes)
   - Add event subscription and publishing mechanisms

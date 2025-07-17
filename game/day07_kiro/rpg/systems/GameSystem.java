@@ -9,10 +9,12 @@ import rpg.utils.ServiceLocator;
  */
 public abstract class GameSystem {
     protected EntityManager entityManager;
+    protected EventBus eventBus;
     protected boolean enabled;
     
     public GameSystem() {
         this.entityManager = ServiceLocator.getService(EntityManager.class);
+        this.eventBus = ServiceLocator.getService(EventBus.class);
         this.enabled = true;
     }
     
