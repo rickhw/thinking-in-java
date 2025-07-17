@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [-] 1. 建立專案結構和核心配置
+- [x] 1. 建立專案結構和核心配置
   - 建立 Spring Boot 3.x 專案結構
   - 配置 Gradle build.gradle 檔案，包含所需依賴（Spring Boot, Docker Java API, H2, JPA, Redis, Spring Cache, Spring Async）
   - 建立 application.yml 配置檔案，包含快取和非同步執行器配置
@@ -9,8 +9,8 @@
   - 配置非同步任務執行器和執行緒池
   - _Requirements: 10.1, 10.2, 10.3_
 
-- [ ] 2. 實作資料模型和狀態管理
-- [ ] 2.1 建立 Instance 實體和狀態枚舉
+- [-] 2. 實作資料模型和狀態管理
+- [-] 2.1 建立 Instance 實體和狀態枚舉
   - 實作 Instance JPA 實體類別，包含所有必要欄位
   - 建立 InstanceState 枚舉，定義所有 EC2 狀態
   - 實作 Instance 實體的 equals, hashCode, toString 方法
