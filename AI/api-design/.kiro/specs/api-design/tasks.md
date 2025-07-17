@@ -9,22 +9,22 @@
   - 配置非同步任務執行器和執行緒池
   - _Requirements: 10.1, 10.2, 10.3_
 
-- [-] 2. 實作資料模型和狀態管理
-- [-] 2.1 建立 Instance 實體和狀態枚舉
+- [x] 2. 實作資料模型和狀態管理
+- [x] 2.1 建立 Instance 實體和狀態枚舉
   - 實作 Instance JPA 實體類別，包含所有必要欄位
   - 建立 InstanceState 枚舉，定義所有 EC2 狀態
   - 實作 Instance 實體的 equals, hashCode, toString 方法
   - 建立對應的單元測試
   - _Requirements: 1.2, 2.4, 7.1_
 
-- [ ] 2.3 建立 Operation 實體和相關枚舉
+- [x] 2.3 建立 Operation 實體和相關枚舉
   - 實作 AsyncOperation JPA 實體類別，用於追蹤非同步操作
   - 建立 OperationType 和 OperationStatus 枚舉
   - 實作 Operation 實體的 equals, hashCode, toString 方法
   - 建立對應的單元測試
   - _Requirements: 8.1, 8.2, 8.4_
 
-- [ ] 2.2 實作狀態機制和轉換邏輯
+- [x] 2.2 實作狀態機制和轉換邏輯
   - 建立 InstanceStateMachine 組件，定義完整的狀態轉換規則（包含 TERMINATED 狀態）
   - 實作狀態轉換驗證方法和終端狀態檢查
   - 實作狀態轉換圖中定義的所有有效轉換路徑
