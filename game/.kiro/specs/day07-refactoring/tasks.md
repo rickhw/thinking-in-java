@@ -55,7 +55,7 @@
   - Implement entity serialization for save/load functionality
   - _Requirements: 2.1, 2.5_
 
-- [-] 3. Create game systems architecture
+- [ ] 3. Create game systems architecture
   - Implement GameSystem base class with update lifecycle
   - Create SystemManager for system registration and execution order
   - Build event system for inter-system communication
@@ -70,7 +70,7 @@
   - Add AnimationSystem for sprite animation updates
   - _Requirements: 3.1, 3.2, 5.1, 5.2, 7.1, 8.1_
 
-- [-] 3.2 Build event system for inter-system communication
+- [ ] 3.2 Build event system for inter-system communication
   - Implement EventBus for decoupled system communication
   - Create event types for common game events (collision, input, state changes)
   - Add event subscription and publishing mechanisms

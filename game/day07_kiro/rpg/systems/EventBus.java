@@ -121,6 +121,11 @@ public class EventBus {
         List<EventListener<?>> eventListeners = listeners.get(event.getClass());
         if (eventListeners != null) {
             for (EventListener<?> listener : eventListeners) {
+                // Skip processing if event has been consumed
+                if (event.isConsumed()) {
+                    break;
+                }
+                
                 try {
                     ((EventListener<GameEvent>) listener).onEvent(event);
                 } catch (Exception e) {
@@ -133,7 +138,8 @@ public class EventBus {
         
         if (enableEventLogging) {
             System.out.println("EventBus: Dispatched " + event.getClass().getSimpleName() + 
-                " to " + (eventListeners != null ? eventListeners.size() : 0) + " listeners");
+                " to " + (eventListeners != null ? eventListeners.size() : 0) + " listeners" +
+                (event.isConsumed() ? " (consumed)" : ""));
         }
     }
     
