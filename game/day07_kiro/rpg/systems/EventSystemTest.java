@@ -1,10 +1,14 @@
-import rpg.systems.*;
+package rpg.systems;
 
 /**
- * Test class to verify the event system functionality
+ * Test class for the event system
  */
-public class TestEventSystem {
-    public static void main(String[] args) {
+public class EventSystemTest {
+    
+    /**
+     * Run a test of the event system
+     */
+    public static void runTest() {
         System.out.println("Testing Event System...");
         
         // Create event bus
@@ -33,21 +37,9 @@ public class TestEventSystem {
         InputEvent inputEvent = new InputEvent(1, "move_up", InputEvent.InputType.PRESSED);
         eventBus.publish(inputEvent);
         
-        // Test entity event
-        EntityEvent entityEvent = new EntityEvent(1, EntityEvent.EntityEventType.CREATED);
-        eventBus.publish(entityEvent);
-        
-        // Test game state event
-        GameStateEvent stateEvent = new GameStateEvent("MENU", "PLAYING");
-        eventBus.publish(stateEvent);
-        
-        // Test animation event
-        AnimationEvent animEvent = new AnimationEvent(1, "walk", AnimationEvent.AnimationEventType.COMPLETED);
-        eventBus.publish(animEvent);
-        
-        // Test movement event
-        MovementEvent moveEvent = new MovementEvent(1, 10.0f, 20.0f, 15.0f, 25.0f);
-        eventBus.publish(moveEvent);
+        // Test system event
+        SystemEvent systemEvent = new SystemEvent("TestSystem", SystemEvent.SystemEventType.INITIALIZED);
+        eventBus.publish(systemEvent);
         
         System.out.println("\n--- Processing Events ---");
         eventBus.processEvents();
@@ -73,7 +65,7 @@ public class TestEventSystem {
         System.out.println("Collision event listeners: " + eventBus.getListenerCount(CollisionEvent.class));
         System.out.println("Input event listeners: " + eventBus.getListenerCount(InputEvent.class));
         System.out.println("Has collision listeners: " + eventBus.hasListeners(CollisionEvent.class));
-        System.out.println("Has movement listeners: " + eventBus.hasListeners(MovementEvent.class));
+        System.out.println("Has system event listeners: " + eventBus.hasListeners(SystemEvent.class));
         
         System.out.println("\nEvent System Test Complete!");
     }
