@@ -14,14 +14,14 @@
     - 撰寫 User 實體的單元測試
     - _需求: 1.2, 7.1_
 
-  - [-] 2.2 建立 Message 實體類別和關聯關係
+  - [x] 2.2 建立 Message 實體類別和關聯關係
     - 實作 Message 實體類別，包含與 User 的關聯關係
     - 實作自我參照的父子留言關係
     - 建立 Message Repository 介面，包含自訂查詢方法
     - 撰寫 Message 實體和關聯關係的單元測試
     - _需求: 2.2, 2.3, 4.2, 7.2_
 
-  - [ ] 2.3 建立 TokenBlacklist 實體和資料庫初始化
+  - [x] 2.3 建立 TokenBlacklist 實體和資料庫初始化
     - 實作 TokenBlacklist 實體類別用於 JWT token 管理
     - 建立資料庫初始化腳本和 Flyway 遷移檔案
     - 配置 JPA 資料庫連線和交易管理
