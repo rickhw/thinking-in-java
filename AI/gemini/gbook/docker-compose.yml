@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: gbook
+      MYSQL_USER: your-username
+      MYSQL_PASSWORD: your-password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/gbook?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: your-username
+      SPRING_DATASOURCE_PASSWORD: your-password
+      APP_JWT_SECRET: your-jwt-secret
+      APP_JWT_EXPIRATION_IN_MS: 86400000
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: your-google-client-id
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: your-google-client-secret
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:

@@ -29,14 +29,14 @@
     - _需求: 1.3, 7.4_
 
 - [ ] 3. 實作 JWT 認證和安全配置
-  - [ ] 3.1 建立 JWT 工具類別和 Token 管理
+  - [x] 3.1 建立 JWT 工具類別和 Token 管理
     - 實作 JwtUtil 類別，包含 token 生成、驗證、解析功能
     - 實作 TokenBlacklistService 管理 token 黑名單
     - 建立 JWT 相關的配置類別和常數定義
     - 撰寫 JWT 工具類別的單元測試
     - _需求: 1.3, 1.4_
 
-  - [ ] 3.2 實作 Spring Security 配置和過濾器
+  - [-] 3.2 實作 Spring Security 配置和過濾器
     - 建立 SecurityConfig 配置類別，設定 JWT 認證流程
     - 實作 JwtAuthenticationFilter 攔截和驗證 JWT token
     - 配置 CORS 和 API 端點的安全規則
