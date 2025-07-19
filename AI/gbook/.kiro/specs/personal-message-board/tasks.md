@@ -36,7 +36,7 @@
     - 撰寫 JWT 工具類別的單元測試
     - _需求: 1.3, 1.4_
 
-  - [-] 3.2 實作 Spring Security 配置和過濾器
+  - [x] 3.2 實作 Spring Security 配置和過濾器
     - 建立 SecurityConfig 配置類別，設定 JWT 認證流程
     - 實作 JwtAuthenticationFilter 攔截和驗證 JWT token
     - 配置 CORS 和 API 端點的安全規則
