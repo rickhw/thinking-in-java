@@ -1,6 +1,6 @@
 # 實作計劃
 
-- [ ] 1. 建立專案結構和核心配置
+- [x] 1. 建立專案結構和核心配置
   - 使用 Spring Initializr 建立 Spring Boot 3.x 專案，包含 Web、Security、JPA、Redis 依賴
   - 配置 Gradle 建置檔案，包含所需的依賴項目
   - 建立標準的 Maven/Gradle 目錄結構和套件組織
@@ -8,13 +8,13 @@
   - _需求: 5.1, 5.4, 6.1, 7.3_
 
 - [ ] 2. 實作資料模型和實體類別
-  - [ ] 2.1 建立 User 實體類別和 JPA 映射
+  - [x] 2.1 建立 User 實體類別和 JPA 映射
     - 實作 User 實體類別，包含所有必要欄位和 JPA 註解
     - 建立 User Repository 介面，繼承 JpaRepository
     - 撰寫 User 實體的單元測試
     - _需求: 1.2, 7.1_
 
-  - [ ] 2.2 建立 Message 實體類別和關聯關係
+  - [-] 2.2 建立 Message 實體類別和關聯關係
     - 實作 Message 實體類別，包含與 User 的關聯關係
     - 實作自我參照的父子留言關係
     - 建立 Message Repository 介面，包含自訂查詢方法
