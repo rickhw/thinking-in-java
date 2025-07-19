@@ -111,7 +111,7 @@ class SSOServiceImplTest {
         assertThat(result.getEmail()).isEqualTo("test@github.com");
         assertThat(result.getDisplayName()).isEqualTo("Test User");
         assertThat(result.getAvatarUrl()).isEqualTo("https://github.com/avatar.jpg");
-        assertThat(result.getUsername()).isEqualTo("test");
+        assertThat(result.getUsername()).isEqualTo("testuser");
         assertThat(result.getIsActive()).isTrue();
         
         verify(userRepository).findBySsoId("github:12345");

@@ -14,8 +14,27 @@ spring:
   h2:
     console:
       enabled: true
+  
+  # Disable Flyway for tests
+  flyway:
+    enabled: false
+  
+  # Redis Configuration for Testing
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 10000
+      database: 1  # Use different database for testing
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: -1ms
 
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    com.messageboard: DEBUG
