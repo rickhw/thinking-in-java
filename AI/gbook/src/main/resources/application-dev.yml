@@ -25,6 +25,18 @@ spring:
     redis:
       host: localhost
       port: 6379
+  
+  # OAuth2 Configuration for Development
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: dev-google-client-id
+            client-secret: dev-google-client-secret
+          github:
+            client-id: dev-github-client-id
+            client-secret: dev-github-client-secret
 
 # Logging Configuration for Development
 logging:

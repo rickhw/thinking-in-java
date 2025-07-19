@@ -1,6 +1,8 @@
 package com.messageboard.config;
 
+import com.messageboard.security.CustomOAuth2UserService;
 import com.messageboard.security.JwtAuthenticationFilter;
+import com.messageboard.security.OAuth2AuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,9 +24,15 @@ import java.util.Arrays;
 public class SecurityConfig {
     
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                         CustomOAuth2UserService customOAuth2UserService,
+                         OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customOAuth2UserService = customOAuth2UserService;
+        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
     }
 
     @Bean
@@ -39,10 +47,18 @@ public class SecurityConfig {
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/actuator/health").permitAll()
                 .requestMatchers("/api/auth/login", "/api/auth/refresh").permitAll()
+                .requestMatchers("/login/oauth2/**", "/oauth2/**").permitAll()
                 // Protected endpoints - API routes
                 .requestMatchers("/api/**").authenticated()
                 // All other requests require authentication
                 .anyRequest().authenticated()
+            )
+            // OAuth2 login configuration
+            .oauth2Login(oauth2 -> oauth2
+                .userInfoEndpoint(userInfo -> userInfo
+                    .userService(customOAuth2UserService)
+                )
+                .successHandler(oAuth2AuthenticationSuccessHandler)
             )
             // Add JWT authentication filter
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
