@@ -13,5 +13,6 @@
     "checkstyle.configuration": "${workspaceFolder}/checkstyle.xml",
     // 指定格式風格（可選）
     "java.format.settings.url": ".vscode/eclipse-java-google-style.xml",
-    "java.format.settings.profile": "GoogleStyle"
+    "java.format.settings.profile": "GoogleStyle",
+    "java.compile.nullAnalysis.mode": "automatic"
 }
