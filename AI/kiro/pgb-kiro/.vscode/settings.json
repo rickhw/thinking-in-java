@@ -1,0 +1,17 @@
+{
+    // 存檔時自動格式化
+    "editor.formatOnSave": true,
+    // Java 專案使用內建 formatter
+    "[java]": {
+        "editor.defaultFormatter": "redhat.java"
+    },
+    // 存檔時自動整理 import
+    "java.format.settings.organizeImports": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "checkstyle.configuration": "${workspaceFolder}/checkstyle.xml",
+    // 指定格式風格（可選）
+    "java.format.settings.url": ".vscode/eclipse-java-google-style.xml",
+    "java.format.settings.profile": "GoogleStyle"
+}
