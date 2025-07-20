@@ -3,14 +3,12 @@ package com.gtcafe.pgb.repository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import com.gtcafe.pgb.entity.Message;
 import com.gtcafe.pgb.entity.User;
 
@@ -20,86 +18,120 @@ import com.gtcafe.pgb.entity.User;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    /**
-     * Find all messages on a specific user's board (non-deleted, root messages
-     * only)
-     */
-    @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL ORDER BY m.createdAt DESC")
-    Page<Message> findByBoardOwnerAndNotDeletedAndParentMessageIsNull(@Param("boardOwner") User boardOwner,
-            Pageable pageable);
+        /**
+         * Find all messages on a specific user's board (non-deleted, root messages only)
+         */
+        @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL ORDER BY m.createdAt DESC")
+        Page<Message> findByBoardOwnerAndNotDeletedAndParentMessageIsNull(
+                        @Param("boardOwner") User boardOwner, Pageable pageable);
 
-    /**
-     * Find all messages on a specific user's board including replies (non-deleted)
-     */
-    @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false ORDER BY m.createdAt DESC")
-    Page<Message> findByBoardOwnerAndNotDeleted(@Param("boardOwner") User boardOwner, Pageable pageable);
+        /**
+         * Find all messages on a specific user's board including replies (non-deleted)
+         */
+        @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false ORDER BY m.createdAt DESC")
+        Page<Message> findByBoardOwnerAndNotDeleted(@Param("boardOwner") User boardOwner,
+                        Pageable pageable);
 
-    /**
-     * Find all replies to a specific message (non-deleted)
-     */
-    @Query("SELECT m FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false ORDER BY m.createdAt ASC")
-    List<Message> findRepliesByParentMessageAndNotDeleted(@Param("parentMessage") Message parentMessage);
+        /**
+         * Find all replies to a specific message (non-deleted)
+         */
+        @Query("SELECT m FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false ORDER BY m.createdAt ASC")
+        List<Message> findRepliesByParentMessageAndNotDeleted(
+                        @Param("parentMessage") Message parentMessage);
 
-    /**
-     * Find all messages by a specific user (non-deleted)
-     */
-    @Query("SELECT m FROM Message m WHERE m.user = :user AND m.isDeleted = false ORDER BY m.createdAt DESC")
-    Page<Message> findByUserAndNotDeleted(@Param("user") User user, Pageable pageable);
+        /**
+         * Find all messages by a specific user (non-deleted)
+         */
+        @Query("SELECT m FROM Message m WHERE m.user = :user AND m.isDeleted = false ORDER BY m.createdAt DESC")
+        Page<Message> findByUserAndNotDeleted(@Param("user") User user, Pageable pageable);
 
-    /**
-     * Find a message by ID if not deleted
-     */
-    @Query("SELECT m FROM Message m WHERE m.id = :id AND m.isDeleted = false")
-    Optional<Message> findByIdAndNotDeleted(@Param("id") Long id);
+        /**
+         * Find a message by ID if not deleted
+         */
+        @Query("SELECT m FROM Message m WHERE m.id = :id AND m.isDeleted = false")
+        Optional<Message> findByIdAndNotDeleted(@Param("id") Long id);
 
-    /**
-     * Count total messages on a user's board (non-deleted, root messages only)
-     */
-    @Query("SELECT COUNT(m) FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL")
-    long countByBoardOwnerAndNotDeletedAndParentMessageIsNull(@Param("boardOwner") User boardOwner);
+        /**
+         * Count total messages on a user's board (non-deleted, root messages only)
+         */
+        @Query("SELECT COUNT(m) FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL")
+        long countByBoardOwnerAndNotDeletedAndParentMessageIsNull(
+                        @Param("boardOwner") User boardOwner);
 
-    /**
-     * Count total replies to a specific message (non-deleted)
-     */
-    @Query("SELECT COUNT(m) FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false")
-    long countRepliesByParentMessageAndNotDeleted(@Param("parentMessage") Message parentMessage);
+        /**
+         * Count total replies to a specific message (non-deleted)
+         */
+        @Query("SELECT COUNT(m) FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false")
+        long countRepliesByParentMessageAndNotDeleted(
+                        @Param("parentMessage") Message parentMessage);
 
-    /**
-     * Find messages created after a specific date on a user's board
-     */
-    @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.createdAt > :since AND m.isDeleted = false ORDER BY m.createdAt DESC")
-    List<Message> findByBoardOwnerAndCreatedAfterAndNotDeleted(@Param("boardOwner") User boardOwner,
-            @Param("since") LocalDateTime since);
+        /**
+         * Find messages created after a specific date on a user's board
+         */
+        @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.createdAt > :since AND m.isDeleted = false ORDER BY m.createdAt DESC")
+        List<Message> findByBoardOwnerAndCreatedAfterAndNotDeleted(
+                        @Param("boardOwner") User boardOwner, @Param("since") LocalDateTime since);
 
-    /**
-     * Find recent messages across all boards (for activity feed)
-     */
-    @Query("SELECT m FROM Message m WHERE m.isDeleted = false AND m.parentMessage IS NULL ORDER BY m.createdAt DESC")
-    Page<Message> findRecentRootMessages(Pageable pageable);
+        /**
+         * Find recent messages across all boards (for activity feed)
+         */
+        @Query("SELECT m FROM Message m WHERE m.isDeleted = false AND m.parentMessage IS NULL ORDER BY m.createdAt DESC")
+        Page<Message> findRecentRootMessages(Pageable pageable);
 
-    /**
-     * Search messages by content on a specific user's board
-     */
-    @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND LOWER(m.content) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY m.createdAt DESC")
-    Page<Message> searchByBoardOwnerAndContent(@Param("boardOwner") User boardOwner, @Param("keyword") String keyword,
-            Pageable pageable);
+        /**
+         * Search messages by content on a specific user's board
+         */
+        @Query("SELECT m FROM Message m WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND LOWER(m.content) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY m.createdAt DESC")
+        Page<Message> searchByBoardOwnerAndContent(@Param("boardOwner") User boardOwner,
+                        @Param("keyword") String keyword, Pageable pageable);
 
-    /**
-     * Find messages with their replies for a specific board (optimized for display)
-     */
-    @Query("SELECT DISTINCT m FROM Message m LEFT JOIN FETCH m.replies r WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL AND (r IS NULL OR r.isDeleted = false) ORDER BY m.createdAt DESC")
-    List<Message> findByBoardOwnerWithReplies(@Param("boardOwner") User boardOwner);
+        /**
+         * Find messages with their replies for a specific board (optimized for display)
+         */
+        @Query("SELECT DISTINCT m FROM Message m LEFT JOIN FETCH m.replies r WHERE m.boardOwner = :boardOwner AND m.isDeleted = false AND m.parentMessage IS NULL AND (r IS NULL OR r.isDeleted = false) ORDER BY m.createdAt DESC")
+        List<Message> findByBoardOwnerWithReplies(@Param("boardOwner") User boardOwner);
 
-    /**
-     * Check if a user has any messages on a specific board
-     */
-    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM Message m WHERE m.user = :user AND m.boardOwner = :boardOwner AND m.isDeleted = false")
-    boolean existsByUserAndBoardOwnerAndNotDeleted(@Param("user") User user, @Param("boardOwner") User boardOwner);
+        /**
+         * Check if a user has any messages on a specific board
+         */
+        @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM Message m WHERE m.user = :user AND m.boardOwner = :boardOwner AND m.isDeleted = false")
+        boolean existsByUserAndBoardOwnerAndNotDeleted(@Param("user") User user,
+                        @Param("boardOwner") User boardOwner);
 
-    /**
-     * Find all messages that need to be cleaned up (soft deleted messages older
-     * than specified date)
-     */
-    @Query("SELECT m FROM Message m WHERE m.isDeleted = true AND m.updatedAt < :cutoffDate")
-    List<Message> findDeletedMessagesOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
+        /**
+         * Find all messages that need to be cleaned up (soft deleted messages older than specified
+         * date)
+         */
+        @Query("SELECT m FROM Message m WHERE m.isDeleted = true AND m.updatedAt < :cutoffDate")
+        List<Message> findDeletedMessagesOlderThan(@Param("cutoffDate") LocalDateTime cutoffDate);
+
+        /**
+         * Find replies with pagination
+         */
+        @Query("SELECT m FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false ORDER BY m.createdAt ASC")
+        Page<Message> findRepliesByParentMessageAndNotDeleted(
+                        @Param("parentMessage") Message parentMessage, Pageable pageable);
+
+        /**
+         * Find all replies in a thread (including nested replies)
+         */
+        @Query("SELECT m FROM Message m WHERE m.parentMessage IS NOT NULL AND m.isDeleted = false AND "
+                        + "(m.parentMessage = :rootMessage OR m.parentMessage IN "
+                        + "(SELECT r FROM Message r WHERE r.parentMessage = :rootMessage AND r.isDeleted = false)) "
+                        + "ORDER BY m.createdAt ASC")
+        List<Message> findAllRepliesInThread(@Param("rootMessage") Message rootMessage);
+
+        /**
+         * Get reply statistics for a message
+         */
+        @Query("SELECT COUNT(DISTINCT m.user.id), MAX(m.createdAt) FROM Message m WHERE m.parentMessage = :parentMessage AND m.isDeleted = false")
+        Object[] getReplyStatistics(@Param("parentMessage") Message parentMessage);
+
+        /**
+         * Find the root message of a reply chain
+         */
+        @Query("SELECT m FROM Message m WHERE m.id = :messageId OR "
+                        + "(m.parentMessage IS NULL AND m.id IN "
+                        + "(SELECT CASE WHEN p.parentMessage IS NULL THEN p.id ELSE p.parentMessage.id END FROM Message p WHERE p.id = :messageId))")
+        Optional<Message> findRootMessage(@Param("messageId") Long messageId);
 }

@@ -1,5 +1,6 @@
 package com.gtcafe.pgb.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -176,4 +177,84 @@ public interface MessageService {
      * @return true if user has posted messages on the board
      */
     boolean hasUserPostedOnBoard(User user, User boardOwner);
+
+    // Enhanced reply functionality for task 6.2
+
+    /**
+     * Check if a user can reply to a message
+     * 
+     * @param message the message to reply to
+     * @param user the user attempting to reply
+     * @return true if user can reply to the message
+     */
+    boolean canReplyToMessage(Message message, User user);
+
+    /**
+     * Get the reply depth/level of a message
+     * 
+     * @param message the message
+     * @return the depth level (0 for root messages, 1 for direct replies, etc.)
+     */
+    int getMessageDepth(Message message);
+
+    /**
+     * Get all replies in a thread (including nested replies)
+     * 
+     * @param rootMessage the root message
+     * @return list of all replies in the thread, ordered by creation time
+     */
+    List<Message> getThreadReplies(Message rootMessage);
+
+    /**
+     * Get replies with pagination
+     * 
+     * @param parentMessage the parent message
+     * @param pageable pagination information
+     * @return page of replies
+     */
+    Page<Message> getRepliesWithPagination(Message parentMessage, Pageable pageable);
+
+    /**
+     * Delete all replies to a message (cascade delete)
+     * 
+     * @param parentMessage the parent message
+     * @param user the user attempting to delete (must have permission)
+     * @throws SecurityException if user doesn't have permission
+     */
+    void deleteAllReplies(Message parentMessage, User user);
+
+    /**
+     * Get reply statistics for a message
+     * 
+     * @param message the message
+     * @return reply statistics including total count, unique authors, etc.
+     */
+    ReplyStatistics getReplyStatistics(Message message);
+
+    /**
+     * Inner class for reply statistics
+     */
+    class ReplyStatistics {
+        private final long totalReplies;
+        private final long uniqueAuthors;
+        private final LocalDateTime lastReplyTime;
+
+        public ReplyStatistics(long totalReplies, long uniqueAuthors, LocalDateTime lastReplyTime) {
+            this.totalReplies = totalReplies;
+            this.uniqueAuthors = uniqueAuthors;
+            this.lastReplyTime = lastReplyTime;
+        }
+
+        public long getTotalReplies() {
+            return totalReplies;
+        }
+
+        public long getUniqueAuthors() {
+            return uniqueAuthors;
+        }
+
+        public LocalDateTime getLastReplyTime() {
+            return lastReplyTime;
+        }
+    }
 }

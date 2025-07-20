@@ -1,5 +1,6 @@
 package com.gtcafe.pgb.service.impl;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -33,6 +34,7 @@ import com.gtcafe.pgb.entity.Message;
 import com.gtcafe.pgb.entity.User;
 import com.gtcafe.pgb.repository.MessageRepository;
 import com.gtcafe.pgb.service.CacheService;
+import com.gtcafe.pgb.service.MessageService;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("MessageService Implementation Tests")
@@ -559,6 +561,220 @@ class MessageServiceImplTest {
             // Then
             assertEquals(expectedCount, result);
             verify(cacheService).set(anyString(), eq(expectedCount), any());
+        }
+    }
+
+    @Nested
+    @DisplayName("Enhanced Reply Functionality Tests")
+    class EnhancedReplyTests {
+
+        @Test
+        @DisplayName("Should check if user can reply to message")
+        void shouldCheckIfUserCanReplyToMessage() {
+            // When
+            boolean canReply = messageService.canReplyToMessage(testMessage, testUser);
+
+            // Then
+            assertTrue(canReply);
+        }
+
+        @Test
+        @DisplayName("Should not allow reply to deleted message")
+        void shouldNotAllowReplyToDeletedMessage() {
+            // Given
+            testMessage.setIsDeleted(true);
+
+            // When
+            boolean canReply = messageService.canReplyToMessage(testMessage, testUser);
+
+            // Then
+            assertFalse(canReply);
+        }
+
+        @Test
+        @DisplayName("Should not allow inactive user to reply")
+        void shouldNotAllowInactiveUserToReply() {
+            // Given
+            testUser.setIsActive(false);
+
+            // When
+            boolean canReply = messageService.canReplyToMessage(testMessage, testUser);
+
+            // Then
+            assertFalse(canReply);
+        }
+
+        @Test
+        @DisplayName("Should get message depth correctly")
+        void shouldGetMessageDepthCorrectly() {
+            // Given - root message
+            Message rootMessage = Message.builder().id(1L).user(testUser).boardOwner(boardOwner)
+                    .content("Root message").build();
+
+            // Given - first level reply
+            Message firstReply = Message.builder().id(2L).user(testUser).boardOwner(boardOwner)
+                    .content("First reply").parentMessage(rootMessage).build();
+
+            // Given - second level reply
+            Message secondReply = Message.builder().id(3L).user(testUser).boardOwner(boardOwner)
+                    .content("Second reply").parentMessage(firstReply).build();
+
+            // When & Then
+            assertEquals(0, messageService.getMessageDepth(rootMessage));
+            assertEquals(1, messageService.getMessageDepth(firstReply));
+            assertEquals(2, messageService.getMessageDepth(secondReply));
+        }
+
+        @Test
+        @DisplayName("Should get thread replies for root message")
+        void shouldGetThreadRepliesForRootMessage() {
+            // Given
+            List<Message> expectedReplies = Arrays.asList(testMessage, parentMessage);
+            when(messageRepository.findAllRepliesInThread(parentMessage))
+                    .thenReturn(expectedReplies);
+
+            // When
+            List<Message> result = messageService.getThreadReplies(parentMessage);
+
+            // Then
+            assertNotNull(result);
+            assertEquals(2, result.size());
+            verify(messageRepository).findAllRepliesInThread(parentMessage);
+        }
+
+        @Test
+        @DisplayName("Should throw exception when getting thread replies for non-root message")
+        void shouldThrowExceptionWhenGettingThreadRepliesForNonRootMessage() {
+            // Given - message with parent (not root)
+            Message replyMessage = Message.builder().id(3L).user(testUser).boardOwner(boardOwner)
+                    .content("Reply message").parentMessage(parentMessage).build();
+
+            // When & Then
+            assertThrows(IllegalArgumentException.class,
+                    () -> messageService.getThreadReplies(replyMessage));
+        }
+
+        @Test
+        @DisplayName("Should get replies with pagination")
+        void shouldGetRepliesWithPagination() {
+            // Given
+            Pageable pageable = PageRequest.of(0, 5);
+            List<Message> replies = Arrays.asList(testMessage);
+            Page<Message> replyPage = new PageImpl<>(replies, pageable, 1);
+
+            when(messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage, pageable))
+                    .thenReturn(replyPage);
+
+            // When
+            Page<Message> result = messageService.getRepliesWithPagination(parentMessage, pageable);
+
+            // Then
+            assertNotNull(result);
+            assertEquals(1, result.getTotalElements());
+            assertEquals(testMessage, result.getContent().get(0));
+        }
+
+        @Test
+        @DisplayName("Should delete all replies by message author")
+        void shouldDeleteAllRepliesByMessageAuthor() {
+            // Given
+            List<Message> replies = Arrays.asList(testMessage);
+            when(messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage))
+                    .thenReturn(replies);
+            when(messageRepository.save(any(Message.class))).thenReturn(testMessage);
+
+            // When
+            messageService.deleteAllReplies(parentMessage, boardOwner);
+
+            // Then
+            verify(messageRepository).findRepliesByParentMessageAndNotDeleted(parentMessage);
+            verify(messageRepository).save(testMessage);
+            assertTrue(testMessage.isDeleted());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when user has no permission to delete all replies")
+        void shouldThrowExceptionWhenUserHasNoPermissionToDeleteAllReplies() {
+            // Given
+            User otherUser = User.builder().id(99L).ssoId("other-sso").username("otheruser")
+                    .email("other@example.com").isActive(true).build();
+
+            // When & Then
+            assertThrows(SecurityException.class,
+                    () -> messageService.deleteAllReplies(parentMessage, otherUser));
+        }
+
+        @Test
+        @DisplayName("Should get reply statistics")
+        void shouldGetReplyStatistics() {
+            // Given
+            Object[] statsData = {3L, LocalDateTime.now()};
+            when(messageRepository.getReplyStatistics(parentMessage)).thenReturn(statsData);
+            when(messageRepository.countRepliesByParentMessageAndNotDeleted(parentMessage))
+                    .thenReturn(5L);
+
+            // When
+            MessageService.ReplyStatistics stats = messageService.getReplyStatistics(parentMessage);
+
+            // Then
+            assertNotNull(stats);
+            assertEquals(5L, stats.getTotalReplies());
+            assertEquals(3L, stats.getUniqueAuthors());
+            assertNotNull(stats.getLastReplyTime());
+        }
+
+        @Test
+        @DisplayName("Should return empty statistics for null message")
+        void shouldReturnEmptyStatisticsForNullMessage() {
+            // When
+            MessageService.ReplyStatistics stats = messageService.getReplyStatistics(null);
+
+            // Then
+            assertNotNull(stats);
+            assertEquals(0L, stats.getTotalReplies());
+            assertEquals(0L, stats.getUniqueAuthors());
+            assertNull(stats.getLastReplyTime());
+        }
+
+        @Test
+        @DisplayName("Should prevent reply when depth limit exceeded")
+        void shouldPreventReplyWhenDepthLimitExceeded() {
+            // Given - create a deep reply chain
+            Message level1 = Message.builder().id(1L).user(testUser).boardOwner(boardOwner)
+                    .content("Level 1").parentMessage(parentMessage).build();
+
+            Message level2 = Message.builder().id(2L).user(testUser).boardOwner(boardOwner)
+                    .content("Level 2").parentMessage(level1).build();
+
+            Message level3 = Message.builder().id(3L).user(testUser).boardOwner(boardOwner)
+                    .content("Level 3").parentMessage(level2).build();
+
+            // When
+            boolean canReplyToLevel3 = messageService.canReplyToMessage(level3, testUser);
+
+            // Then
+            assertFalse(canReplyToLevel3);
+        }
+
+        @Test
+        @DisplayName("Should create reply with enhanced validation")
+        void shouldCreateReplyWithEnhancedValidation() {
+            // Given
+            String content = "Enhanced reply content";
+            Message reply = Message.builder().id(3L).user(testUser).boardOwner(boardOwner)
+                    .content(content).parentMessage(parentMessage).isDeleted(false).build();
+
+            when(messageRepository.save(any(Message.class))).thenReturn(reply);
+
+            // When
+            Message result = messageService.createReply(testUser, parentMessage, content);
+
+            // Then
+            assertNotNull(result);
+            assertEquals(reply.getId(), result.getId());
+            assertEquals(testUser, result.getUser());
+            assertEquals(parentMessage, result.getParentMessage());
+            verify(messageRepository).save(any(Message.class));
         }
     }
 }

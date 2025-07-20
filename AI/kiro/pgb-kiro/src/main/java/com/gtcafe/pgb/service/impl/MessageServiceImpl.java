@@ -1,18 +1,22 @@
 package com.gtcafe.pgb.service.impl;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
 import com.gtcafe.pgb.entity.Message;
 import com.gtcafe.pgb.entity.User;
 import com.gtcafe.pgb.repository.MessageRepository;
 import com.gtcafe.pgb.service.CacheService;
 import com.gtcafe.pgb.service.MessageService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,6 +46,7 @@ public class MessageServiceImpl implements MessageService {
     // Message content validation constants
     private static final int MAX_MESSAGE_LENGTH = 1000;
     private static final int MIN_MESSAGE_LENGTH = 1;
+    private static final int MAX_REPLY_DEPTH = 3;
 
     @Override
     public Message createMessage(User author, User boardOwner, String content) {
@@ -50,8 +55,11 @@ public class MessageServiceImpl implements MessageService {
 
         log.debug("Creating message by user {} on board {}", author.getId(), boardOwner.getId());
 
-        Message message = Message.builder().user(author).boardOwner(boardOwner)
-                .content(content.trim()).build();
+        Message message = Message.builder()
+                .user(author)
+                .boardOwner(boardOwner)
+                .content(content.trim())
+                .build();
 
         Message savedMessage = messageRepository.save(message);
 
@@ -59,8 +67,7 @@ public class MessageServiceImpl implements MessageService {
         clearBoardCaches(boardOwner.getId());
         clearUserCaches(author.getId());
 
-        log.info("Created message {} by user {} on board {}", savedMessage.getId(), author.getId(),
-                boardOwner.getId());
+        log.info("Created message {} by user {} on board {}", savedMessage.getId(), author.getId(), boardOwner.getId());
 
         return savedMessage;
     }
@@ -74,10 +81,19 @@ public class MessageServiceImpl implements MessageService {
             throw new IllegalArgumentException("Parent message not found or deleted");
         }
 
+        // Enhanced reply validation
+        if (!canReplyToMessage(parentMessage, author)) {
+            throw new IllegalArgumentException("User cannot reply to this message");
+        }
+
         log.debug("Creating reply by user {} to message {}", author.getId(), parentMessage.getId());
 
-        Message reply = Message.builder().user(author).boardOwner(parentMessage.getBoardOwner())
-                .content(content.trim()).parentMessage(parentMessage).build();
+        Message reply = Message.builder()
+                .user(author)
+                .boardOwner(parentMessage.getBoardOwner())
+                .content(content.trim())
+                .parentMessage(parentMessage)
+                .build();
 
         Message savedReply = messageRepository.save(reply);
 
@@ -86,8 +102,7 @@ public class MessageServiceImpl implements MessageService {
         clearBoardCaches(parentMessage.getBoardOwner().getId());
         clearUserCaches(author.getId());
 
-        log.info("Created reply {} by user {} to message {}", savedReply.getId(), author.getId(),
-                parentMessage.getId());
+        log.info("Created reply {} by user {} to message {}", savedReply.getId(), author.getId(), parentMessage.getId());
 
         return savedReply;
     }
@@ -167,19 +182,16 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional(readOnly = true)
     public Page<Message> getBoardMessages(User boardOwner, Pageable pageable) {
-        log.debug("Getting board messages for user {} with page {}", boardOwner.getId(),
-                pageable.getPageNumber());
+        log.debug("Getting board messages for user {} with page {}", boardOwner.getId(), pageable.getPageNumber());
 
         validateUser(boardOwner);
-        return messageRepository.findByBoardOwnerAndNotDeletedAndParentMessageIsNull(boardOwner,
-                pageable);
+        return messageRepository.findByBoardOwnerAndNotDeletedAndParentMessageIsNull(boardOwner, pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Page<Message> getAllBoardMessages(User boardOwner, Pageable pageable) {
-        log.debug("Getting all board messages for user {} with page {}", boardOwner.getId(),
-                pageable.getPageNumber());
+        log.debug("Getting all board messages for user {} with page {}", boardOwner.getId(), pageable.getPageNumber());
 
         validateUser(boardOwner);
         return messageRepository.findByBoardOwnerAndNotDeleted(boardOwner, pageable);
@@ -201,8 +213,7 @@ public class MessageServiceImpl implements MessageService {
         }
 
         // Fetch from database
-        List<Message> replies =
-                messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage);
+        List<Message> replies = messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage);
 
         // Cache the result
         cacheService.set(cacheKey, replies, MESSAGE_CACHE_DURATION);
@@ -213,8 +224,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional(readOnly = true)
     public Page<Message> getUserMessages(User user, Pageable pageable) {
-        log.debug("Getting messages for user {} with page {}", user.getId(),
-                pageable.getPageNumber());
+        log.debug("Getting messages for user {} with page {}", user.getId(), pageable.getPageNumber());
 
         validateUser(user);
         return messageRepository.findByUserAndNotDeleted(user, pageable);
@@ -223,8 +233,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional(readOnly = true)
     public Page<Message> searchBoardMessages(User boardOwner, String keyword, Pageable pageable) {
-        log.debug("Searching board messages for user {} with keyword '{}'", boardOwner.getId(),
-                keyword);
+        log.debug("Searching board messages for user {} with keyword '{}'", boardOwner.getId(), keyword);
 
         validateUser(boardOwner);
 
@@ -256,8 +265,7 @@ public class MessageServiceImpl implements MessageService {
         }
 
         // Fetch from database
-        long count =
-                messageRepository.countByBoardOwnerAndNotDeletedAndParentMessageIsNull(boardOwner);
+        long count = messageRepository.countByBoardOwnerAndNotDeletedAndParentMessageIsNull(boardOwner);
 
         // Cache the result
         cacheService.set(cacheKey, count, COUNT_CACHE_DURATION);
@@ -308,8 +316,8 @@ public class MessageServiceImpl implements MessageService {
         }
 
         if (trimmedContent.length() > MAX_MESSAGE_LENGTH) {
-            throw new IllegalArgumentException(String.format(
-                    "Message content exceeds maximum length of %d characters", MAX_MESSAGE_LENGTH));
+            throw new IllegalArgumentException(
+                String.format("Message content exceeds maximum length of %d characters", MAX_MESSAGE_LENGTH));
         }
     }
 
@@ -330,6 +338,129 @@ public class MessageServiceImpl implements MessageService {
         }
 
         return messageRepository.existsByUserAndBoardOwnerAndNotDeleted(user, boardOwner);
+    }
+
+    // Enhanced reply functionality for task 6.2
+
+    @Override
+    public boolean canReplyToMessage(Message message, User user) {
+        if (message == null || user == null) {
+            return false;
+        }
+
+        // Cannot reply to deleted messages
+        if (message.isDeleted()) {
+            return false;
+        }
+
+        // User must be active
+        if (!user.isActive()) {
+            return false;
+        }
+
+        // Check if reply depth limit is exceeded
+        if (getMessageDepth(message) >= MAX_REPLY_DEPTH) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public int getMessageDepth(Message message) {
+        if (message == null) {
+            return -1;
+        }
+
+        int depth = 0;
+        Message current = message;
+        
+        while (current.getParentMessage() != null) {
+            depth++;
+            current = current.getParentMessage();
+            
+            // Prevent infinite loops in case of data corruption
+            if (depth > 10) {
+                log.warn("Message depth exceeded maximum safe limit for message {}", message.getId());
+                break;
+            }
+        }
+        
+        return depth;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Message> getThreadReplies(Message rootMessage) {
+        if (rootMessage == null) {
+            throw new IllegalArgumentException("Root message cannot be null");
+        }
+
+        // Only get thread replies for root messages
+        if (rootMessage.getParentMessage() != null) {
+            throw new IllegalArgumentException("Message must be a root message to get thread replies");
+        }
+
+        return messageRepository.findAllRepliesInThread(rootMessage);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Message> getRepliesWithPagination(Message parentMessage, Pageable pageable) {
+        if (parentMessage == null) {
+            throw new IllegalArgumentException("Parent message cannot be null");
+        }
+
+        return messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage, pageable);
+    }
+
+    @Override
+    public void deleteAllReplies(Message parentMessage, User user) {
+        if (parentMessage == null) {
+            throw new IllegalArgumentException("Parent message cannot be null");
+        }
+
+        validateUser(user);
+
+        // Only message author or board owner can delete all replies
+        if (!parentMessage.isAuthor(user) && !parentMessage.isBoardOwner(user)) {
+            throw new SecurityException("User does not have permission to delete all replies to this message");
+        }
+
+        log.debug("Deleting all replies to message {} by user {}", parentMessage.getId(), user.getId());
+
+        List<Message> replies = messageRepository.findRepliesByParentMessageAndNotDeleted(parentMessage);
+        
+        for (Message reply : replies) {
+            reply.softDelete();
+            messageRepository.save(reply);
+            
+            // Clear cache for each deleted reply
+            clearMessageCaches(reply.getId());
+        }
+
+        // Clear parent message caches
+        clearMessageCaches(parentMessage.getId());
+        clearBoardCaches(parentMessage.getBoardOwner().getId());
+
+        log.info("Deleted {} replies to message {} by user {}", replies.size(), parentMessage.getId(), user.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReplyStatistics getReplyStatistics(Message message) {
+        if (message == null) {
+            return new ReplyStatistics(0, 0, null);
+        }
+
+        Object[] stats = messageRepository.getReplyStatistics(message);
+        
+        long uniqueAuthors = stats[0] != null ? ((Number) stats[0]).longValue() : 0;
+        LocalDateTime lastReplyTime = (LocalDateTime) stats[1];
+        long totalReplies = countReplies(message);
+
+        return new ReplyStatistics(totalReplies, uniqueAuthors, lastReplyTime);
     }
 
     // Private helper methods
