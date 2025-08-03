@@ -1,9 +1,5 @@
 package com.example.messageboard.service;
 
-import com.example.messageboard.model.Message;
-import com.example.messageboard.model.Task;
-import com.example.messageboard.model.TaskStatus;
-import com.example.messageboard.repository.MessageRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,7 +9,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import com.gtcafe.messageboard.model.Message;
+import com.gtcafe.messageboard.model.Task;
+import com.gtcafe.messageboard.model.TaskStatus;
+import com.gtcafe.messageboard.repository.MessageRepository;
+import com.gtcafe.messageboard.service.MessageService;
+import com.gtcafe.messageboard.service.TaskService;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;

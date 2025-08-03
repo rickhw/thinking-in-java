@@ -1,12 +1,12 @@
-package com.example.messageboard.repository;
+package com.gtcafe.messageboard.repository;
 
-import com.example.messageboard.model.Message;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import com.gtcafe.messageboard.model.Message;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {

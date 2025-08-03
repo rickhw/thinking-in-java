@@ -1,14 +1,14 @@
 package com.example.messageboard.service;
 
-import com.example.messageboard.model.Task;
-import com.example.messageboard.model.TaskStatus;
-import com.example.messageboard.repository.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
+import com.gtcafe.messageboard.model.Task;
+import com.gtcafe.messageboard.model.TaskStatus;
+import com.gtcafe.messageboard.repository.TaskRepository;
+import com.gtcafe.messageboard.service.TaskService;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;

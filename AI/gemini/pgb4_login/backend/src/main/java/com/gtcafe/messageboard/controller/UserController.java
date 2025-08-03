@@ -1,18 +1,22 @@
-package com.example.messageboard.controller;
+package com.gtcafe.messageboard.controller;
 
-import com.example.messageboard.model.User;
-import com.example.messageboard.repository.UserRepository;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
-import java.util.Map;
-import java.util.HashMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import com.gtcafe.messageboard.model.User;
+import com.gtcafe.messageboard.repository.UserRepository;
 
 @RestController
 @RequestMapping("/api/v1/users")
-// @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 public class UserController {
 
     @Autowired

@@ -1,21 +1,18 @@
-package com.example.messageboard.service;
-
-import com.example.messageboard.model.Task;
-import com.example.messageboard.model.TaskStatus;
-import com.example.messageboard.repository.TaskRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+package com.gtcafe.messageboard.service;
 
 import java.util.Optional;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.gtcafe.messageboard.model.Task;
+import com.gtcafe.messageboard.model.TaskStatus;
+import com.gtcafe.messageboard.repository.TaskRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class TaskService {
 
     private final TaskRepository taskRepository;
-
-    public TaskService(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
 
     @Transactional
     public void addTask(String taskId, Task task) {

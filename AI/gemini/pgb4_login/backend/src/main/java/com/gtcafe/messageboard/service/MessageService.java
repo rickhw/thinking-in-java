@@ -1,24 +1,23 @@
-package com.example.messageboard.service;
-
-import com.example.messageboard.model.Message;
-import com.example.messageboard.model.Task;
-import com.example.messageboard.model.TaskStatus;
-import com.example.messageboard.repository.MessageRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+package com.gtcafe.messageboard.service;
 
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import com.gtcafe.messageboard.model.Message;
+import com.gtcafe.messageboard.model.Task;
+import com.gtcafe.messageboard.model.TaskStatus;
+import com.gtcafe.messageboard.repository.MessageRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class MessageService {
 
-    private final MessageRepository messageRepository;
+    private final MessageRepository repos;
     private final TaskService taskService;
 
     @Async
@@ -26,7 +25,7 @@ public class MessageService {
         String taskId = UUID.randomUUID().toString();
         taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
-            messageRepository.save(message);
+            repos.save(message);
             taskService.updateTaskStatus(taskId, TaskStatus.COMPLETED);
             return CompletableFuture.completedFuture(taskId);
         } catch (Exception e) {
@@ -41,11 +40,11 @@ public class MessageService {
         String taskId = UUID.randomUUID().toString();
         taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
-            Optional<Message> optionalMessage = messageRepository.findById(id);
+            Optional<Message> optionalMessage = repos.findById(id);
             if (optionalMessage.isPresent()) {
                 Message existingMessage = optionalMessage.get();
                 existingMessage.setContent(messageDetails.getContent());
-                messageRepository.save(existingMessage);
+                repos.save(existingMessage);
                 taskService.updateTaskStatus(taskId, TaskStatus.COMPLETED);
                 return CompletableFuture.completedFuture(taskId);
             } else {
@@ -65,8 +64,8 @@ public class MessageService {
         String taskId = UUID.randomUUID().toString();
         taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
-            if (messageRepository.existsById(id)) {
-                messageRepository.deleteById(id);
+            if (repos.existsById(id)) {
+                repos.deleteById(id);
                 taskService.updateTaskStatus(taskId, TaskStatus.COMPLETED);
                 return CompletableFuture.completedFuture(taskId);
             } else {
@@ -82,16 +81,16 @@ public class MessageService {
     }
 
     public Optional<Message> getMessageById(Long id) {
-        return messageRepository.findById(id);
+        return repos.findById(id);
     }
 
     public Page<Message> getMessagesByUserId(String userId, Pageable pageable) {
-        Page<Message> messages = messageRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
+        Page<Message> messages = repos.findByUserIdOrderByCreatedAtDesc(userId, pageable);
         System.out.println("Querying messages for userId: " + userId + ", found " + messages.getTotalElements() + " messages.");
         return messages;
     }
 
     public Page<Message> getAllMessages(Pageable pageable) {
-        return messageRepository.findAllOrderByCreatedAtDesc(pageable);
+        return repos.findAllOrderByCreatedAtDesc(pageable);
     }
 }
