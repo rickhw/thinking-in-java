@@ -16,19 +16,16 @@ import com.gtcafe.pgb.security.CustomOAuth2UserService;
 import com.gtcafe.pgb.security.OAuth2AuthenticationSuccessHandler;
 import com.gtcafe.pgb.security.TokenAuthenticationFilter;
 
+import lombok.RequiredArgsConstructor;
+
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
-
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler, TokenAuthenticationFilter tokenAuthenticationFilter) {
-        this.customOAuth2UserService = customOAuth2UserService;
-        this.oAuth2AuthenticationSuccessHandler = oAuth2AuthenticationSuccessHandler;
-        this.tokenAuthenticationFilter = tokenAuthenticationFilter;
-    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

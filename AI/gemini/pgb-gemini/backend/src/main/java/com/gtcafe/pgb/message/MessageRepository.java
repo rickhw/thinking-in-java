@@ -8,4 +8,5 @@ import com.gtcafe.pgb.account.Account;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
     Page<Message> findByUser(Account user, Pageable pageable);
+    Page<Message> findByUserId(Long userId, Pageable pageable);
 }

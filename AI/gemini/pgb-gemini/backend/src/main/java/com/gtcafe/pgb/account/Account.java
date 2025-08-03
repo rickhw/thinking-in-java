@@ -1,5 +1,6 @@
 package com.gtcafe.pgb.account;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,9 +27,11 @@ public class Account {
     @Column(name = "profile_image_url")
     private String profileImageUrl;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 

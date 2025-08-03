@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: twitter-board-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: twitter_board
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: app_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - twitter-board-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: twitter-board-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - twitter-board-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: twitter-board-backend
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+      - DB_USERNAME=app_user
+      - DB_PASSWORD=app_password
+      - REDIS_HOST=redis
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - JWT_SECRET=${JWT_SECRET}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - twitter-board-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: twitter-board-frontend
+    environment:
+      - REACT_APP_API_BASE_URL=http://localhost:8080/api/v1
+      - REACT_APP_GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - twitter-board-network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  twitter-board-network:
+    driver: bridge

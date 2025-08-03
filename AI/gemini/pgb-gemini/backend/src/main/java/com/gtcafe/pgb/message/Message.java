@@ -1,5 +1,6 @@
 package com.gtcafe.pgb.message;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 import com.gtcafe.pgb.account.Account;
@@ -34,9 +35,11 @@ public class Message {
     @Column(nullable = false)
     private String status = "PUBLISHED";
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
