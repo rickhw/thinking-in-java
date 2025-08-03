@@ -1,0 +1,53 @@
+# 測試登入 API
+
+### 測試用戶登入 - 成功案例
+POST http://localhost:8080/api/v1/users/login
+Content-Type: application/json
+
+{
+  "username": "rick",
+  "password": "password123"
+}
+
+### 測試用戶登入 - 失敗案例（錯誤密碼）
+POST http://localhost:8080/api/v1/users/login
+Content-Type: application/json
+
+{
+  "username": "rick",
+  "password": "wrongpassword"
+}
+
+### 測試用戶登入 - 失敗案例（不存在的用戶）
+POST http://localhost:8080/api/v1/users/login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "password123"
+}
+
+### 獲取所有訊息
+GET http://localhost:8080/api/v1/messages?page=0&size=5
+
+### 獲取特定用戶的訊息
+GET http://localhost:8080/api/v1/users/rick/messages?page=0&size=5
+
+### 創建新訊息
+POST http://localhost:8080/api/v1/messages
+Content-Type: application/json
+
+{
+  "userId": "rick",
+  "content": "這是一則測試訊息！"
+}
+
+### 註冊新用戶
+POST http://localhost:8080/api/v1/users/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpass123",
+  "email": "test@example.com"
+}

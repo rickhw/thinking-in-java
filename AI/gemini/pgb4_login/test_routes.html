@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>路由測試頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .test-link:hover {
+            background-color: #0056b3;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>分頁路由測試頁面</h1>
+    
+    <div class="instructions">
+        <h3>測試說明</h3>
+        <p>點擊下面的連結來測試不同的分頁路由。確保前端服務正在運行在 http://localhost:5174</p>
+        <p><strong>注意：</strong>需要先創建足夠的測試資料才能看到分頁效果。</p>
+    </div>
+
+    <div class="test-section">
+        <h3>首頁分頁測試</h3>
+        <a href="http://localhost:5174/" class="test-link" target="_blank">首頁 (第1頁)</a>
+        <a href="http://localhost:5174/page/2" class="test-link" target="_blank">第2頁</a>
+        <a href="http://localhost:5174/page/3" class="test-link" target="_blank">第3頁</a>
+        <a href="http://localhost:5174/page/5" class="test-link" target="_blank">第5頁</a>
+        <a href="http://localhost:5174/page/999" class="test-link" target="_blank">第999頁 (測試邊界)</a>
+    </div>
+
+    <div class="test-section">
+        <h3>我的訊息分頁測試</h3>
+        <p><em>需要先登入才能測試這些連結</em></p>
+        <a href="http://localhost:5174/my-messages" class="test-link" target="_blank">我的訊息 (第1頁)</a>
+        <a href="http://localhost:5174/my-messages/page/2" class="test-link" target="_blank">我的訊息 第2頁</a>
+        <a href="http://localhost:5174/my-messages/page/3" class="test-link" target="_blank">我的訊息 第3頁</a>
+    </div>
+
+    <div class="test-section">
+        <h3>邊界情況測試</h3>
+        <a href="http://localhost:5174/page/0" class="test-link" target="_blank">第0頁</a>
+        <a href="http://localhost:5174/page/-1" class="test-link" target="_blank">第-1頁</a>
+        <a href="http://localhost:5174/page/abc" class="test-link" target="_blank">非數字頁面</a>
+    </div>
+
+    <div class="test-section">
+        <h3>測試檢查清單</h3>
+        <ul>
+            <li>✓ URL 在分頁切換時正確更新</li>
+            <li>✓ 直接訪問特定頁面 URL 正常工作</li>
+            <li>✓ 瀏覽器前進/後退按鈕正常工作</li>
+            <li>✓ 無效頁面號碼自動重定向到有效頁面</li>
+            <li>✓ 第1頁使用簡潔的 URL（不包含 /page/1）</li>
+            <li>✓ 分頁控制按鈕狀態正確（禁用/啟用）</li>
+        </ul>
+    </div>
+
+    <script>
+        // 添加一些 JavaScript 來幫助測試
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('分頁路由測試頁面已載入');
+            console.log('請確保前端服務運行在 http://localhost:5174');
+        });
+    </script>
+</body>
+</html>
