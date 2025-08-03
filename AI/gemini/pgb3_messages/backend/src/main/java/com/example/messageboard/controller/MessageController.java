@@ -14,18 +14,20 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/api/v1/messages")
+// @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
 @RequiredArgsConstructor
 public class MessageController {
 
     private final MessageService messageService;
 
     @PostMapping
-    public ResponseEntity<String> createMessage(@RequestBody NewMessageRequest newMessageRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<TaskResponse> createMessage(@RequestBody NewMessageRequest newMessageRequest)
+            throws ExecutionException, InterruptedException {
         Message message = new Message();
         message.setUserId(newMessageRequest.getUserId());
         message.setContent(newMessageRequest.getContent());
         String taskId = messageService.createMessage(message).get();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new TaskResponse(taskId));
     }
 
     @GetMapping("/{messageId}")
@@ -36,24 +38,46 @@ public class MessageController {
     }
 
     @PutMapping("/{messageId}")
-    public ResponseEntity<String> updateMessage(@PathVariable Long messageId, @RequestBody UpdateMessageRequest updateMessageRequest) throws ExecutionException, InterruptedException {
+    public ResponseEntity<TaskResponse> updateMessage(@PathVariable Long messageId,
+            @RequestBody UpdateMessageRequest updateMessageRequest)
+            throws ExecutionException, InterruptedException {
         Message messageDetails = new Message();
         messageDetails.setContent(updateMessageRequest.getContent());
         String taskId = messageService.updateMessage(messageId, messageDetails).get();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new TaskResponse(taskId));
     }
 
     @DeleteMapping("/{messageId}")
-    public ResponseEntity<String> deleteMessage(@PathVariable Long messageId) throws ExecutionException, InterruptedException {
+    public ResponseEntity<TaskResponse> deleteMessage(@PathVariable Long messageId)
+            throws ExecutionException, InterruptedException {
         String taskId = messageService.deleteMessage(messageId).get();
-        return ResponseEntity.status(HttpStatus.ACCEPTED).body(taskId);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(new TaskResponse(taskId));
     }
 
     @GetMapping
-    public ResponseEntity<Page<Message>> getAllMessages(@PageableDefault(size = 10, page = 0) Pageable pageable) {
+    public ResponseEntity<Page<Message>> getAllMessages(
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
         return ResponseEntity.ok(messageService.getAllMessages(pageable));
     }
 }
+
+
+@RestController
+@RequestMapping("/api/v1/users")
+@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174"})
+@RequiredArgsConstructor
+class UserMessageController {
+
+    private final MessageService messageService;
+
+    @GetMapping("/{userId}/messages")
+    public ResponseEntity<Page<Message>> getMessagesByUserId(
+            @PathVariable String userId,
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        return ResponseEntity.ok(messageService.getMessagesByUserId(userId, pageable));
+    }
+}
+
 
 // DTOs
 @RequiredArgsConstructor
@@ -76,5 +100,14 @@ class UpdateMessageRequest {
 
     public String getContent() {
         return content;
+    }
+}
+
+@RequiredArgsConstructor
+class TaskResponse {
+    private final String taskId;
+
+    public String getTaskId() {
+        return taskId;
     }
 }

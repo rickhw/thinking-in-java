@@ -1,81 +1,115 @@
-import axios from 'axios';
+const API_BASE_URL = 'http://localhost:8080/api/v1';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-});
+export const getMessages = async (page = 0, size = 10) => {
+    const response = await fetch(`${API_BASE_URL}/messages?page=${page}&size=${size}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
 
 export const createMessage = async (userId, content) => {
-  try {
-    const response = await api.post('/messages', { userId, content });
-    return response.data; // Returns taskId
-  } catch (error) {
-    console.error('Error creating message:', error);
-    throw error;
-  }
-};
-
-export const getMessageById = async (messageId) => {
-  try {
-    const response = await api.get(`/messages/${messageId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching message by ID:', error);
-    throw error;
-  }
-};
-
-export const updateMessage = async (messageId, content) => {
-  try {
-    const response = await api.put(`/messages/${messageId}`, { content });
-    return response.data; // Returns taskId
-  } catch (error) {
-    console.error('Error updating message:', error);
-    throw error;
-  }
-};
-
-export const deleteMessage = async (messageId) => {
-  try {
-    const response = await api.delete(`/messages/${messageId}`);
-    return response.data; // Returns taskId
-  } catch (error) {
-    console.error('Error deleting message:', error);
-    throw error;
-  }
-};
-
-export const getAllMessages = async (page = 0, size = 10) => {
-  try {
-    const response = await api.get('/messages', {
-      params: { page, size },
+    const message = { userId, content };
+    const response = await fetch(`${API_BASE_URL}/messages`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(message),
     });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching all messages:', error);
-    throw error;
-  }
-};
-
-export const getMessagesByUserId = async (userId, page = 0, size = 10) => {
-  try {
-    const response = await api.get(`/users/${userId}/messages`, {
-      params: { page, size },
-    });
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching messages by user ID:', error);
-    throw error;
-  }
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    // 根據設計文件，非同步操作會返回 202 狀態碼和任務 ID
+    const result = await response.json();
+    return result.taskId;
 };
 
 export const getTaskStatus = async (taskId) => {
-  try {
-    const response = await api.get(`/tasks/${taskId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching task status:', error);
-    throw error;
-  }
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
+
+export const getMessagesByUserId = async (userId, page = 0, size = 10) => {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}/messages?page=${page}&size=${size}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
+
+export const getMessageById = async (messageId) => {
+    const response = await fetch(`${API_BASE_URL}/messages/${messageId}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
+
+export const updateMessage = async (messageId, content) => {
+    const response = await fetch(`${API_BASE_URL}/messages/${messageId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content }),
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    // 非同步操作返回任務 ID
+    const result = await response.json();
+    return result.taskId;
+};
+
+export const deleteMessage = async (messageId) => {
+    const response = await fetch(`${API_BASE_URL}/messages/${messageId}`, {
+        method: 'DELETE',
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    // 非同步操作返回任務 ID
+    const result = await response.json();
+    return result.taskId;
+};
+
+// User API functions
+export const getUserById = async (userId) => {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`);
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
+
+export const updateUser = async (userId, userData) => {
+    const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
+};
+
+export const registerUser = async (userData) => {
+    const response = await fetch(`${API_BASE_URL}/users/register`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+    });
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    }
+    return response.json();
 };

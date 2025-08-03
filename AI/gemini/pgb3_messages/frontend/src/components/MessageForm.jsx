@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { createMessage, getTaskStatus } from '../api';
 
-const MessageForm = () => {
+const MessageForm = ({ onMessageCreated }) => {
   const [userId, setUserId] = useState('');
   const [content, setContent] = useState('');
   const [status, setStatus] = useState('');
-  const [taskId, setTaskId] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('Sending message...');
-    setTaskId(null);
     try {
       const returnedTaskId = await createMessage(userId, content);
-      setTaskId(returnedTaskId);
       setStatus(`Message sent. Task ID: ${returnedTaskId}. Checking status...`);
       checkTaskStatus(returnedTaskId);
       setUserId('');
@@ -34,6 +31,9 @@ const MessageForm = () => {
           clearInterval(interval);
           if (currentStatus === 'COMPLETED') {
             setStatus(`Task ID: ${id}, Status: ${currentStatus}. Message created successfully!`);
+            if (onMessageCreated) {
+              onMessageCreated();
+            }
           } else {
             setStatus(`Task ID: ${id}, Status: ${currentStatus}. Error: ${task.error}`);
           }

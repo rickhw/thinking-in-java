@@ -10,22 +10,22 @@ const UserMessages = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchUserMessages = async (currentPage) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await getMessagesByUserId(userId, currentPage);
-      setMessages(data.content);
-      setTotalPages(data.totalPages);
-      setPage(data.number);
-    } catch (err) {
-      setError(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchUserMessages = async (currentPage) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await getMessagesByUserId(userId, currentPage);
+        setMessages(data.content);
+        setTotalPages(data.totalPages);
+        setPage(data.number);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchUserMessages(page);
   }, [userId, page]);
 
