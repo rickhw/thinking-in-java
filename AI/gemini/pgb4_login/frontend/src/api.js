@@ -34,7 +34,7 @@ export const getTaskStatus = async (taskId) => {
 };
 
 export const getMessagesByUserId = async (userId, page = 0, size = 10) => {
-    const response = await fetch(`${API_BASE_URL}/users/${userId}/messages?page=${page}&size=${size}`);
+    const response = await fetch(`${API_BASE_URL}/messages/users/${userId}?page=${page}&size=${size}`);
     if (!response.ok) {
         throw new Error('Network response was not ok');
     }

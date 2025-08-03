@@ -6,7 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import com.gtcafe.messageboard.model.Message;
+
+import com.gtcafe.messageboard.entity.Message;
 
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {

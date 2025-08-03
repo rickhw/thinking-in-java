@@ -3,10 +3,12 @@ package com.example.messageboard.steps;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -14,12 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import com.gtcafe.messageboard.model.Message;
-import com.gtcafe.messageboard.model.Task;
-import com.gtcafe.messageboard.model.TaskStatus;
+
+import com.gtcafe.messageboard.entity.Message;
+import com.gtcafe.messageboard.entity.Task;
+import com.gtcafe.messageboard.entity.TaskStatus;
 import com.gtcafe.messageboard.repository.MessageRepository;
 import com.gtcafe.messageboard.service.MessageService;
 import com.gtcafe.messageboard.service.TaskService;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

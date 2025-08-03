@@ -1,4 +1,4 @@
-package com.gtcafe.messageboard.model;
+package com.gtcafe.messageboard.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

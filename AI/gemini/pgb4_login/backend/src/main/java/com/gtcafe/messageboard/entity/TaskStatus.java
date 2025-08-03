@@ -1,4 +1,4 @@
-package com.gtcafe.messageboard.model;
+package com.gtcafe.messageboard.entity;
 
 public enum TaskStatus {
     PENDING,

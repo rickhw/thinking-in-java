@@ -1,19 +1,26 @@
 package com.example.messageboard.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import com.gtcafe.messageboard.model.Task;
-import com.gtcafe.messageboard.model.TaskStatus;
+
+import com.gtcafe.messageboard.entity.Task;
+import com.gtcafe.messageboard.entity.TaskStatus;
 import com.gtcafe.messageboard.repository.TaskRepository;
 import com.gtcafe.messageboard.service.TaskService;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 class TaskServiceTest {
 

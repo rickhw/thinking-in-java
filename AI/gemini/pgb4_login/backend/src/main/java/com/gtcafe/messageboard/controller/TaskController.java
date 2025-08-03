@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.gtcafe.messageboard.model.Task;
+
+import com.gtcafe.messageboard.entity.Task;
 import com.gtcafe.messageboard.service.TaskService;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -14,11 +16,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class TaskController {
 
-    private final TaskService taskService;
+    private final TaskService _service;
 
     @GetMapping("/{taskId}")
     public ResponseEntity<Task> getTaskStatus(@PathVariable String taskId) {
-        return taskService.getTask(taskId)
+        return _service.getTask(taskId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
