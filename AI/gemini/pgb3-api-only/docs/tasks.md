@@ -43,6 +43,7 @@
     -   [ ] 為 `MessageService` 編寫單元測試。
     -   [ ] 為 `MessageController`, `UserController`, `TaskController` 編寫整合測試，驗證 API 端點的行為是否正確。
     -   [ ] 測試非同步 API 的任務追蹤功能.
+    -   [x] 導入 BDD (Behavior-Driven Development) 測試，使用 Cucumber 編寫功能測試。
 
 **額外任務：**
 -   [x] 後端 API 錯誤處理優化 (例如 `IllegalArgumentException` 修正)。
