@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { usePageTitle } from '../contexts/PageContext';
 import { getMessagesByUserId } from '../api';
 import MessageList from './MessageList';
 
 const UserMessages = () => {
     const { userId, pageNumber } = useParams();
     const navigate = useNavigate();
+    const { setPageTitle } = usePageTitle();
     const [messages, setMessages] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -14,6 +16,12 @@ const UserMessages = () => {
     // 從 URL 參數獲取頁面號碼，預設為 1（顯示），但 API 使用 0-based
     const parsedPageNumber = pageNumber ? parseInt(pageNumber) : 1;
     const currentPage = Math.max(0, parsedPageNumber - 1); // 確保不會是負數
+
+    useEffect(() => {
+        if (userId) {
+            setPageTitle(`${userId} 的訊息`);
+        }
+    }, [userId, setPageTitle]);
 
     const fetchUserMessages = async (page) => {
         setLoading(true);
@@ -70,12 +78,6 @@ const UserMessages = () => {
 
     return (
         <div className="user-messages">
-            <div className="user-messages-header">
-                <h2>{userId} 的訊息</h2>
-                <button onClick={() => navigate(-1)} className="back-button">
-                    ← 返回
-                </button>
-            </div>
             
             <MessageList
                 messages={messages}

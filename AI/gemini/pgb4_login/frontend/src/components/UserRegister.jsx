@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api';
 import { useUser } from '../contexts/UserContext';
+import { usePageTitle } from '../contexts/PageContext';
 
 const UserRegister = () => {
     const navigate = useNavigate();
     const { login } = useUser();
+    const { setPageTitle } = usePageTitle();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -13,6 +15,10 @@ const UserRegister = () => {
     });
     const [status, setStatus] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setPageTitle('用戶註冊');
+    }, [setPageTitle]);
 
     const handleChange = (e) => {
         setFormData({
@@ -45,12 +51,6 @@ const UserRegister = () => {
 
     return (
         <div className="user-register">
-            <div className="profile-header">
-                <h2>用戶註冊</h2>
-                <button onClick={() => navigate(-1)} className="back-button">
-                    ← 返回
-                </button>
-            </div>
 
             <div className="profile-edit">
                 <form onSubmit={handleSubmit}>

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../contexts/UserContext';
+import { usePageTitle } from '../contexts/PageContext';
 import { updateUser } from '../api';
 
 const MyProfile = () => {
     const { currentUser, isLoggedIn, login } = useUser();
+    const { setPageTitle } = usePageTitle();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -12,6 +14,10 @@ const MyProfile = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    useEffect(() => {
+        setPageTitle('我的資料');
+    }, [setPageTitle]);
 
     useEffect(() => {
         if (currentUser) {
@@ -66,7 +72,6 @@ const MyProfile = () => {
 
     return (
         <div className="my-profile">
-            <h2>我的資料</h2>
             <form onSubmit={handleSubmit} className="profile-form">
                 <div className="form-group">
                     <label htmlFor="username">用戶名:</label>

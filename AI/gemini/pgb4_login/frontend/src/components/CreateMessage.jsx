@@ -1,14 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createMessage, getTaskStatus } from '../api';
 import { useUser } from '../contexts/UserContext';
+import { usePageTitle } from '../contexts/PageContext';
 
 const CreateMessage = () => {
   const { currentUser, isLoggedIn } = useUser();
+  const { setPageTitle } = usePageTitle();
   const navigate = useNavigate();
   const [content, setContent] = useState('');
   const [status, setStatus] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setPageTitle('發布新訊息');
+  }, [setPageTitle]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +64,6 @@ const CreateMessage = () => {
   if (!isLoggedIn) {
     return (
       <div className="create-message-container">
-        <h2>發布新訊息</h2>
         <p>請先登入才能發布訊息</p>
         <button onClick={() => navigate('/login')} className="login-redirect-btn">
           前往登入
@@ -69,12 +74,6 @@ const CreateMessage = () => {
 
   return (
     <div className="create-message-container">
-      <div className="create-message-header">
-        <h2>發布新訊息</h2>
-        <button onClick={() => navigate(-1)} className="back-button">
-          ← 返回
-        </button>
-      </div>
       
       <form onSubmit={handleSubmit} className="create-message-form">
         <div className="form-group">

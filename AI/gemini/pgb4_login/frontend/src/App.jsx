@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import { UserProvider, useUser } from './contexts/UserContext';
+import { PageProvider, usePageTitle } from './contexts/PageContext';
 import Navigation from './components/Navigation';
 import MessageList from './components/MessageList';
 import CreateMessage from './components/CreateMessage';
@@ -15,25 +16,27 @@ import './App.css';
 function App() {
     return (
         <UserProvider>
-            <Router>
-                <div className="App">
-                    <Navigation />
-                    <main className="main-content">
-                        <Routes>
-                            <Route path="/" element={<HomePage />} />
-                            <Route path="/page/:pageNumber" element={<HomePage />} />
-                            <Route path="/login" element={<LoginPage />} />
-                            <Route path="/register" element={<UserRegister />} />
-                            <Route path="/create" element={<CreateMessage />} />
-                            <Route path="/messages" element={<MyMessages />} />
-                            <Route path="/messages/page/:pageNumber" element={<MyMessages />} />
-                            <Route path="/profile" element={<MyProfile />} />
-                            <Route path="/user/:userId/messages" element={<UserMessages />} />
-                            <Route path="/user/:userId/messages/page/:pageNumber" element={<UserMessages />} />
-                        </Routes>
-                    </main>
-                </div>
-            </Router>
+            <PageProvider>
+                <Router>
+                    <div className="App">
+                        <Navigation />
+                        <main className="main-content">
+                            <Routes>
+                                <Route path="/" element={<HomePage />} />
+                                <Route path="/page/:pageNumber" element={<HomePage />} />
+                                <Route path="/login" element={<LoginPage />} />
+                                <Route path="/register" element={<UserRegister />} />
+                                <Route path="/create" element={<CreateMessage />} />
+                                <Route path="/messages" element={<MyMessages />} />
+                                <Route path="/messages/page/:pageNumber" element={<MyMessages />} />
+                                <Route path="/profile" element={<MyProfile />} />
+                                <Route path="/user/:userId/messages" element={<UserMessages />} />
+                                <Route path="/user/:userId/messages/page/:pageNumber" element={<UserMessages />} />
+                            </Routes>
+                        </main>
+                    </div>
+                </Router>
+            </PageProvider>
         </UserProvider>
     );
 }
@@ -99,7 +102,6 @@ function HomePage() {
 
     return (
         <>
-            <h1>Message Board</h1>
             {loading ? (
                 <div>Loading messages...</div>
             ) : error ? (
@@ -120,6 +122,11 @@ function HomePage() {
 
 function LoginPage() {
     const { login } = useUser();
+    const { setPageTitle } = usePageTitle();
+    
+    useEffect(() => {
+        setPageTitle('用戶登入');
+    }, [setPageTitle]);
     
     const handleLoginSuccess = (user) => {
         login(user);

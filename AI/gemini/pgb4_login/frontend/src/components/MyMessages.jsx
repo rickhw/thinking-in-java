@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
+import { usePageTitle } from '../contexts/PageContext';
 import { getMessagesByUserId, deleteMessage, updateMessage, getTaskStatus } from '../api';
 import MessageList from './MessageList';
 
@@ -8,6 +9,7 @@ const MyMessages = () => {
     const { pageNumber } = useParams();
     const navigate = useNavigate();
     const { currentUser, isLoggedIn } = useUser();
+    const { setPageTitle } = usePageTitle();
     const [messages, setMessages] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [loading, setLoading] = useState(true);
@@ -18,6 +20,10 @@ const MyMessages = () => {
     // 從 URL 參數獲取頁面號碼，預設為 1（顯示），但 API 使用 0-based
     const parsedPageNumber = pageNumber ? parseInt(pageNumber) : 1;
     const currentPage = Math.max(0, parsedPageNumber - 1); // 確保不會是負數
+
+    useEffect(() => {
+        setPageTitle('我的訊息');
+    }, [setPageTitle]);
 
     const fetchMyMessages = async (page) => {
         if (!isLoggedIn || !currentUser) return;
@@ -117,7 +123,6 @@ const MyMessages = () => {
 
     return (
         <div className="my-messages">
-            <h2>我的訊息</h2>
             {editingMessage && (
                 <div className="edit-modal">
                     <h3>編輯訊息</h3>

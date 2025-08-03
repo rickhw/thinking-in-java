@@ -8,11 +8,101 @@
   text-align: left;
 }
 
+/* Navigation Styles */
 nav {
   background-color: #f5f5f5;
   padding: 1rem;
   margin-bottom: 2rem;
   border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-left {
+  flex: 1;
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.nav-right {
+  flex: 0 0 auto;
+}
+
+.nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.nav-menu li {
+  margin: 0;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+  min-width: 60px;
+}
+
+.nav-link:hover {
+  background-color: #e0e0e0;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  margin-bottom: 0.2rem;
+}
+
+.nav-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.user-info {
+  margin: 0 0.5rem;
+}
+
+.welcome-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #666;
+  font-size: 0.8rem;
+  padding: 0.5rem;
+}
+
+.logout-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  min-width: 60px;
+  transition: background-color 0.2s;
+}
+
+.logout-btn:hover {
+  background-color: #c82333;
 }
 
 /* 統一所有頁面的寬度與導航欄一致 */
@@ -23,30 +113,6 @@ nav {
 
 .main-content > * {
   max-width: 100%;
-}
-
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 1rem;
-}
-
-nav li {
-  margin: 0;
-}
-
-nav a {
-  text-decoration: none;
-  color: #333;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  transition: background-color 0.2s;
-}
-
-nav a:hover {
-  background-color: #e0e0e0;
 }
 
 h1, h2 {
@@ -389,27 +455,7 @@ li {
   margin: 1rem 0;
 }
 
-/* Navigation Styles */
-.navigation ul {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.navigation .logout-btn {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.navigation .logout-btn:hover {
-  background-color: #c82333;
-}
+/* Remove old navigation styles - replaced above */
 
 /* Message List Styles */
 .message-list {
@@ -544,13 +590,6 @@ li {
   margin: 0;
 }
 
-.create-message-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
-}
-
 .create-message-form {
   background-color: #f9f9f9;
   padding: 2rem;
@@ -594,13 +633,6 @@ li {
 .user-messages {
   max-width: 100%;
   margin: 0;
-}
-
-.user-messages-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
 }
 
 /* Message List Enhancements */
