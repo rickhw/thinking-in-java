@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const MessageList = ({ 
   messages, 
@@ -9,20 +10,34 @@ const MessageList = ({
   currentUserId, 
   onEdit, 
   onDelete,
-  title = "All Messages" 
+  title = "All Messages",
+  showUserLinks = true
 }) => {
   return (
     <div>
       <h2>{title}</h2>
       {messages.length === 0 ? (
-        <p>No messages yet.</p>
+        <p>目前沒有訊息。</p>
       ) : (
         <ul className="message-list">
           {messages.map((message) => (
             <li key={message.id} className="message-item">
               <div className="message-content">
-                <strong>{message.userId}:</strong> {message.content}
-                <p><em>Created at: {new Date(message.createdAt).toLocaleString()}</em></p>
+                <div className="message-header">
+                  {showUserLinks ? (
+                    <Link to={`/user/${message.userId}/messages`} className="user-link">
+                      <strong>{message.userId}</strong>
+                    </Link>
+                  ) : (
+                    <strong>{message.userId}</strong>
+                  )}
+                  <span className="message-time">
+                    {new Date(message.createdAt).toLocaleString()}
+                  </span>
+                </div>
+                <div className="message-text">
+                  {message.content}
+                </div>
               </div>
               {showActions && currentUserId === message.userId && (
                 <div className="message-actions">

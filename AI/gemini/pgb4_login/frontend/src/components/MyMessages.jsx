@@ -47,9 +47,9 @@ const MyMessages = () => {
             // 如果當前頁面超出範圍，重定向到最後一頁
             const lastPage = totalPages;
             if (lastPage === 1) {
-                navigate('/my-messages');
+                navigate('/messages');
             } else {
-                navigate(`/my-messages/page/${lastPage}`);
+                navigate(`/messages/page/${lastPage}`);
             }
         }
     }, [totalPages, currentPage, navigate]);
@@ -59,9 +59,9 @@ const MyMessages = () => {
             // 更新 URL，頁面號碼從 1 開始顯示
             const displayPage = newPage + 1;
             if (displayPage === 1) {
-                navigate('/my-messages');
+                navigate('/messages');
             } else {
-                navigate(`/my-messages/page/${displayPage}`);
+                navigate(`/messages/page/${displayPage}`);
             }
         }
     };
@@ -142,6 +142,8 @@ const MyMessages = () => {
                 currentUserId={currentUser?.username}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                title="我的訊息"
+                showUserLinks={false}
             />
         </div>
     );

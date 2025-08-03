@@ -18,10 +18,13 @@ const Navigation = () => {
                 {isLoggedIn ? (
                     <>
                         <li>
-                            <Link to="/my-messages">我的訊息</Link>
+                            <Link to="/create">發布訊息</Link>
                         </li>
                         <li>
-                            <Link to="/my-profile">我的資料</Link>
+                            <Link to="/messages">我的訊息</Link>
+                        </li>
+                        <li>
+                            <Link to="/profile">我的資料</Link>
                         </li>
                         <li>
                             <span>歡迎, {currentUser.username}!</span>

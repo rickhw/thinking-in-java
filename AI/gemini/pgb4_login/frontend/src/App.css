@@ -15,6 +15,16 @@ nav {
   border-radius: 8px;
 }
 
+/* 統一所有頁面的寬度與導航欄一致 */
+.main-content {
+  padding: 0;
+  max-width: 100%;
+}
+
+.main-content > * {
+  max-width: 100%;
+}
+
 nav ul {
   list-style: none;
   padding: 0;
@@ -528,7 +538,109 @@ li {
   cursor: not-allowed;
 }
 
-/* Main Content */
-.main-content {
+/* Create Message Styles */
+.create-message-container {
+  max-width: 100%;
+  margin: 0;
+}
+
+.create-message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.create-message-form {
+  background-color: #f9f9f9;
+  padding: 2rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.create-message-form .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.create-message-form textarea {
+  width: 100%;
+  min-height: 150px;
   padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.login-redirect-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.login-redirect-btn:hover {
+  background-color: #0056b3;
+}
+
+/* User Messages Styles */
+.user-messages {
+  max-width: 100%;
+  margin: 0;
+}
+
+.user-messages-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Message List Enhancements */
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.user-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.user-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.message-time {
+  color: #6c757d;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.message-text {
+  margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+/* Adjust existing profile styles */
+.user-profile, .my-profile, .my-messages {
+  max-width: 100%;
+  margin: 0;
+}
+
+/* Login container adjustment */
+.login-container {
+  max-width: 400px;
+  margin: 2rem auto;
 }

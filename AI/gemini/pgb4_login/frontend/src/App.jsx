@@ -3,11 +3,12 @@ import { BrowserRouter as Router, Routes, Route, useParams, useNavigate } from '
 import { UserProvider, useUser } from './contexts/UserContext';
 import Navigation from './components/Navigation';
 import MessageList from './components/MessageList';
-import MessageForm from './components/MessageForm';
+import CreateMessage from './components/CreateMessage';
 import Login from './components/Login';
 import UserRegister from './components/UserRegister';
 import MyMessages from './components/MyMessages';
 import MyProfile from './components/MyProfile';
+import UserMessages from './components/UserMessages';
 import { getMessages } from './api';
 import './App.css';
 
@@ -23,9 +24,12 @@ function App() {
                             <Route path="/page/:pageNumber" element={<HomePage />} />
                             <Route path="/login" element={<LoginPage />} />
                             <Route path="/register" element={<UserRegister />} />
-                            <Route path="/my-messages" element={<MyMessages />} />
-                            <Route path="/my-messages/page/:pageNumber" element={<MyMessages />} />
-                            <Route path="/my-profile" element={<MyProfile />} />
+                            <Route path="/create" element={<CreateMessage />} />
+                            <Route path="/messages" element={<MyMessages />} />
+                            <Route path="/messages/page/:pageNumber" element={<MyMessages />} />
+                            <Route path="/profile" element={<MyProfile />} />
+                            <Route path="/user/:userId/messages" element={<UserMessages />} />
+                            <Route path="/user/:userId/messages/page/:pageNumber" element={<UserMessages />} />
                         </Routes>
                     </main>
                 </div>
@@ -96,7 +100,6 @@ function HomePage() {
     return (
         <>
             <h1>Message Board</h1>
-            <MessageForm onMessageCreated={refreshMessages} />
             {loading ? (
                 <div>Loading messages...</div>
             ) : error ? (
@@ -108,6 +111,7 @@ function HomePage() {
                     totalPages={totalPages}
                     onPageChange={handlePageChange}
                     title="所有訊息"
+                    showUserLinks={true}
                 />
             )}
         </>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前端更新測試頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .test-link:hover {
+            background-color: #0056b3;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .feature-list {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>前端更新功能測試</h1>
+    
+    <div class="instructions">
+        <h3>測試說明</h3>
+        <p>以下是本次前端更新的主要功能，請逐一測試確認功能正常。</p>
+        <p><strong>注意：</strong>需要先登入才能測試部分功能。</p>
+    </div>
+
+    <div class="feature-list">
+        <h3>✅ 本次更新功能</h3>
+        <ul>
+            <li><strong>新增訊息獨立頁面</strong> - 發布訊息現在有專門的頁面</li>
+            <li><strong>統一頁面寬度</strong> - 所有頁面寬度與導航欄一致</li>
+            <li><strong>用戶名連結</strong> - 訊息列表中的用戶名可點擊查看該用戶的所有訊息</li>
+            <li><strong>簡化 URI</strong> - 路徑更簡潔 (/messages, /profile)</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>1. 基本頁面測試</h3>
+        <a href="http://localhost:5174/" class="test-link" target="_blank">首頁</a>
+        <a href="http://localhost:5174/login" class="test-link" target="_blank">登入頁面</a>
+        <a href="http://localhost:5174/register" class="test-link" target="_blank">註冊頁面</a>
+    </div>
+
+    <div class="test-section">
+        <h3>2. 新的 URI 路徑測試</h3>
+        <p><em>需要先登入才能訪問</em></p>
+        <a href="http://localhost:5174/create" class="test-link" target="_blank">發布訊息 (/create)</a>
+        <a href="http://localhost:5174/messages" class="test-link" target="_blank">我的訊息 (/messages)</a>
+        <a href="http://localhost:5174/profile" class="test-link" target="_blank">我的資料 (/profile)</a>
+    </div>
+
+    <div class="test-section">
+        <h3>3. 用戶訊息頁面測試</h3>
+        <p><em>這些連結可以直接訪問，測試用戶名連結功能</em></p>
+        <a href="http://localhost:5174/user/rick/messages" class="test-link" target="_blank">Rick 的訊息</a>
+        <a href="http://localhost:5174/user/alice/messages" class="test-link" target="_blank">Alice 的訊息</a>
+        <a href="http://localhost:5174/user/bob/messages" class="test-link" target="_blank">Bob 的訊息</a>
+    </div>
+
+    <div class="test-section">
+        <h3>4. 分頁功能測試</h3>
+        <a href="http://localhost:5174/page/2" class="test-link" target="_blank">首頁第2頁</a>
+        <a href="http://localhost:5174/messages/page/2" class="test-link" target="_blank">我的訊息第2頁</a>
+        <a href="http://localhost:5174/user/rick/messages/page/2" class="test-link" target="_blank">Rick訊息第2頁</a>
+    </div>
+
+    <div class="test-section">
+        <h3>5. 功能測試檢查清單</h3>
+        <ul>
+            <li>□ 導航欄顯示新的連結（發布訊息、我的訊息、我的資料）</li>
+            <li>□ 首頁不再顯示訊息發布表單</li>
+            <li>□ 點擊「發布訊息」進入獨立的發布頁面</li>
+            <li>□ 所有頁面寬度與導航欄一致</li>
+            <li>□ 訊息列表中的用戶名可以點擊</li>
+            <li>□ 點擊用戶名跳轉到該用戶的訊息頁面</li>
+            <li>□ 我的訊息頁面不顯示用戶名連結</li>
+            <li>□ 用戶訊息頁面支持分頁</li>
+            <li>□ 發布訊息成功後跳轉回首頁</li>
+            <li>□ 所有新的 URI 路徑正常工作</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>6. 測試流程建議</h3>
+        <ol>
+            <li>先訪問首頁，確認頁面寬度和佈局</li>
+            <li>登入系統（使用測試帳號：rick / password123）</li>
+            <li>測試發布訊息功能（點擊導航欄的「發布訊息」）</li>
+            <li>在首頁點擊任意用戶名，確認跳轉功能</li>
+            <li>訪問「我的訊息」頁面，測試編輯/刪除功能</li>
+            <li>測試各種分頁功能</li>
+            <li>確認所有頁面的寬度一致</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('前端更新測試頁面已載入');
+            console.log('請確保前端服務運行在 http://localhost:5174');
+            console.log('請確保後端服務運行在 http://localhost:8080');
+        });
+    </script>
+</body>
+</html>
