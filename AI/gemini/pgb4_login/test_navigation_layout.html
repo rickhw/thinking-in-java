@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>導航佈局測試頁面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .test-link {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .test-link:hover {
+            background-color: #0056b3;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .feature-list {
+            background-color: #e8f5e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .layout-preview {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>導航佈局更新測試</h1>
+    
+    <div class="instructions">
+        <h3>測試說明</h3>
+        <p>本次更新將頁面標題移到導航欄左側，功能選單移到右側，並為每個功能添加了 emoji icon。</p>
+        <p><strong>注意：</strong>需要登入才能看到完整的功能選單。</p>
+    </div>
+
+    <div class="feature-list">
+        <h3>✅ 新導航佈局特色</h3>
+        <ul>
+            <li><strong>左側標題</strong> - 頁面標題顯示在導航欄左側</li>
+            <li><strong>右側選單</strong> - 功能選單整齊排列在右側</li>
+            <li><strong>Icon 設計</strong> - 每個功能都有對應的 emoji icon</li>
+            <li><strong>動態標題</strong> - 標題會根據當前頁面自動更新</li>
+            <li><strong>簡潔佈局</strong> - 移除了頁面內的重複標題</li>
+        </ul>
+    </div>
+
+    <div class="layout-preview">
+        <h3>預期佈局結構：</h3>
+        <pre>
+┌─────────────────────────────────────────────────────────────┐
+│ [頁面標題]                    [🏠首頁] [✏️發布] [💬訊息] [👤資料] [👋用戶] [🚪登出] │
+└─────────────────────────────────────────────────────────────┘
+        </pre>
+    </div>
+
+    <div class="test-section">
+        <h3>1. 基本頁面測試</h3>
+        <p>測試不同頁面的標題顯示</p>
+        <a href="http://localhost:5174/" class="test-link" target="_blank">首頁 (Message Board)</a>
+        <a href="http://localhost:5174/login" class="test-link" target="_blank">登入頁面 (用戶登入)</a>
+        <a href="http://localhost:5174/register" class="test-link" target="_blank">註冊頁面 (用戶註冊)</a>
+    </div>
+
+    <div class="test-section">
+        <h3>2. 登入後功能測試</h3>
+        <p><em>需要先登入才能測試這些頁面的標題</em></p>
+        <a href="http://localhost:5174/create" class="test-link" target="_blank">發布訊息 (發布新訊息)</a>
+        <a href="http://localhost:5174/messages" class="test-link" target="_blank">我的訊息 (我的訊息)</a>
+        <a href="http://localhost:5174/profile" class="test-link" target="_blank">我的資料 (我的資料)</a>
+    </div>
+
+    <div class="test-section">
+        <h3>3. 用戶訊息頁面測試</h3>
+        <p>測試動態標題功能</p>
+        <a href="http://localhost:5174/user/rick/messages" class="test-link" target="_blank">Rick 的訊息 (rick 的訊息)</a>
+        <a href="http://localhost:5174/user/alice/messages" class="test-link" target="_blank">Alice 的訊息 (alice 的訊息)</a>
+        <a href="http://localhost:5174/user/bob/messages" class="test-link" target="_blank">Bob 的訊息 (bob 的訊息)</a>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Icon 功能對照表</h3>
+        <ul>
+            <li>🏠 - 首頁</li>
+            <li>✏️ - 發布訊息</li>
+            <li>💬 - 我的訊息</li>
+            <li>👤 - 我的資料</li>
+            <li>👋 - 歡迎用戶</li>
+            <li>🚪 - 登出</li>
+            <li>🔑 - 登入</li>
+            <li>📝 - 註冊</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>5. 測試檢查清單</h3>
+        <ul>
+            <li>□ 導航欄左側顯示頁面標題</li>
+            <li>□ 導航欄右側顯示功能選單</li>
+            <li>□ 每個功能都有對應的 icon</li>
+            <li>□ 標題會根據頁面自動更新</li>
+            <li>□ 頁面內容不再顯示重複標題</li>
+            <li>□ 登入前後選單正確切換</li>
+            <li>□ 用戶名顯示在選單中</li>
+            <li>□ 所有 icon 顯示正常</li>
+            <li>□ 響應式設計在不同螢幕尺寸下正常</li>
+            <li>□ 懸停效果正常工作</li>
+        </ul>
+    </div>
+
+    <div class="test-section">
+        <h3>6. 測試流程建議</h3>
+        <ol>
+            <li>先訪問首頁，確認導航佈局正確</li>
+            <li>檢查標題是否顯示為 "Message Board"</li>
+            <li>確認右側顯示登入和註冊選項</li>
+            <li>登入系統（使用測試帳號：rick / password123）</li>
+            <li>確認登入後選單變化（發布、訊息、資料、用戶名、登出）</li>
+            <li>逐一訪問各個頁面，確認標題正確更新</li>
+            <li>測試用戶訊息頁面的動態標題</li>
+            <li>確認所有 icon 顯示正確</li>
+        </ol>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('導航佈局測試頁面已載入');
+            console.log('請確保前端服務運行在 http://localhost:5174');
+            console.log('請確保後端服務運行在 http://localhost:8080');
+        });
+    </script>
+</body>
+</html>
