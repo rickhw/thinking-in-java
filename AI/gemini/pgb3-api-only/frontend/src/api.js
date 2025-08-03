@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -46,9 +46,11 @@ export const deleteMessage = async (messageId) => {
   }
 };
 
-export const getAllMessages = async () => {
+export const getAllMessages = async (page = 0, size = 10) => {
   try {
-    const response = await api.get('/messages');
+    const response = await api.get('/messages', {
+      params: { page, size },
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching all messages:', error);
@@ -56,9 +58,11 @@ export const getAllMessages = async () => {
   }
 };
 
-export const getMessagesByUserId = async (userId) => {
+export const getMessagesByUserId = async (userId, page = 0, size = 10) => {
   try {
-    const response = await api.get(`/users/${userId}/messages`);
+    const response = await api.get(`/users/${userId}/messages`, {
+      params: { page, size },
+    });
     return response.data;
   } catch (error) {
     console.error('Error fetching messages by user ID:', error);

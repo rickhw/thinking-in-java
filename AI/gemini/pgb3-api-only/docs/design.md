@@ -47,6 +47,32 @@ servers:
 
 paths:
   /messages:
+    get:
+      summary: "取得所有訊息 (分頁)"
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 0
+          description: "頁碼 (從 0 開始)"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 10
+          description: "每頁數量"
+      responses:
+        '200':
+          description: "成功取得訊息列表。"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
     post:
       summary: "建立新訊息 (非同步)"
       description: "接收訊息資料，立即返回並在背景非同步處理建立。"
@@ -64,22 +90,36 @@ paths:
 
   /users/{userId}/messages:
     get:
-      summary: "取得特定使用者的所有訊息"
+      summary: "取得特定使用者的所有訊息 (分頁)"
       parameters:
         - name: "userId"
           in: "path"
           required: true
           schema:
             type: "string"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 0
+          description: "頁碼 (從 0 開始)"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 10
+          description: "每頁數量"
       responses:
         '200':
           description: "成功取得訊息列表。"
           content:
             application/json:
               schema:
-                type: "array"
-                items:
-                  $ref: '#/components/schemas/Message'
+                $ref: '#/components/schemas/MessagePage'
         '404':
           description: "找不到使用者。"
 
@@ -181,4 +221,35 @@ components:
           description: "新的訊息內容"
       required:
         - "content"
+
+    MessagePage:
+      type: "object"
+      properties:
+        content:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/Message'
+        totalElements:
+          type: "integer"
+          format: "int64"
+        totalPages:
+          type: "integer"
+          format: "int32"
+        number:
+          type: "integer"
+          format: "int32"
+          description: "當前頁碼 (從 0 開始)"
+        size:
+          type: "integer"
+          format: "int32"
+          description: "每頁數量"
+        first:
+          type: "boolean"
+          description: "是否為第一頁"
+        last:
+          type: "boolean"
+          description: "是否為最後一頁"
+        empty:
+          type: "boolean"
+          description: "內容是否為空"
 ```

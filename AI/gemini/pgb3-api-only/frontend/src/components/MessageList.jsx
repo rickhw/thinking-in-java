@@ -1,29 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { getAllMessages } from '../api';
+import React from 'react';
 
-const MessageList = () => {
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const data = await getAllMessages();
-        setMessages(data);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMessages();
-  }, []);
-
-  if (loading) return <div>Loading messages...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-
+const MessageList = ({ messages, page, totalPages, onPageChange }) => {
   return (
     <div>
       <h2>All Messages</h2>
@@ -39,6 +16,15 @@ const MessageList = () => {
           ))}
         </ul>
       )}
+      <div className="pagination-controls">
+        <button onClick={() => onPageChange(page - 1)} disabled={page === 0}>
+          Previous
+        </button>
+        <span> Page {page + 1} of {totalPages} </span>
+        <button onClick={() => onPageChange(page + 1)} disabled={page === totalPages - 1}>
+          Next
+        </button>
+      </div>
     </div>
   );
 };
