@@ -40,8 +40,8 @@
     -   [x] 建立 `TaskController`，實現 `GET /api/v1/tasks/{taskId}` 端點，用於查詢指定任務的狀態。(位於 `backend/src/main/java/com/example/messageboard/controller/TaskController.java`)
 
 7.  **測試**
-    -   [ ] 為 `MessageService` 編寫單元測試。
-    -   [ ] 為 `MessageController`, `UserController`, `TaskController` 編寫整合測試，驗證 API 端點的行為是否正確。
+    -   [ ] 為 `MessageService` 編寫單元測試。(無法完成：無法從 Gradle 測試執行中獲取詳細的測試失敗資訊)
+    -   [ ] 為 `MessageController`, `UserController`, `TaskController` 編寫整合測試，驗證 API 端點的行為是否正確。(無法完成：無法從 Gradle 測試執行中獲取詳細的測試失敗資訊)
     -   [ ] 測試非同步 API 的任務追蹤功能.
     -   [x] 導入 BDD (Behavior-Driven Development) 測試，使用 Cucumber 編寫功能測試。
 
