@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { usePageTitle } from '../contexts/PageContext';
-import { getMessagesByUserId } from '../api';
-import MessageList from './MessageList';
+import { usePageTitle } from '../../contexts/PageContext';
+import { getMessagesByUserId } from '../../api';
+import MessageList from '../MessageList';
 
 const UserMessages = () => {
     const { userId, pageNumber } = useParams();

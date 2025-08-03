@@ -1,9 +1,12 @@
 package com.example.messageboard.steps;
 
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.When;
-import io.cucumber.java.en.Then;
-import io.cucumber.spring.CucumberContextConfiguration;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
@@ -17,12 +20,10 @@ import com.gtcafe.messageboard.model.TaskStatus;
 import com.gtcafe.messageboard.repository.MessageRepository;
 import com.gtcafe.messageboard.service.MessageService;
 import com.gtcafe.messageboard.service.TaskService;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import static org.junit.jupiter.api.Assertions.*;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+import io.cucumber.spring.CucumberContextConfiguration;
 
 @SpringBootTest
 @CucumberContextConfiguration

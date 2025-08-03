@@ -9,7 +9,7 @@ import Login from './components/Login';
 import UserRegister from './components/UserRegister';
 import MyMessages from './components/MyMessages';
 import MyProfile from './components/MyProfile';
-import UserMessages from './components/UserMessages';
+import UserMessages from './components/bak/UserMessages';
 import { getMessages } from './api';
 import './App.css';
 
