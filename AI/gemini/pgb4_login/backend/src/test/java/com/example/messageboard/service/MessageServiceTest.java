@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
@@ -106,7 +106,7 @@ class MessageServiceTest {
     @Test
     void updateMessage_success() throws ExecutionException, InterruptedException {
         System.out.println("Running test: updateMessage_success");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         Message existingMessage = new Message();
         existingMessage.setId(messageId);
         existingMessage.setContent("Old Content");
@@ -133,7 +133,7 @@ class MessageServiceTest {
     @Test
     void updateMessage_notFound() {
         System.out.println("Running test: updateMessage_notFound");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         Message updatedDetails = new Message();
         updatedDetails.setContent("New Content");
 
@@ -155,7 +155,7 @@ class MessageServiceTest {
     @Test
     void updateMessage_failure() {
         System.out.println("Running test: updateMessage_failure");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         Message existingMessage = new Message();
         existingMessage.setId(messageId);
         existingMessage.setContent("Old Content");
@@ -183,7 +183,7 @@ class MessageServiceTest {
     @Test
     void deleteMessage_success() throws ExecutionException, InterruptedException {
         System.out.println("Running test: deleteMessage_success");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         when(messageRepository.existsById(messageId)).thenReturn(true);
         doNothing().when(messageRepository).deleteById(messageId);
 
@@ -201,7 +201,7 @@ class MessageServiceTest {
     @Test
     void deleteMessage_notFound() {
         System.out.println("Running test: deleteMessage_notFound");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         when(messageRepository.existsById(messageId)).thenReturn(false);
 
         CompletableFuture<String> future = messageService.deleteMessage(messageId);
@@ -212,7 +212,7 @@ class MessageServiceTest {
 
         verify(taskService, times(1)).addTask(anyString(), any(Task.class));
         verify(messageRepository, times(1)).existsById(messageId);
-        verify(messageRepository, never()).deleteById(anyLong());
+        verify(messageRepository, never()).deleteById(anyString());
         verify(taskService, times(1)).updateTaskStatus(anyString(), TaskStatus.FAILED);
         verify(taskService, times(1)).updateTaskError(anyString(), eq("Message not found with ID: " + messageId));
     }
@@ -220,7 +220,7 @@ class MessageServiceTest {
     @Test
     void deleteMessage_failure() {
         System.out.println("Running test: deleteMessage_failure");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         when(messageRepository.existsById(messageId)).thenReturn(true);
         doThrow(new RuntimeException("DB Delete Error")).when(messageRepository).deleteById(messageId);
 
@@ -240,7 +240,7 @@ class MessageServiceTest {
     @Test
     void getMessageById_found() {
         System.out.println("Running test: getMessageById_found");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         Message message = new Message();
         message.setId(messageId);
         when(messageRepository.findById(messageId)).thenReturn(Optional.of(message));
@@ -255,7 +255,7 @@ class MessageServiceTest {
     @Test
     void getMessageById_notFound() {
         System.out.println("Running test: getMessageById_notFound");
-        Long messageId = 1L;
+        String messageId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
         when(messageRepository.findById(messageId)).thenReturn(Optional.empty());
 
         Optional<Message> result = messageService.getMessageById(messageId);

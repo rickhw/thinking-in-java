@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.gtcafe.messageboard.entity.Message;
 
 @Repository
-public interface MessageRepository extends JpaRepository<Message, Long> {
+public interface MessageRepository extends JpaRepository<Message, String> {
 
     @Query("SELECT m FROM Message m WHERE m.userId = :userId ORDER BY m.createdAt DESC")
     Page<Message> findByUserIdOrderByCreatedAtDesc(@Param("userId") String userId, Pageable pageable);
@@ -20,4 +20,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     
     // 保留原有方法以保持向後兼容性
     Page<Message> findByUserId(String userId, Pageable pageable);
+    
+    // 新增: 檢查 ID 是否存在 (根據設計文檔要求)
+    boolean existsById(String id);
 }

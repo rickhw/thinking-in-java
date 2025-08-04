@@ -42,14 +42,14 @@ public class MessageController {
     }
 
     @GetMapping("/{messageId}")
-    public ResponseEntity<Message> getMessageById(@PathVariable Long messageId) {
+    public ResponseEntity<Message> getMessageById(@PathVariable String messageId) {
         return _service.getMessageById(messageId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{messageId}")
-    public ResponseEntity<TaskResponse> updateMessage(@PathVariable Long messageId,
+    public ResponseEntity<TaskResponse> updateMessage(@PathVariable String messageId,
             @RequestBody UpdateMessageRequest updateMessageRequest)
             throws ExecutionException, InterruptedException {
         Message details = new Message();
@@ -59,7 +59,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/{messageId}")
-    public ResponseEntity<TaskResponse> deleteMessage(@PathVariable Long messageId)
+    public ResponseEntity<TaskResponse> deleteMessage(@PathVariable String messageId)
             throws ExecutionException, InterruptedException {
         String taskId = _service.deleteMessage(messageId).get();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new TaskResponse(taskId));

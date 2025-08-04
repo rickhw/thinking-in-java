@@ -37,7 +37,7 @@ public class MessageService {
     }
 
     @Async
-    public CompletableFuture<String> updateMessage(Long id, Message messageDetails) {
+    public CompletableFuture<String> updateMessage(String id, Message messageDetails) {
         String taskId = UUID.randomUUID().toString();
         _taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
@@ -61,7 +61,7 @@ public class MessageService {
     }
 
     @Async
-    public CompletableFuture<String> deleteMessage(Long id) {
+    public CompletableFuture<String> deleteMessage(String id) {
         String taskId = UUID.randomUUID().toString();
         _taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
@@ -81,7 +81,7 @@ public class MessageService {
         }
     }
 
-    public Optional<Message> getMessageById(Long id) {
+    public Optional<Message> getMessageById(String id) {
         return _repos.findById(id);
     }
 
