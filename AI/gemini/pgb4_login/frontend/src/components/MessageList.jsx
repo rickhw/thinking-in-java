@@ -38,6 +38,11 @@ const MessageList = ({
                 <div className="message-text">
                   {message.content}
                 </div>
+                <div className="message-permalink">
+                  <Link to={`/message/${message.id}`} className="permalink-link">
+                    查看詳情
+                  </Link>
+                </div>
               </div>
               {showActions && currentUserId === message.userId && (
                 <div className="message-actions">

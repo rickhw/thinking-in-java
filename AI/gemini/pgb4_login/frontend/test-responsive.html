@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SingleMessage Responsive Test</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .test-container {
+            padding: 2rem;
+        }
+        
+        .viewport-info {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+        
+        .breakpoint-indicator {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+            background: #007bff;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 1000;
+        }
+        
+        .breakpoint-indicator::before {
+            content: "Desktop (>1024px)";
+        }
+        
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .breakpoint-indicator::before {
+                content: "Tablet (769px-1024px)";
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .breakpoint-indicator::before {
+                content: "Mobile (≤768px)";
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .breakpoint-indicator::before {
+                content: "Small Mobile (≤480px)";
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="src/App.css">
+</head>
+<body>
+    <div class="viewport-info">
+        <div>Width: <span id="width"></span>px</div>
+        <div>Height: <span id="height"></span>px</div>
+    </div>
+    
+    <div class="breakpoint-indicator"></div>
+    
+    <div class="test-container">
+        <h1>SingleMessage 響應式設計測試</h1>
+        
+        <!-- Test SingleMessage Component Structure -->
+        <div class="single-message">
+            <div class="breadcrumb">
+                <a href="#" class="breadcrumb-link">← 返回所有訊息</a>
+            </div>
+
+            <div class="message-detail">
+                <div class="message-header">
+                    <div class="author-info">
+                        <span class="author-label">作者：</span>
+                        <a href="#" class="author-link">測試用戶</a>
+                    </div>
+                    <div class="time-info">
+                        <div class="created-time">
+                            <span class="time-label">發布時間：</span>
+                            <span class="time-value">2025/08/04 17:26:31</span>
+                        </div>
+                        <div class="updated-time">
+                            <span class="time-label">更新時間：</span>
+                            <span class="time-value">2025/08/04 17:30:15</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="message-content">
+                    <div class="message-text">
+這是一個測試訊息，用來驗證響應式設計的效果。這個訊息包含了足夠的文字內容來測試在不同螢幕尺寸下的顯示效果。
+
+在桌面版本中，這個訊息應該居中顯示，並且有適當的最大寬度限制。在移動版本中，它應該佔滿整個寬度，並且按鈕應該垂直堆疊。
+
+讓我們看看這個設計在不同設備上的表現如何！
+                    </div>
+                </div>
+                
+                <div class="message-actions">
+                    <button class="edit-button" type="button">編輯</button>
+                    <button class="delete-button" type="button">刪除</button>
+                </div>
+
+                <div class="navigation-links">
+                    <a href="#" class="nav-link">返回所有訊息</a>
+                    <a href="#" class="nav-link">查看 測試用戶 的所有訊息</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Loading Skeleton -->
+        <h2>載入狀態測試</h2>
+        <div class="single-message">
+            <div class="loading-skeleton">
+                <div class="skeleton-header">
+                    <div class="skeleton-line skeleton-title"></div>
+                    <div class="skeleton-line skeleton-subtitle"></div>
+                </div>
+                <div class="skeleton-content">
+                    <div class="skeleton-line skeleton-author"></div>
+                    <div class="skeleton-line skeleton-time"></div>
+                    <div class="skeleton-line skeleton-text"></div>
+                    <div class="skeleton-line skeleton-text"></div>
+                    <div class="skeleton-line skeleton-text short"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Error States -->
+        <h2>錯誤狀態測試</h2>
+        <div class="single-message error-page">
+            <div class="error-content not-found">
+                <div class="error-icon">📄</div>
+                <h2>訊息不存在</h2>
+                <p>抱歉，您要查看的訊息可能已被刪除或不存在。</p>
+                <div class="error-actions">
+                    <a href="#" class="back-button primary">返回首頁</a>
+                    <button class="back-button secondary">重新載入</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateViewportInfo() {
+            document.getElementById('width').textContent = window.innerWidth;
+            document.getElementById('height').textContent = window.innerHeight;
+        }
+        
+        updateViewportInfo();
+        window.addEventListener('resize', updateViewportInfo);
+    </script>
+</body>
+</html>

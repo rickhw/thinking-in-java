@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title Test - Message Board</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-title {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .test-result {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Page Title and SEO Meta Tags Test</h1>
+    
+    <div class="test-section">
+        <h2 class="test-title">Current Page Information</h2>
+        <div class="test-result">
+            <div><strong>Title:</strong> <span id="current-title"></span></div>
+            <div><strong>Description:</strong> <span id="current-description"></span></div>
+            <div><strong>OG Title:</strong> <span id="current-og-title"></span></div>
+            <div><strong>OG Description:</strong> <span id="current-og-description"></span></div>
+            <div><strong>OG Type:</strong> <span id="current-og-type"></span></div>
+            <div><strong>OG URL:</strong> <span id="current-og-url"></span></div>
+            <div><strong>Structured Data:</strong> <span id="current-structured-data"></span></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">Test Page Title Updates</h2>
+        <button onclick="testMessageTitle()">Test Message Title</button>
+        <button onclick="testLongMessageTitle()">Test Long Message</button>
+        <button onclick="testLoadingTitle()">Test Loading Title</button>
+        <button onclick="testErrorTitle()">Test Error Title</button>
+        <button onclick="testNotFoundTitle()">Test Not Found Title</button>
+        <button onclick="resetTitle()">Reset Title</button>
+    </div>
+
+    <div class="test-section">
+        <h2 class="test-title">Test Results</h2>
+        <div id="test-results" class="test-result">
+            Click the buttons above to test different page title scenarios.
+        </div>
+    </div>
+
+    <script>
+        // Mock PageContext functionality for testing
+        function updatePageMeta({ title, description, author, publishedTime }) {
+            // Update document title
+            if (title) {
+                document.title = title;
+            }
+
+            // Update meta description
+            if (description) {
+                let metaDescription = document.querySelector('meta[name="description"]');
+                if (!metaDescription) {
+                    metaDescription = document.createElement('meta');
+                    metaDescription.name = 'description';
+                    document.head.appendChild(metaDescription);
+                }
+                metaDescription.content = description;
+            }
+
+            // Update Open Graph meta tags
+            if (title || description) {
+                // Update or create og:title
+                let ogTitle = document.querySelector('meta[property="og:title"]');
+                if (!ogTitle) {
+                    ogTitle = document.createElement('meta');
+                    ogTitle.setAttribute('property', 'og:title');
+                    document.head.appendChild(ogTitle);
+                }
+                ogTitle.content = title;
+
+                // Update or create og:description
+                if (description) {
+                    let ogDescription = document.querySelector('meta[property="og:description"]');
+                    if (!ogDescription) {
+                        ogDescription = document.createElement('meta');
+                        ogDescription.setAttribute('property', 'og:description');
+                        document.head.appendChild(ogDescription);
+                    }
+                    ogDescription.content = description;
+                }
+
+                // Update or create og:type
+                let ogType = document.querySelector('meta[property="og:type"]');
+                if (!ogType) {
+                    ogType = document.createElement('meta');
+                    ogType.setAttribute('property', 'og:type');
+                    document.head.appendChild(ogType);
+                }
+                ogType.content = description ? 'article' : 'website';
+
+                // Update or create og:url
+                let ogUrl = document.querySelector('meta[property="og:url"]');
+                if (!ogUrl) {
+                    ogUrl = document.createElement('meta');
+                    ogUrl.setAttribute('property', 'og:url');
+                    document.head.appendChild(ogUrl);
+                }
+                ogUrl.content = window.location.href;
+            }
+
+            // Update structured data (JSON-LD)
+            if (description && author && publishedTime) {
+                // Remove existing structured data
+                const existingScript = document.querySelector('script[type="application/ld+json"]');
+                if (existingScript) {
+                    existingScript.remove();
+                }
+
+                // Create new structured data
+                const structuredData = {
+                    "@context": "https://schema.org",
+                    "@type": "SocialMediaPosting",
+                    "headline": title,
+                    "author": {
+                        "@type": "Person",
+                        "name": author
+                    },
+                    "datePublished": publishedTime,
+                    "text": description
+                };
+
+                const script = document.createElement('script');
+                script.type = 'application/ld+json';
+                script.textContent = JSON.stringify(structuredData);
+                document.head.appendChild(script);
+            }
+
+            // Update display
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('current-title').textContent = document.title;
+            
+            const description = document.querySelector('meta[name="description"]');
+            document.getElementById('current-description').textContent = description ? description.content : 'None';
+            
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            document.getElementById('current-og-title').textContent = ogTitle ? ogTitle.content : 'None';
+            
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            document.getElementById('current-og-description').textContent = ogDescription ? ogDescription.content : 'None';
+            
+            const ogType = document.querySelector('meta[property="og:type"]');
+            document.getElementById('current-og-type').textContent = ogType ? ogType.content : 'None';
+            
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            document.getElementById('current-og-url').textContent = ogUrl ? ogUrl.content : 'None';
+            
+            const structuredData = document.querySelector('script[type="application/ld+json"]');
+            document.getElementById('current-structured-data').textContent = structuredData ? 'Present' : 'None';
+        }
+
+        function testMessageTitle() {
+            const mockMessage = {
+                content: "這是一個測試訊息，用來驗證頁面標題功能是否正常工作。這個訊息包含了足夠的內容來測試標題截斷功能，以及確保SEO優化的meta標籤都能正確設置。",
+                userId: "testuser",
+                createdAt: "2025-01-08T10:00:00Z",
+                updatedAt: "2025-01-08T10:30:00Z"
+            };
+
+            // Clean text for SEO (remove extra whitespace and line breaks)
+            const cleanContent = mockMessage.content.replace(/\s+/g, ' ').replace(/\n/g, ' ').trim();
+            
+            const messagePreview = cleanContent.length > 50 
+                ? cleanContent.substring(0, 50).trim() + '...' 
+                : cleanContent;
+            
+            const messageDescription = cleanContent.length > 150 
+                ? cleanContent.substring(0, 150).trim() + '...' 
+                : cleanContent;
+
+            updatePageMeta({
+                title: `${messagePreview} - Message Board`,
+                description: messageDescription,
+                author: mockMessage.userId,
+                publishedTime: mockMessage.createdAt
+            });
+
+            document.getElementById('test-results').innerHTML = 
+                '<strong>✅ Message Title Test:</strong> Updated page title with message content preview (50 chars), description (150 chars), and full SEO meta tags including structured data.';
+        }
+
+        function testLoadingTitle() {
+            updatePageMeta({
+                title: '載入中... - Message Board',
+                description: '正在載入訊息內容...',
+                author: '',
+                publishedTime: ''
+            });
+
+            document.getElementById('test-results').innerHTML = 
+                '<strong>⏳ Loading Title Test:</strong> Updated page title to show loading state.';
+        }
+
+        function testErrorTitle() {
+            updatePageMeta({
+                title: '載入錯誤 - Message Board',
+                description: '載入訊息時發生錯誤',
+                author: '',
+                publishedTime: ''
+            });
+
+            document.getElementById('test-results').innerHTML = 
+                '<strong>❌ Error Title Test:</strong> Updated page title to show error state.';
+        }
+
+        function testLongMessageTitle() {
+            const mockMessage = {
+                content: "這是一個非常長的測試訊息，用來驗證當訊息內容超過預設的字符限制時，頁面標題和描述的截斷功能是否正常工作。這個訊息故意寫得很長，包含了大量的文字內容，以確保我們的SEO優化功能能夠正確處理長文本的情況。在實際應用中，用戶可能會發布很長的訊息，我們需要確保這些長訊息不會破壞頁面的SEO表現，同時也要保持標題和描述的可讀性。這個測試將驗證文本截斷、清理和格式化功能是否都能正常運作。",
+                userId: "longtextuser",
+                createdAt: "2025-01-08T11:00:00Z"
+            };
+
+            const cleanContent = mockMessage.content.replace(/\s+/g, ' ').replace(/\n/g, ' ').trim();
+            
+            const messagePreview = cleanContent.length > 50 
+                ? cleanContent.substring(0, 50).trim() + '...' 
+                : cleanContent;
+            
+            const messageDescription = cleanContent.length > 150 
+                ? cleanContent.substring(0, 150).trim() + '...' 
+                : cleanContent;
+
+            updatePageMeta({
+                title: `${messagePreview} - Message Board`,
+                description: messageDescription,
+                author: mockMessage.userId,
+                publishedTime: mockMessage.createdAt
+            });
+
+            document.getElementById('test-results').innerHTML = 
+                '<strong>📝 Long Message Test:</strong> Tested with very long content. Title truncated to 50 chars, description to 150 chars.';
+        }
+
+        function testNotFoundTitle() {
+            updatePageMeta({
+                title: '訊息不存在 - Message Board',
+                description: '您要查看的訊息可能已被刪除或不存在',
+                author: '',
+                publishedTime: ''
+            });
+
+            document.getElementById('test-results').innerHTML = 
+                '<strong>🔍 Not Found Title Test:</strong> Updated page title to show not found state.';
+        }
+
+        function resetTitle() {
+            document.title = 'Page Title Test - Message Board';
+            
+            // Remove meta tags
+            const metaDescription = document.querySelector('meta[name="description"]');
+            if (metaDescription) metaDescription.remove();
+            
+            const ogTitle = document.querySelector('meta[property="og:title"]');
+            if (ogTitle) ogTitle.remove();
+            
+            const ogDescription = document.querySelector('meta[property="og:description"]');
+            if (ogDescription) ogDescription.remove();
+            
+            const ogType = document.querySelector('meta[property="og:type"]');
+            if (ogType) ogType.remove();
+            
+            const ogUrl = document.querySelector('meta[property="og:url"]');
+            if (ogUrl) ogUrl.remove();
+            
+            const structuredData = document.querySelector('script[type="application/ld+json"]');
+            if (structuredData) structuredData.remove();
+
+            updateDisplay();
+            
+            document.getElementById('test-results').innerHTML = 
+                '<strong>🔄 Reset Test:</strong> Reset page title and removed all meta tags.';
+        }
+
+        // Initialize display on page load
+        document.addEventListener('DOMContentLoaded', updateDisplay);
+    </script>
+</body>
+</html>

@@ -9,6 +9,7 @@ import Login from './components/Login';
 import UserRegister from './components/UserRegister';
 import MyMessages from './components/MyMessages';
 import MyProfile from './components/MyProfile';
+import SingleMessage from './components/SingleMessage';
 import UserMessages from './components/bak/UserMessages';
 import { getMessages } from './api';
 import './App.css';
@@ -30,6 +31,7 @@ function App() {
                                 <Route path="/messages" element={<MyMessages />} />
                                 <Route path="/messages/page/:pageNumber" element={<MyMessages />} />
                                 <Route path="/profile" element={<MyProfile />} />
+                                <Route path="/message/:messageId" element={<SingleMessage />} />
                                 <Route path="/user/:userId/messages" element={<UserMessages />} />
                                 <Route path="/user/:userId/messages/page/:pageNumber" element={<UserMessages />} />
                             </Routes>

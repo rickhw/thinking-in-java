@@ -44,7 +44,10 @@ export const getMessagesByUserId = async (userId, page = 0, size = 10) => {
 export const getMessageById = async (messageId) => {
     const response = await fetch(`${API_BASE_URL}/messages/${messageId}`);
     if (!response.ok) {
-        throw new Error('Network response was not ok');
+        if (response.status === 404) {
+            throw new Error('Message not found (404)');
+        }
+        throw new Error(`Network response was not ok (${response.status})`);
     }
     return response.json();
 };
