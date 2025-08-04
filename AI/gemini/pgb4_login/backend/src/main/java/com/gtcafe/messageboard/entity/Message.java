@@ -40,14 +40,14 @@ public class Message {
     private LocalDateTime updatedAt;
 
     @Transient
-    private static MessageIdGenerator messageIdGenerator;
+    private static MessageIdGenerator _idGenerator;
 
     /**
      * Sets the MessageIdGenerator instance for ID generation
      * This is called by Spring during application startup
      */
-    public static void setMessageIdGenerator(MessageIdGenerator generator) {
-        messageIdGenerator = generator;
+    public static void setIdGenerator(MessageIdGenerator generator) {
+        _idGenerator = generator;
     }
 
     /**
@@ -55,8 +55,8 @@ public class Message {
      */
     @PrePersist
     public void generateId() {
-        if (this.id == null && messageIdGenerator != null) {
-            this.id = messageIdGenerator.generateId();
+        if (this.id == null && _idGenerator != null) {
+            this.id = _idGenerator.generateId();
         }
     }
 }

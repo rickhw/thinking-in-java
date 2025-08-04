@@ -13,13 +13,13 @@ import jakarta.annotation.PostConstruct;
 public class EntityConfiguration {
 
     @Autowired
-    private MessageIdGenerator messageIdGenerator;
+    private MessageIdGenerator _idGenerator;
 
     /**
      * Injects the MessageIdGenerator into the Message entity after Spring context initialization
      */
     @PostConstruct
     public void configureEntities() {
-        Message.setMessageIdGenerator(messageIdGenerator);
+        Message.setIdGenerator(_idGenerator);
     }
 }

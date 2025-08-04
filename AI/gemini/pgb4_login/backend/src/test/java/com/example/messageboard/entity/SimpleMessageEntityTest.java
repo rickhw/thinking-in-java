@@ -72,7 +72,7 @@ public class SimpleMessageEntityTest {
             }
         };
         
-        Message.setMessageIdGenerator(mockGenerator);
+        Message.setIdGenerator(mockGenerator);
         prePersistMessage.generateId();
         
         System.out.println("✓ @PrePersist method works");

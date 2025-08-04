@@ -22,7 +22,7 @@
   - 編寫整合測試驗證 Repository 功能
   - _Requirements: 2.4, 4.2_
 
-- [-] 4. 更新 MessageService 服務層
+- [x] 4. 更新 MessageService 服務層
   - 修改所有方法的參數類型從 Long 改為 String
   - 在服務方法中添加 ID 格式驗證
   - 更新 createMessage 方法以使用新的 ID 生成器

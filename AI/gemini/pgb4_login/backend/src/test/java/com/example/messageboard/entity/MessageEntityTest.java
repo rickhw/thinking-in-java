@@ -26,7 +26,7 @@ class MessageEntityTest {
     @BeforeEach
     void setUp() {
         mockIdGenerator = mock(MessageIdGenerator.class);
-        Message.setMessageIdGenerator(mockIdGenerator);
+        Message.setIdGenerator(mockIdGenerator);
     }
 
     @Test
@@ -99,7 +99,7 @@ class MessageEntityTest {
     @Test
     void testPrePersistHandlesNullIdGenerator() {
         // Test that @PrePersist method handles null ID generator gracefully
-        Message.setMessageIdGenerator(null);
+        Message.setIdGenerator(null);
 
         Message message = new Message();
         message.setUserId("testUser");

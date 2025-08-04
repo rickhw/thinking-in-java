@@ -45,8 +45,7 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-java:7.18.0'
     testImplementation 'io.cucumber:cucumber-junit:7.18.0'
     testImplementation 'io.cucumber:cucumber-spring:7.18.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.11.0-M1' // Ensure JUnit 5 for Spring Boot Test
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.0-M1'
+    // JUnit versions are managed by Spring Boot, no need to specify explicitly
 }
 
 tasks.named('test') {

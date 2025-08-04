@@ -20,12 +20,19 @@ public class MessageService {
 
     private final MessageRepository _repos;
     private final TaskService _taskService;
+    private final MessageIdGenerator _idGenerator;
 
     @Async
     public CompletableFuture<String> createMessage(Message message) {
         String taskId = UUID.randomUUID().toString();
         _taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
+            // Generate new ID if not already set
+            if (message.getId() == null || message.getId().isEmpty()) {
+                String newId = _idGenerator.generateId();
+                message.setId(newId);
+            }
+            
             _repos.save(message);
             _taskService.updateTaskStatus(taskId, TaskStatus.COMPLETED);
             return CompletableFuture.completedFuture(taskId);
@@ -41,6 +48,13 @@ public class MessageService {
         String taskId = UUID.randomUUID().toString();
         _taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
+            // Validate ID format
+            if (!_idGenerator.isValidId(id)) {
+                _taskService.updateTaskStatus(taskId, TaskStatus.FAILED);
+                _taskService.updateTaskError(taskId, "Invalid message ID format: " + id);
+                return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid message ID format"));
+            }
+            
             Optional<Message> optionalMessage = _repos.findById(id);
             if (optionalMessage.isPresent()) {
                 Message existingMessage = optionalMessage.get();
@@ -65,6 +79,13 @@ public class MessageService {
         String taskId = UUID.randomUUID().toString();
         _taskService.addTask(taskId, new Task(taskId, TaskStatus.PENDING, null, null));
         try {
+            // Validate ID format
+            if (!_idGenerator.isValidId(id)) {
+                _taskService.updateTaskStatus(taskId, TaskStatus.FAILED);
+                _taskService.updateTaskError(taskId, "Invalid message ID format: " + id);
+                return CompletableFuture.failedFuture(new IllegalArgumentException("Invalid message ID format"));
+            }
+            
             if (_repos.existsById(id)) {
                 _repos.deleteById(id);
                 _taskService.updateTaskStatus(taskId, TaskStatus.COMPLETED);
@@ -82,6 +103,10 @@ public class MessageService {
     }
 
     public Optional<Message> getMessageById(String id) {
+        // Validate ID format
+        if (!_idGenerator.isValidId(id)) {
+            return Optional.empty();
+        }
         return _repos.findById(id);
     }
 
