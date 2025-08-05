@@ -1,10 +1,10 @@
 package com.gtcafe.messageboard.controller.request;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
-@Getter
+@Data
+@NoArgsConstructor
 public class NewMessageRequest {
     private String userId;
     private String content;

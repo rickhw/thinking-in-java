@@ -149,7 +149,7 @@ class MessageEntityTest {
         // Test that the ID field has proper JPA annotations
         // This is more of a structural test to ensure the annotations are correct
         Message message = new Message();
-        String testId = "TEST-ID-1234-5678-ABCDEFGHIJKL";
+        String testId = "TESTID12-3456-7890-ABCD-EFGHIJKLMNOP";
         message.setId(testId);
 
         // The ID should be exactly 36 characters as per the column definition

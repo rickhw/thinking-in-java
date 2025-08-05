@@ -30,7 +30,7 @@
   - 編寫單元測試驗證服務層的所有變更
   - _Requirements: 2.1, 2.2, 2.3_
 
-- [ ] 5. 更新 MessageController 控制器
+- [x] 5. 更新 MessageController 控制器
   - 將路徑參數 messageId 的類型從 Long 改為 String
   - 在控制器方法中添加 ID 格式驗證
   - 更新錯誤處理以支援無效 ID 格式的情況
@@ -38,7 +38,7 @@
   - 編寫控制器測試驗證 API 端點功能
   - _Requirements: 2.2, 2.3, 6.1, 6.3_
 
-- [ ] 6. 創建數據庫遷移腳本
+- [-] 6. 創建數據庫遷移腳本
   - 編寫 SQL 腳本將 id 欄位從 BIGINT 改為 VARCHAR(36)
   - 為現有數據生成新格式的 ID
   - 更新相關的索引和約束

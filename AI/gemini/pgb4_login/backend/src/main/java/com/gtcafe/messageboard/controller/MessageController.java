@@ -20,6 +20,8 @@ import com.gtcafe.messageboard.controller.request.NewMessageRequest;
 import com.gtcafe.messageboard.controller.request.UpdateMessageRequest;
 import com.gtcafe.messageboard.controller.response.TaskResponse;
 import com.gtcafe.messageboard.entity.Message;
+import com.gtcafe.messageboard.exception.InvalidMessageIdException;
+import com.gtcafe.messageboard.service.MessageIdGenerator;
 import com.gtcafe.messageboard.service.MessageService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class MessageController {
 
     private final MessageService _service;
+    private final MessageIdGenerator _messageIdGenerator;
 
     @PostMapping
     public ResponseEntity<TaskResponse> createMessage(@RequestBody NewMessageRequest newMessageRequest)
@@ -43,6 +46,11 @@ public class MessageController {
 
     @GetMapping("/{messageId}")
     public ResponseEntity<Message> getMessageById(@PathVariable String messageId) {
+        // Validate message ID format
+        if (!_messageIdGenerator.isValidId(messageId)) {
+            throw new InvalidMessageIdException(messageId);
+        }
+        
         return _service.getMessageById(messageId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -52,6 +60,11 @@ public class MessageController {
     public ResponseEntity<TaskResponse> updateMessage(@PathVariable String messageId,
             @RequestBody UpdateMessageRequest updateMessageRequest)
             throws ExecutionException, InterruptedException {
+        // Validate message ID format
+        if (!_messageIdGenerator.isValidId(messageId)) {
+            throw new InvalidMessageIdException(messageId);
+        }
+        
         Message details = new Message();
         details.setContent(updateMessageRequest.getContent());
         String taskId = _service.updateMessage(messageId, details).get();
@@ -61,6 +74,11 @@ public class MessageController {
     @DeleteMapping("/{messageId}")
     public ResponseEntity<TaskResponse> deleteMessage(@PathVariable String messageId)
             throws ExecutionException, InterruptedException {
+        // Validate message ID format
+        if (!_messageIdGenerator.isValidId(messageId)) {
+            throw new InvalidMessageIdException(messageId);
+        }
+        
         String taskId = _service.deleteMessage(messageId).get();
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(new TaskResponse(taskId));
     }
