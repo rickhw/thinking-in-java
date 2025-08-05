@@ -58,6 +58,9 @@ check_migration_needed() {
         AND TABLE_NAME = 'messages' 
         AND COLUMN_NAME = 'id'
     " 2>/dev/null || echo "")
+
+    echo "result: [${result}]"
+    return 0;
     
     if [ "$result" = "bigint" ]; then
         log "Migration needed: messages.id is currently BIGINT"
