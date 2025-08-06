@@ -14,5 +14,5 @@ dependencies {
 }
 
 application {
-    mainClass = 'MessageIdMigrator'
+    mainClass = 'MessageIdUuidMigrator'
 }
