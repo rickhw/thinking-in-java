@@ -10,6 +10,12 @@ import {
     PAGE_DESCRIPTIONS
 } from '../utils/seo';
 import { isValidMessageId, validateMessageIdWithError, isLegacyNumericId } from '../utils/messageId';
+import { 
+    generateBreadcrumbs, 
+    generateUserMessagesUrl, 
+    handleNavigationError,
+    validateNavigationPath 
+} from '../utils/navigation';
 
 const SingleMessage = () => {
     const { messageId } = useParams();
@@ -532,7 +538,20 @@ const SingleMessage = () => {
             
             {/* Navigation breadcrumb */}
             <div className="breadcrumb">
-                <Link to="/" className="breadcrumb-link">← 返回所有訊息列表</Link>
+                {generateBreadcrumbs(window.location.pathname, { messageId, userId: message?.userId }).map((breadcrumb, index) => (
+                    <span key={index} className="breadcrumb-item">
+                        {index > 0 && <span className="breadcrumb-separator"> › </span>}
+                        {breadcrumb.isActive ? (
+                            <span className={`breadcrumb-current ${breadcrumb.hasError ? 'breadcrumb-error' : ''}`}>
+                                {breadcrumb.text}
+                            </span>
+                        ) : (
+                            <Link to={breadcrumb.url} className="breadcrumb-link">
+                                {breadcrumb.text}
+                            </Link>
+                        )}
+                    </span>
+                ))}
             </div>
 
             {/* Action Error Banner */}
@@ -606,7 +625,7 @@ const SingleMessage = () => {
                     <Link to="/" className="nav-link">
                         📋 返回所有訊息
                     </Link>
-                    <Link to={`/user/${message.userId}/messages`} className="nav-link">
+                    <Link to={generateUserMessagesUrl(message.userId)} className="nav-link">
                         👤 查看 {message.userId} 的所有訊息
                     </Link>
                 </div>

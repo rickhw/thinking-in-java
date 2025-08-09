@@ -13,6 +13,7 @@ import SingleMessage from './components/SingleMessage';
 import UserMessages from './components/bak/UserMessages';
 import ErrorBoundary from './components/ErrorBoundary';
 import { getMessages } from './api';
+import { generateHomeUrl, parsePageNumberFromPath } from './utils/navigation';
 import './App.css';
 
 function App() {
@@ -95,11 +96,7 @@ function HomePage() {
         if (newPage >= 0 && newPage < totalPages) {
             // 更新 URL，頁面號碼從 1 開始顯示
             const displayPage = newPage + 1;
-            if (displayPage === 1) {
-                navigate('/');
-            } else {
-                navigate(`/page/${displayPage}`);
-            }
+            navigate(generateHomeUrl(displayPage));
         }
     };
 

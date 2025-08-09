@@ -5,6 +5,7 @@ import { usePageTitle } from '../contexts/PageContext';
 import { getMessagesByUserId, deleteMessage, updateMessage, getTaskStatus } from '../api';
 import MessageList from './MessageList';
 import { isValidMessageId, validateMessageIdWithError } from '../utils/messageId';
+import { generateMyMessagesUrl } from '../utils/navigation';
 
 const MyMessages = () => {
     const { pageNumber } = useParams();
@@ -53,11 +54,7 @@ const MyMessages = () => {
         if (totalPages > 0 && currentPage >= totalPages) {
             // 如果當前頁面超出範圍，重定向到最後一頁
             const lastPage = totalPages;
-            if (lastPage === 1) {
-                navigate('/messages');
-            } else {
-                navigate(`/messages/page/${lastPage}`);
-            }
+            navigate(generateMyMessagesUrl(lastPage));
         }
     }, [totalPages, currentPage, navigate]);
 
@@ -65,11 +62,7 @@ const MyMessages = () => {
         if (newPage >= 0 && newPage < totalPages) {
             // 更新 URL，頁面號碼從 1 開始顯示
             const displayPage = newPage + 1;
-            if (displayPage === 1) {
-                navigate('/messages');
-            } else {
-                navigate(`/messages/page/${displayPage}`);
-            }
+            navigate(generateMyMessagesUrl(displayPage));
         }
     };
 

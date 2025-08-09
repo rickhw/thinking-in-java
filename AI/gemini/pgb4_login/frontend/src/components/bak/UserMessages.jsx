@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { usePageTitle } from '../../contexts/PageContext';
 import { getMessagesByUserId } from '../../api';
 import MessageList from '../MessageList';
+import { generateUserMessagesUrl } from '../../utils/navigation';
 
 const UserMessages = () => {
     const { userId, pageNumber } = useParams();
@@ -48,11 +49,7 @@ const UserMessages = () => {
         if (totalPages > 0 && currentPage >= totalPages) {
             // 如果當前頁面超出範圍，重定向到最後一頁
             const lastPage = totalPages;
-            if (lastPage === 1) {
-                navigate(`/user/${userId}/messages`);
-            } else {
-                navigate(`/user/${userId}/messages/page/${lastPage}`);
-            }
+            navigate(generateUserMessagesUrl(userId, lastPage));
         }
     }, [totalPages, currentPage, navigate, userId]);
 
@@ -60,11 +57,7 @@ const UserMessages = () => {
         if (newPage >= 0 && newPage < totalPages) {
             // 更新 URL，頁面號碼從 1 開始顯示
             const displayPage = newPage + 1;
-            if (displayPage === 1) {
-                navigate(`/user/${userId}/messages`);
-            } else {
-                navigate(`/user/${userId}/messages/page/${displayPage}`);
-            }
+            navigate(generateUserMessagesUrl(userId, displayPage));
         }
     };
 

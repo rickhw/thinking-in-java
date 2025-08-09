@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { isValidMessageId, truncateMessageId } from '../utils/messageId';
+import { generateMessageUrl, generateUserMessagesUrl } from '../utils/navigation';
 
 const MessageList = ({ 
   messages, 
@@ -30,7 +31,7 @@ const MessageList = ({
                 <div className="message-content">
                   <div className="message-header">
                     {showUserLinks ? (
-                      <Link to={`/user/${message.userId}/messages`} className="user-link">
+                      <Link to={generateUserMessagesUrl(message.userId)} className="user-link">
                         <strong>{message.userId}</strong>
                       </Link>
                     ) : (
@@ -49,7 +50,7 @@ const MessageList = ({
                   </div>
                   <div className="message-permalink">
                     {hasValidId ? (
-                      <Link to={`/message/${message.id}`} className="permalink-link">
+                      <Link to={generateMessageUrl(message.id)} className="permalink-link">
                         查看詳情
                       </Link>
                     ) : (
