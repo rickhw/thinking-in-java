@@ -7,18 +7,26 @@ import com.gtcafe.messageboard.repository.MessageRepository;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.regex.Pattern;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Service for generating unique 36-character message IDs
+ * Optimized service for generating unique 36-character message IDs
  * Format: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
  * Character set: A-Z, 0-9
+ * 
+ * Performance optimizations:
+ * - Uses ThreadLocalRandom for better concurrent performance
+ * - Caches charset array for faster access
+ * - Uses atomic counter for sequence numbers
+ * - Pre-compiled regex pattern for validation
  */
 @Service
 public class MessageIdGenerator {
 
     private static final String CHARSET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int CHARSET_SIZE = CHARSET.length();
-    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final char[] CHARSET_ARRAY = CHARSET.toCharArray();
+    private static final int CHARSET_SIZE = CHARSET_ARRAY.length;
 
     // Pattern for validating ID format: 8-4-4-4-12 with A-Z and 0-9
     private static final Pattern ID_PATTERN = Pattern.compile(
@@ -27,6 +35,13 @@ public class MessageIdGenerator {
     // Machine identifier (last 2 digits of current time in milliseconds)
     private static final String MACHINE_ID = String.format("%02X",
             (int) (System.currentTimeMillis() % 256));
+
+    // Atomic counter for sequence numbers to ensure uniqueness within the same millisecond
+    private static final AtomicLong SEQUENCE_COUNTER = new AtomicLong(0);
+
+    // Cache for StringBuilder to reduce object allocation
+    private static final ThreadLocal<StringBuilder> STRING_BUILDER_CACHE = 
+            ThreadLocal.withInitial(() -> new StringBuilder(36));
 
     @Autowired
     private MessageRepository messageRepository;
@@ -65,9 +80,12 @@ public class MessageIdGenerator {
     /**
      * Internal method to generate ID without uniqueness check
      * Public for testing purposes
+     * 
+     * Optimized version with reduced object allocation and better performance
      */
     public String generateIdInternal() {
-        StringBuilder sb = new StringBuilder(36);
+        StringBuilder sb = STRING_BUILDER_CACHE.get();
+        sb.setLength(0); // Reset the cached StringBuilder
 
         // Part 1: Timestamp encoding (8 chars)
         long timestamp = Instant.now().getEpochSecond();
@@ -76,24 +94,26 @@ public class MessageIdGenerator {
         sb.append('-');
 
         // Part 2: Random component (4 chars)
-        sb.append(generateRandomString(4));
+        generateRandomStringDirect(sb, 4);
         sb.append('-');
 
         // Part 3: Random component (4 chars)
-        sb.append(generateRandomString(4));
+        generateRandomStringDirect(sb, 4);
         sb.append('-');
 
-        // Part 4: Machine ID + Random (4 chars)
+        // Part 4: Machine ID + Sequence (4 chars)
         sb.append(MACHINE_ID);
-        sb.append(generateRandomString(2));
+        // Use sequence counter for better uniqueness within same millisecond
+        long sequence = SEQUENCE_COUNTER.incrementAndGet() % (CHARSET_SIZE * CHARSET_SIZE);
+        sb.append(CHARSET_ARRAY[(int) (sequence / CHARSET_SIZE)]);
+        sb.append(CHARSET_ARRAY[(int) (sequence % CHARSET_SIZE)]);
         sb.append('-');
 
-        // Part 5: Random + Sequence + Checksum (12 chars)
-        String randomPart = generateRandomString(10);
-        sb.append(randomPart);
+        // Part 5: Random + Checksum (12 chars)
+        generateRandomStringDirect(sb, 10);
 
         // Add checksum (2 chars)
-        String checksum = calculateChecksum(sb.toString());
+        String checksum = calculateChecksumOptimized(sb);
         sb.append(checksum);
 
         return sb.toString();
@@ -129,17 +149,47 @@ public class MessageIdGenerator {
 
     /**
      * Generates a random string of specified length using our charset
+     * Optimized version that appends directly to StringBuilder
+     */
+    private void generateRandomStringDirect(StringBuilder sb, int length) {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        for (int i = 0; i < length; i++) {
+            sb.append(CHARSET_ARRAY[random.nextInt(CHARSET_SIZE)]);
+        }
+    }
+
+    /**
+     * Legacy method for backward compatibility
      */
     private String generateRandomString(int length) {
         StringBuilder sb = new StringBuilder(length);
-        for (int i = 0; i < length; i++) {
-            sb.append(CHARSET.charAt(RANDOM.nextInt(CHARSET_SIZE)));
-        }
+        generateRandomStringDirect(sb, length);
         return sb.toString();
     }
 
     /**
      * Calculates a simple checksum for the ID
+     * Optimized version that works directly with StringBuilder
+     */
+    private String calculateChecksumOptimized(StringBuilder input) {
+        int sum = 0;
+        for (int i = 0; i < input.length(); i++) {
+            char c = input.charAt(i);
+            if (c != '-') {
+                sum += c;
+            }
+        }
+
+        // Convert sum to 2-character string using our charset
+        int checksum = sum % (CHARSET_SIZE * CHARSET_SIZE);
+        char first = CHARSET_ARRAY[checksum / CHARSET_SIZE];
+        char second = CHARSET_ARRAY[checksum % CHARSET_SIZE];
+
+        return "" + first + second;
+    }
+
+    /**
+     * Legacy method for backward compatibility
      */
     private String calculateChecksum(String input) {
         int sum = 0;
@@ -151,8 +201,8 @@ public class MessageIdGenerator {
 
         // Convert sum to 2-character string using our charset
         int checksum = sum % (CHARSET_SIZE * CHARSET_SIZE);
-        char first = CHARSET.charAt(checksum / CHARSET_SIZE);
-        char second = CHARSET.charAt(checksum % CHARSET_SIZE);
+        char first = CHARSET_ARRAY[checksum / CHARSET_SIZE];
+        char second = CHARSET_ARRAY[checksum % CHARSET_SIZE];
 
         return "" + first + second;
     }

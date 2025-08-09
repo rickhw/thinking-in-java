@@ -193,8 +193,9 @@ class MessageIdEndToEndIntegrationTest {
             waitForTaskCompletion(taskId);
 
             // Find the created message
+            final int index = i; // Make variable effectively final for lambda
             Optional<Message> message = messageRepository.findAll().stream()
-                    .filter(m -> userIds[i].equals(m.getUserId()) && contents[i].equals(m.getContent()))
+                    .filter(m -> userIds[index].equals(m.getUserId()) && contents[index].equals(m.getContent()))
                     .findFirst();
             assertTrue(message.isPresent());
             createdMessageIds[i] = message.get().getId();
