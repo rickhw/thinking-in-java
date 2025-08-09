@@ -1,0 +1,470 @@
+openapi: 3.0.0
+info:
+  title: "Twitter-like Message Board API (Message ID Redesign)"
+  description: "A simple message board RESTful API with asynchronous message operations. Updated to support 36-character string message IDs."
+  version: "2.0.0"
+servers:
+  - url: "/api/v1"
+    description: "API V1"
+
+paths:
+  /users/register:
+    post:
+      summary: "User Registration"
+      description: "Register a new user account"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        '200':
+          description: "Registration successful"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: "Invalid registration data"
+
+  /users/login:
+    post:
+      summary: "User Login"
+      description: "User authentication"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: "Login successful"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: "Login failed"
+
+  /users/{id}:
+    get:
+      summary: "Get User Data"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        '200':
+          description: "Successfully retrieved user data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: "User not found"
+    put:
+      summary: "Update User Data"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+            format: "int64"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+      responses:
+        '200':
+          description: "Update successful"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: "User not found"
+
+  /tasks/{taskId}:
+    get:
+      summary: "Query Task Status"
+      parameters:
+        - name: "taskId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        '200':
+          description: "Successfully retrieved task status"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: "Task not found"
+
+  /messages:
+    get:
+      summary: "Get All Messages (Paginated, Ordered by Creation Time Descending)"
+      description: "Retrieve all messages, ordered by creation time descending (newest first)"
+      parameters:
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 0
+          description: "Page number (starting from 0)"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 10
+          description: "Number of items per page"
+      responses:
+        '200':
+          description: "Successfully retrieved message list, ordered by creation time descending."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
+    post:
+      summary: "Create New Message (Asynchronous)"
+      description: "Accept message data, return immediately and process creation asynchronously in background."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewMessage'
+      responses:
+        '202':
+          description: "Request accepted, processing in progress."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: "Invalid request format."
+
+  /users/{userId}/messages:
+    get:
+      summary: "Get All Messages from Specific User (Paginated, Ordered by Creation Time Descending)"
+      description: "Retrieve all messages from a specific user, ordered by creation time descending (newest first)"
+      parameters:
+        - name: "userId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+        - name: "page"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 0
+          description: "Page number (starting from 0)"
+        - name: "size"
+          in: "query"
+          required: false
+          schema:
+            type: "integer"
+            format: "int32"
+            default: 10
+          description: "Number of items per page"
+      responses:
+        '200':
+          description: "Successfully retrieved message list, ordered by creation time descending."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessagePage'
+        '404':
+          description: "User not found."
+
+  /messages/{messageId}:
+    get:
+      summary: "Get Single Message"
+      parameters:
+        - name: "messageId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            pattern: "^[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}$"
+            example: "A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6"
+          description: "36-character message ID in format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+      responses:
+        '200':
+          description: "Successfully retrieved message."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: "Invalid message ID format."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: "Message not found."
+    put:
+      summary: "Update Message (Asynchronous)"
+      description: "Accept update data, return immediately and process update asynchronously in background."
+      parameters:
+        - name: "messageId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            pattern: "^[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}$"
+            example: "A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6"
+          description: "36-character message ID in format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMessage'
+      responses:
+        '202':
+          description: "Request accepted, processing in progress."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: "Invalid request format or message ID format."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: "Message to update not found."
+    delete:
+      summary: "Delete Message (Asynchronous)"
+      description: "Accept delete request, return immediately and process deletion asynchronously in background."
+      parameters:
+        - name: "messageId"
+          in: "path"
+          required: true
+          schema:
+            type: "string"
+            pattern: "^[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}$"
+            example: "A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6"
+          description: "36-character message ID in format XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+      responses:
+        '202':
+          description: "Request accepted, processing in progress."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          description: "Invalid message ID format."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: "Message to delete not found."
+
+components:
+  schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int64"
+        username:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+          writeOnly: true
+
+    UserRegistration:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+      required:
+        - "username"
+        - "email"
+        - "password"
+
+    UserUpdate:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        email:
+          type: "string"
+          format: "email"
+        password:
+          type: "string"
+          description: "New password (optional)"
+
+    LoginRequest:
+      type: "object"
+      properties:
+        username:
+          type: "string"
+        password:
+          type: "string"
+      required:
+        - "username"
+        - "password"
+
+    LoginResponse:
+      type: "object"
+      properties:
+        success:
+          type: "boolean"
+        user:
+          $ref: '#/components/schemas/User'
+        message:
+          type: "string"
+
+    Task:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        status:
+          type: "string"
+          enum: ["PENDING", "COMPLETED", "FAILED"]
+        result:
+          type: "string"
+        error:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+
+    TaskResponse:
+      type: "object"
+      properties:
+        taskId:
+          type: "string"
+          description: "Task ID for tracking the asynchronous operation"
+        status:
+          type: "string"
+          enum: ["PENDING", "COMPLETED", "FAILED"]
+          description: "Current status of the task"
+
+    Message:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          pattern: "^[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}$"
+          example: "A1B2C3D4-E5F6-G7H8-I9J0-K1L2M3N4O5P6"
+          description: "36-character unique message ID"
+        userId:
+          type: "string"
+        content:
+          type: "string"
+        createdAt:
+          type: "string"
+          format: "date-time"
+        updatedAt:
+          type: "string"
+          format: "date-time"
+
+    NewMessage:
+      type: "object"
+      properties:
+        userId:
+          type: "string"
+          description: "ID of the user posting the message"
+        content:
+          type: "string"
+          description: "Message content"
+      required:
+        - "userId"
+        - "content"
+
+    UpdateMessage:
+      type: "object"
+      properties:
+        content:
+          type: "string"
+          description: "New message content"
+      required:
+        - "content"
+
+    MessagePage:
+      type: "object"
+      properties:
+        content:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/Message'
+        totalElements:
+          type: "integer"
+          format: "int64"
+        totalPages:
+          type: "integer"
+          format: "int32"
+        number:
+          type: "integer"
+          format: "int32"
+          description: "Current page number (starting from 0)"
+        size:
+          type: "integer"
+          format: "int32"
+          description: "Number of items per page"
+        first:
+          type: "boolean"
+          description: "Whether this is the first page"
+        last:
+          type: "boolean"
+          description: "Whether this is the last page"
+        empty:
+          type: "boolean"
+          description: "Whether the content is empty"
+
+    ErrorResponse:
+      type: "object"
+      properties:
+        error:
+          type: "string"
+          description: "Error code"
+          example: "INVALID_MESSAGE_ID"
+        message:
+          type: "string"
+          description: "Human-readable error message"
+          example: "Invalid message ID format: 123"
+        timestamp:
+          type: "string"
+          format: "date-time"
+          description: "Timestamp when the error occurred"
+      required:
+        - "error"
+        - "message"
+        - "timestamp"
