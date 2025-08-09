@@ -9,6 +9,7 @@ import {
     PAGE_TITLES,
     PAGE_DESCRIPTIONS
 } from '../utils/seo';
+import { isValidMessageId, validateMessageIdWithError, isLegacyNumericId } from '../utils/messageId';
 
 const SingleMessage = () => {
     const { messageId } = useParams();
@@ -32,6 +33,26 @@ const SingleMessage = () => {
                 message: 'Message ID is required',
                 canRetry: false,
                 userGuidance: '請確認 URL 中包含有效的訊息 ID。'
+            });
+            setLoading(false);
+            return;
+        }
+
+        // Validate message ID format
+        const validation = validateMessageIdWithError(messageId);
+        if (!validation.isValid) {
+            let userGuidance = validation.errorMessage;
+            
+            // Provide specific guidance for legacy numeric IDs
+            if (isLegacyNumericId(messageId)) {
+                userGuidance = '此訊息使用舊的數字 ID 格式，系統已升級為新的 36 位字符 ID 格式。請聯繫管理員或查看最新的訊息列表。';
+            }
+            
+            setError({ 
+                type: 'invalid_id_format', 
+                message: '訊息 ID 格式不正確',
+                canRetry: false,
+                userGuidance: userGuidance
             });
             setLoading(false);
             return;

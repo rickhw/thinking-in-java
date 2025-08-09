@@ -4,6 +4,7 @@ import { useUser } from '../contexts/UserContext';
 import { usePageTitle } from '../contexts/PageContext';
 import { getMessagesByUserId, deleteMessage, updateMessage, getTaskStatus } from '../api';
 import MessageList from './MessageList';
+import { isValidMessageId, validateMessageIdWithError } from '../utils/messageId';
 
 const MyMessages = () => {
     const { pageNumber } = useParams();
@@ -80,6 +81,13 @@ const MyMessages = () => {
     const handleSaveEdit = async () => {
         if (!editContent.trim()) return;
         
+        // Validate message ID before attempting update
+        const validation = validateMessageIdWithError(editingMessage.id);
+        if (!validation.isValid) {
+            setError(new Error(`無法更新訊息：${validation.errorMessage}`));
+            return;
+        }
+        
         try {
             const taskId = await updateMessage(editingMessage.id, editContent);
             // 可以選擇性地檢查任務狀態
@@ -98,6 +106,13 @@ const MyMessages = () => {
     };
 
     const handleDelete = async (messageId) => {
+        // Validate message ID before attempting deletion
+        const validation = validateMessageIdWithError(messageId);
+        if (!validation.isValid) {
+            setError(new Error(`無法刪除訊息：${validation.errorMessage}`));
+            return;
+        }
+
         if (window.confirm('確定要刪除這則訊息嗎？')) {
             try {
                 const taskId = await deleteMessage(messageId);

@@ -45,21 +45,21 @@
   - 編寫測試驗證遷移腳本的正確性
   - _Requirements: 4.1, 4.2, 4.4_
 
-- [ ] 7. 添加 ID 格式驗證和錯誤處理
+- [x] 7. 添加 ID 格式驗證和錯誤處理
   - 創建 InvalidMessageIdException 異常類
   - 添加全域異常處理器處理 ID 格式錯誤
   - 實作統一的錯誤響應格式
   - 編寫測試驗證錯誤處理邏輯
   - _Requirements: 6.2, 6.3_
 
-- [ ] 8. 更新前端 API 調用
+- [x] 8. 更新前端 API 調用
   - 修改 api.js 中的所有 message 相關 API 調用
   - 添加前端 ID 格式驗證函數
   - 更新錯誤處理以支援新的錯誤類型
   - 編寫前端單元測試驗證 API 調用
   - _Requirements: 3.3, 5.3_
 
-- [ ] 9. 更新前端組件以支援新 ID 格式
+- [x] 9. 更新前端組件以支援新 ID 格式
   - 修改 MessageList 組件處理新的 ID 格式
   - 更新 SingleMessage 組件的路由參數處理
   - 確保所有 message 相關的前端操作正常工作

@@ -2106,3 +2106,392 @@ li {
     display: none;
   }
 }
+/* Message ID Display Styles */
+.message-id-display {
+  font-size: 0.75rem;
+  color: #666;
+  font-family: 'Courier New', monospace;
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.message-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ffeaa7;
+  font-size: 0.875rem;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.permalink-link.disabled {
+  color: #6c757d;
+  text-decoration: none;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.permalink-link.disabled:hover {
+  color: #6c757d;
+  text-decoration: none;
+}
+
+/* Action Button States */
+.edit-btn:disabled,
+.delete-btn:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.edit-btn:disabled:hover,
+.delete-btn:disabled:hover {
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+/* Single Message Error States */
+.error-page {
+  text-align: center;
+  padding: 2rem;
+}
+
+.error-content {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
+
+.error-content.not-found {
+  background-color: #fff3cd;
+  border-color: #ffeaa7;
+}
+
+.error-content.network-error {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.error-content.general-error {
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.error-guidance-text {
+  margin: 1rem 0;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.back-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.back-button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.back-button.primary:hover {
+  background-color: #0056b3;
+}
+
+.back-button.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.back-button.secondary:hover {
+  background-color: #545b62;
+}
+
+.back-button:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.retry-info {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.error-code {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-family: 'Courier New', monospace;
+  background-color: #f8f9fa;
+  padding: 2px 6px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.max-retry-guidance {
+  margin-top: 1.5rem;
+  text-align: left;
+  background-color: #e9ecef;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.max-retry-guidance h4 {
+  margin-top: 0;
+  color: #495057;
+}
+
+.max-retry-guidance ul {
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+.max-retry-guidance li {
+  margin-bottom: 0.5rem;
+  color: #6c757d;
+}
+
+/* Loading States */
+.loading-skeleton {
+  padding: 2rem;
+}
+
+.retry-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #007bff;
+  font-size: 0.875rem;
+}
+
+.retry-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.skeleton-header,
+.skeleton-content {
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-line {
+  height: 1rem;
+  background-color: #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.skeleton-line.skeleton-title {
+  height: 1.5rem;
+  width: 60%;
+}
+
+.skeleton-line.skeleton-subtitle {
+  height: 1rem;
+  width: 40%;
+}
+
+.skeleton-line.skeleton-author {
+  width: 30%;
+}
+
+.skeleton-line.skeleton-time {
+  width: 50%;
+}
+
+.skeleton-line.skeleton-text {
+  width: 100%;
+}
+
+.skeleton-line.skeleton-text.short {
+  width: 70%;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Permission Error Overlay */
+.permission-error-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.permission-error-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+  margin: 1rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.permission-error-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.permission-error-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.permission-action-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.permission-action-button.primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.permission-action-button.primary:hover {
+  background-color: #0056b3;
+}
+
+.permission-action-button.secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.permission-action-button.secondary:hover {
+  background-color: #545b62;
+}
+
+/* Action Error Banner */
+.action-error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.action-error-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.action-error-icon {
+  flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.action-error-message {
+  font-weight: 500;
+  color: #721c24;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.action-error-guidance {
+  color: #856404;
+  font-size: 0.875rem;
+  display: block;
+}
+
+.action-error-close {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: #721c24;
+  padding: 0.25rem;
+  line-height: 1;
+}
+
+.action-error-close:hover {
+  color: #491217;
+}
+
+/* Action Status */
+.action-status {
+  margin: 1rem 0;
+}
+
+.action-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #007bff;
+  font-size: 0.875rem;
+}
+
+.action-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
