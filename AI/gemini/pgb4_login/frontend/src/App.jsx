@@ -14,7 +14,18 @@ import UserMessages from './components/bak/UserMessages';
 import ErrorBoundary from './components/ErrorBoundary';
 import { getMessages } from './api';
 import { generateHomeUrl, parsePageNumberFromPath } from './utils/navigation';
+import { validateEnvironment, APP_CONFIG, isDevelopment } from './config/environment';
 import './App.css';
+
+// Initialize environment validation
+try {
+  validateEnvironment();
+  if (isDevelopment()) {
+    console.log(`${APP_CONFIG.NAME} v${APP_CONFIG.VERSION} - Environment: ${APP_CONFIG.ENV}`);
+  }
+} catch (error) {
+  console.error('Environment validation failed:', error);
+}
 
 function App() {
     return (

@@ -26,14 +26,14 @@
   - 優化鏡像大小和構建緩存
   - _Requirements: 2.1, 2.3, 2.5_
 
-- [ ] 3. 實現前端 React 應用的部署準備
-- [ ] 3.1 配置前端環境變數和構建優化
+- [x] 3. 實現前端 React 應用的部署準備
+- [x] 3.1 配置前端環境變數和構建優化
   - 修改 Vite 配置支持生產環境變數
   - 創建環境特定的配置文件（.env.production）
   - 實現 API 基礎 URL 的動態配置
   - _Requirements: 5.1, 5.2_
 
-- [ ] 3.2 創建前端 Dockerfile 和 Nginx 配置
+- [x] 3.2 創建前端 Dockerfile 和 Nginx 配置
   - 編寫多階段 Dockerfile，使用 Node.js 構建，Nginx 服務
   - 配置 Nginx 反向代理到後端 API
   - 實現前端靜態文件的 gzip 壓縮和緩存策略
