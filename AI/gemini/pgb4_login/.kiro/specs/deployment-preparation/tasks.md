@@ -1,6 +1,6 @@
 # Implementation Plan
 
-- [-] 1. 設置項目部署目錄結構和基礎配置文件
+- [x] 1. 設置項目部署目錄結構和基礎配置文件
   - 創建 `deployment/` 目錄結構，包含 systemd、docker、k8s 子目錄
   - 創建 `scripts/` 目錄用於存放自動化腳本
   - 創建 `config/` 目錄用於存放環境配置文件
