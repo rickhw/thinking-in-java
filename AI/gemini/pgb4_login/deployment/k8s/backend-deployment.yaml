@@ -1,0 +1,171 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgb4-backend
+  namespace: pgb4
+  labels:
+    app: pgb4-backend
+    component: backend
+    version: v1.0.0
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: pgb4-backend
+  template:
+    metadata:
+      labels:
+        app: pgb4-backend
+        component: backend
+        version: v1.0.0
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/actuator/prometheus"
+    spec:
+      serviceAccountName: pgb4-backend
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+      containers:
+      - name: backend
+        image: pgb4/backend:latest
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        - name: management
+          containerPort: 8081
+          protocol: TCP
+        env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: "prod"
+        - name: SERVER_PORT
+          value: "8080"
+        - name: MANAGEMENT_SERVER_PORT
+          value: "8081"
+        - name: DB_URL
+          valueFrom:
+            configMapKeyRef:
+              name: pgb4-config
+              key: database.url
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: pgb4-secrets
+              key: database.username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pgb4-secrets
+              key: database.password
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: pgb4-config
+              key: logging.level
+        - name: APP_LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: pgb4-config
+              key: logging.app.level
+        - name: JPA_DDL_AUTO
+          value: "validate"
+        - name: JPA_SHOW_SQL
+          value: "false"
+        - name: DB_POOL_SIZE
+          valueFrom:
+            configMapKeyRef:
+              name: pgb4-config
+              key: database.pool.size
+        - name: DB_POOL_MIN_IDLE
+          valueFrom:
+            configMapKeyRef:
+              name: pgb4-config
+              key: database.pool.min.idle
+        - name: ACTUATOR_ENDPOINTS
+          value: "health,info,metrics,prometheus"
+        - name: HEALTH_SHOW_DETAILS
+          value: "never"
+        - name: JAVA_OPTS
+          value: >-
+            -server
+            -XX:+UseContainerSupport
+            -XX:MaxRAMPercentage=75.0
+            -XX:+UseG1GC
+            -XX:+OptimizeStringConcat
+            -XX:+UseStringDeduplication
+            -XX:+ExitOnOutOfMemoryError
+            -Djava.security.egd=file:/dev/./urandom
+            -Djava.awt.headless=true
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 120
+          periodSeconds: 30
+          timeoutSeconds: 15
+          failureThreshold: 3
+          successThreshold: 1
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+        startupProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8081
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 12
+          successThreshold: 1
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+        - name: data
+          mountPath: /app/data
+        - name: tmp
+          mountPath: /app/tmp
+      volumes:
+      - name: logs
+        emptyDir: {}
+      - name: data
+        emptyDir: {}
+      - name: tmp
+        emptyDir: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - pgb4-backend
+              topologyKey: kubernetes.io/hostname

@@ -1,0 +1,38 @@
+---
+# PGB4 Production Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pgb4
+  labels:
+    name: pgb4
+    environment: production
+    app: pgb4-message-board
+  annotations:
+    description: "PGB4 Message Board Production Environment"
+
+---
+# PGB4 Development Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pgb4-dev
+  labels:
+    name: pgb4-dev
+    environment: development
+    app: pgb4-message-board
+  annotations:
+    description: "PGB4 Message Board Development Environment"
+
+---
+# PGB4 Staging Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: pgb4-staging
+  labels:
+    name: pgb4-staging
+    environment: staging
+    app: pgb4-message-board
+  annotations:
+    description: "PGB4 Message Board Staging Environment"

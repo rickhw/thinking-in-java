@@ -1,0 +1,176 @@
+---
+# Service Account for Backend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pgb4-backend
+  namespace: pgb4
+  labels:
+    app: pgb4-backend
+    component: backend
+
+---
+# Service Account for Frontend
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pgb4-frontend
+  namespace: pgb4
+  labels:
+    app: pgb4-frontend
+    component: frontend
+
+---
+# Service Account for MySQL (if running in cluster)
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pgb4-mysql
+  namespace: pgb4
+  labels:
+    app: pgb4-mysql
+    component: database
+
+---
+# ClusterRole for Backend (minimal permissions)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pgb4-backend-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["deployments", "replicasets"]
+  verbs: ["get", "list", "watch"]
+
+---
+# ClusterRoleBinding for Backend
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: pgb4-backend-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: pgb4-backend-role
+subjects:
+- kind: ServiceAccount
+  name: pgb4-backend
+  namespace: pgb4
+
+---
+# Role for Frontend (namespace-scoped)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: pgb4
+  name: pgb4-frontend-role
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "list", "watch"]
+
+---
+# RoleBinding for Frontend
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pgb4-frontend-binding
+  namespace: pgb4
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pgb4-frontend-role
+subjects:
+- kind: ServiceAccount
+  name: pgb4-frontend
+  namespace: pgb4
+
+---
+# NetworkPolicy for Backend (restrict ingress)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pgb4-backend-netpol
+  namespace: pgb4
+spec:
+  podSelector:
+    matchLabels:
+      app: pgb4-backend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: pgb4-frontend
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 8080
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+    ports:
+    - protocol: TCP
+      port: 8081
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: pgb4-mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53
+
+---
+# NetworkPolicy for Frontend
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pgb4-frontend-netpol
+  namespace: pgb4
+spec:
+  podSelector:
+    matchLabels:
+      app: pgb4-frontend
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: ingress-nginx
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: pgb4-backend
+    ports:
+    - protocol: TCP
+      port: 8080
+  - to: []
+    ports:
+    - protocol: TCP
+      port: 53
+    - protocol: UDP
+      port: 53

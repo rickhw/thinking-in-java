@@ -69,26 +69,26 @@
   - 實現部署回滾功能
   - _Requirements: 2.6, 4.2, 4.4, 4.5_
 
-- [ ] 6. 創建 Kubernetes 部署配置
-- [ ] 6.1 編寫 Kubernetes Deployment 配置
+- [x] 6. 創建 Kubernetes 部署配置
+- [x] 6.1 編寫 Kubernetes Deployment 配置
   - 創建後端 Deployment 配置 `k8s/backend-deployment.yaml`
   - 創建前端 Deployment 配置 `k8s/frontend-deployment.yaml`
   - 配置 Pod 資源限制、健康檢查和滾動更新策略
   - _Requirements: 3.1, 3.4, 3.5_
 
-- [ ] 6.2 編寫 Kubernetes Service 和網絡配置
+- [x] 6.2 編寫 Kubernetes Service 和網絡配置
   - 創建 Service 配置文件 `k8s/services.yaml`
   - 創建 Ingress 配置文件 `k8s/ingress.yaml`
   - 配置負載均衡和外部訪問規則
   - _Requirements: 3.2, 3.6_
 
-- [ ] 6.3 創建 Kubernetes ConfigMap 和 Secret 配置
+- [x] 6.3 創建 Kubernetes ConfigMap 和 Secret 配置
   - 編寫 ConfigMap 配置 `k8s/configmap.yaml`
   - 編寫 Secret 配置 `k8s/secrets.yaml`
   - 實現敏感信息的安全管理
   - _Requirements: 3.3, 5.2, 5.6_
 
-- [ ] 6.4 實現 Kubernetes 部署自動化腳本
+- [x] 6.4 實現 Kubernetes 部署自動化腳本
   - 編寫 `scripts/deploy-k8s.sh` 部署腳本
   - 實現 kubectl 命令的自動化執行
   - 添加部署狀態檢查和驗證功能

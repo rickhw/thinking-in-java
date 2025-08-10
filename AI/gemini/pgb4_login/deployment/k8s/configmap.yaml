@@ -1,0 +1,281 @@
+---
+# Main Application ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgb4-config
+  namespace: pgb4
+  labels:
+    app: pgb4
+    component: config
+data:
+  # Database Configuration
+  database.url: "jdbc:mysql://pgb4-mysql-service:3306/pgb4"
+  database.pool.size: "20"
+  database.pool.min.idle: "10"
+  database.connection.timeout: "30000"
+  database.idle.timeout: "600000"
+  database.max.lifetime: "1800000"
+  
+  # Backend Service Configuration
+  backend.url: "http://pgb4-backend-service:8080"
+  server.port: "8080"
+  management.port: "8081"
+  
+  # Logging Configuration
+  logging.level: "WARN"
+  logging.app.level: "INFO"
+  logging.pattern: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  # JPA Configuration
+  jpa.ddl.auto: "validate"
+  jpa.show.sql: "false"
+  jpa.format.sql: "false"
+  
+  # Async Configuration
+  async.core.size: "10"
+  async.max.size: "20"
+  async.queue.capacity: "100"
+  
+  # Actuator Configuration
+  actuator.endpoints: "health,info,metrics,prometheus"
+  health.show.details: "never"
+  
+  # Application Information
+  app.name: "PGB4 Message Board"
+  app.version: "1.0.0"
+  app.description: "Message Board Application - Kubernetes"
+  app.environment: "production"
+
+---
+# Backend Application Properties ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgb4-backend-config
+  namespace: pgb4
+  labels:
+    app: pgb4-backend
+    component: config
+data:
+  application-k8s.properties: |
+    # Kubernetes-specific configuration
+    server.port=${SERVER_PORT:8080}
+    management.server.port=${MANAGEMENT_SERVER_PORT:8081}
+    
+    # Database Configuration
+    spring.datasource.url=${DB_URL}
+    spring.datasource.username=${DB_USERNAME}
+    spring.datasource.password=${DB_PASSWORD}
+    spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+    
+    # Connection Pool Configuration
+    spring.datasource.hikari.maximum-pool-size=${DB_POOL_SIZE:20}
+    spring.datasource.hikari.minimum-idle=${DB_POOL_MIN_IDLE:10}
+    spring.datasource.hikari.connection-timeout=${DB_CONNECTION_TIMEOUT:30000}
+    spring.datasource.hikari.idle-timeout=${DB_IDLE_TIMEOUT:600000}
+    spring.datasource.hikari.max-lifetime=${DB_MAX_LIFETIME:1800000}
+    spring.datasource.hikari.leak-detection-threshold=60000
+    
+    # JPA Configuration
+    spring.jpa.hibernate.ddl-auto=${JPA_DDL_AUTO:validate}
+    spring.jpa.show-sql=${JPA_SHOW_SQL:false}
+    spring.jpa.properties.hibernate.format_sql=${JPA_FORMAT_SQL:false}
+    spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+    spring.jpa.properties.hibernate.jdbc.batch_size=20
+    spring.jpa.properties.hibernate.order_inserts=true
+    spring.jpa.properties.hibernate.order_updates=true
+    
+    # Async Configuration
+    spring.task.execution.pool.core-size=${ASYNC_CORE_SIZE:10}
+    spring.task.execution.pool.max-size=${ASYNC_MAX_SIZE:20}
+    spring.task.execution.pool.queue-capacity=${ASYNC_QUEUE_CAPACITY:100}
+    spring.task.execution.thread-name-prefix=pgb4-k8s-async-
+    
+    # Logging Configuration
+    logging.level.root=${LOG_LEVEL:WARN}
+    logging.level.com.gtcafe.messageboard=${APP_LOG_LEVEL:INFO}
+    logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n
+    logging.file.name=/app/logs/application.log
+    logging.file.max-size=10MB
+    logging.file.max-history=30
+    
+    # Management Configuration
+    management.endpoints.web.exposure.include=${ACTUATOR_ENDPOINTS:health,info,metrics,prometheus}
+    management.endpoint.health.show-details=${HEALTH_SHOW_DETAILS:never}
+    management.endpoint.health.show-components=always
+    management.health.db.enabled=true
+    management.health.diskspace.enabled=true
+    management.metrics.export.prometheus.enabled=true
+    
+    # Security Configuration
+    server.servlet.session.cookie.secure=true
+    server.servlet.session.cookie.http-only=true
+    server.servlet.session.cookie.same-site=strict
+    
+    # Application Information
+    info.app.name=${APP_NAME:PGB4 Message Board}
+    info.app.version=${APP_VERSION:1.0.0}
+    info.app.description=${APP_DESCRIPTION:Message Board Application - Kubernetes}
+    info.app.environment=kubernetes
+    info.kubernetes.namespace=${POD_NAMESPACE:pgb4}
+    info.kubernetes.pod=${POD_NAME:unknown}
+    info.kubernetes.node=${NODE_NAME:unknown}
+
+---
+# Frontend Nginx ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgb4-frontend-config
+  namespace: pgb4
+  labels:
+    app: pgb4-frontend
+    component: config
+data:
+  nginx.conf: |
+    user nginx-app;
+    worker_processes auto;
+    error_log /var/log/nginx/error.log warn;
+    pid /var/run/nginx.pid;
+    
+    events {
+        worker_connections 1024;
+        use epoll;
+        multi_accept on;
+    }
+    
+    http {
+        include /etc/nginx/mime.types;
+        default_type application/octet-stream;
+        
+        # Logging format
+        log_format main '$remote_addr - $remote_user [$time_local] "$request" '
+                        '$status $body_bytes_sent "$http_referer" '
+                        '"$http_user_agent" "$http_x_forwarded_for"';
+        
+        access_log /var/log/nginx/access.log main;
+        
+        # Performance optimizations
+        sendfile on;
+        tcp_nopush on;
+        tcp_nodelay on;
+        keepalive_timeout 65;
+        types_hash_max_size 2048;
+        client_max_body_size 16M;
+        
+        # Security headers
+        server_tokens off;
+        
+        # Gzip compression
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_proxied any;
+        gzip_comp_level 6;
+        gzip_types
+            text/plain
+            text/css
+            text/xml
+            text/javascript
+            application/json
+            application/javascript
+            application/xml+rss
+            application/atom+xml
+            image/svg+xml;
+        
+        # Rate limiting
+        limit_req_zone $binary_remote_addr zone=api:10m rate=10r/s;
+        limit_req_zone $binary_remote_addr zone=login:10m rate=5r/m;
+        
+        server {
+            listen 80;
+            server_name _;
+            root /usr/share/nginx/html;
+            index index.html;
+            
+            # Security headers
+            add_header X-Frame-Options "SAMEORIGIN" always;
+            add_header X-Content-Type-Options "nosniff" always;
+            add_header X-XSS-Protection "1; mode=block" always;
+            add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+            
+            # Health check endpoint
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+            
+            # API proxy with rate limiting
+            location /api/ {
+                limit_req zone=api burst=20 nodelay;
+                proxy_pass ${BACKEND_URL}/;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+                proxy_connect_timeout 30s;
+                proxy_send_timeout 30s;
+                proxy_read_timeout 30s;
+            }
+            
+            # Login endpoint with stricter rate limiting
+            location /api/login {
+                limit_req zone=login burst=5 nodelay;
+                proxy_pass ${BACKEND_URL}/login;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+            }
+            
+            # Static files with caching
+            location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+                expires 1y;
+                add_header Cache-Control "public, immutable";
+                add_header X-Content-Type-Options "nosniff" always;
+            }
+            
+            # SPA routing - serve index.html for all routes
+            location / {
+                try_files $uri $uri/ /index.html;
+                add_header Cache-Control "no-cache, no-store, must-revalidate";
+                add_header Pragma "no-cache";
+                add_header Expires "0";
+            }
+            
+            # Error pages
+            error_page 404 /index.html;
+            error_page 500 502 503 504 /50x.html;
+            location = /50x.html {
+                root /usr/share/nginx/html;
+            }
+        }
+    }
+
+---
+# Environment-specific ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgb4-env-config
+  namespace: pgb4
+  labels:
+    app: pgb4
+    component: environment
+data:
+  # Environment variables
+  NODE_ENV: "production"
+  SPRING_PROFILES_ACTIVE: "prod,k8s"
+  TZ: "UTC"
+  
+  # Feature flags
+  FEATURE_REDIS_ENABLED: "false"
+  FEATURE_METRICS_ENABLED: "true"
+  FEATURE_TRACING_ENABLED: "false"
+  
+  # Performance tuning
+  NGINX_WORKER_PROCESSES: "auto"
+  NGINX_WORKER_CONNECTIONS: "1024"
+  NGINX_CLIENT_MAX_BODY_SIZE: "16M"

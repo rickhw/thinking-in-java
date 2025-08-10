@@ -1,0 +1,113 @@
+---
+# Backend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgb4-backend-service
+  namespace: pgb4
+  labels:
+    app: pgb4-backend
+    component: backend
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  selector:
+    app: pgb4-backend
+  sessionAffinity: None
+
+---
+# Frontend Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgb4-frontend-service
+  namespace: pgb4
+  labels:
+    app: pgb4-frontend
+    component: frontend
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: pgb4-frontend
+  sessionAffinity: None
+
+---
+# MySQL Service (if running MySQL in cluster)
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgb4-mysql-service
+  namespace: pgb4
+  labels:
+    app: pgb4-mysql
+    component: database
+spec:
+  type: ClusterIP
+  ports:
+  - name: mysql
+    port: 3306
+    targetPort: 3306
+    protocol: TCP
+  selector:
+    app: pgb4-mysql
+  sessionAffinity: None
+
+---
+# Redis Service (if using Redis)
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgb4-redis-service
+  namespace: pgb4
+  labels:
+    app: pgb4-redis
+    component: cache
+spec:
+  type: ClusterIP
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+    protocol: TCP
+  selector:
+    app: pgb4-redis
+  sessionAffinity: None
+
+---
+# Headless Service for Backend (for StatefulSet if needed)
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgb4-backend-headless
+  namespace: pgb4
+  labels:
+    app: pgb4-backend
+    component: backend
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: http
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: management
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  selector:
+    app: pgb4-backend
+  publishNotReadyAddresses: true
