@@ -1,0 +1,42 @@
+[Unit]
+Description=PGB4 Message Board Frontend Service (Nginx)
+Documentation=https://github.com/your-org/pgb4_login
+After=network.target pgb4-backend.service
+Wants=pgb4-backend.service
+Requires=network.target
+
+[Service]
+Type=forking
+User=nginx
+Group=nginx
+PIDFile=/var/run/nginx-pgb4.pid
+ExecStartPre=/usr/sbin/nginx -t -c /opt/pgb4/frontend/nginx.conf
+ExecStart=/usr/sbin/nginx -c /opt/pgb4/frontend/nginx.conf
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -QUIT $MAINPID
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=30
+Restart=always
+RestartSec=5
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Environment variables for nginx template substitution
+Environment=BACKEND_URL=http://localhost:8080
+Environment=FRONTEND_PORT=80
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/nginx /var/cache/nginx /var/run
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pgb4-frontend
+
+[Install]
+WantedBy=multi-user.target

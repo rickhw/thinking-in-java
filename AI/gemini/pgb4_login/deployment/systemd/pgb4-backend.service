@@ -1,0 +1,46 @@
+[Unit]
+Description=PGB4 Message Board Backend Service
+Documentation=https://github.com/your-org/pgb4_login
+After=network.target mysql.service
+Wants=mysql.service
+Requires=network.target
+
+[Service]
+Type=exec
+User=pgb4
+Group=pgb4
+WorkingDirectory=/opt/pgb4/backend
+ExecStart=/usr/bin/java -jar /opt/pgb4/backend/pgb4-backend.jar --spring.profiles.active=prod
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Environment variables
+Environment=JAVA_OPTS="-Xms512m -Xmx1024m -XX:+UseG1GC"
+Environment=SPRING_PROFILES_ACTIVE=prod
+Environment=SERVER_PORT=8080
+Environment=LOG_LEVEL=INFO
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/pgb4/backend/logs /var/log/pgb4
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=pgb4-backend
+
+# Health check (using systemd-notify if implemented)
+WatchdogSec=60
+NotifyAccess=main
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=PGB4 Message Board Application Stack
+Documentation=https://github.com/your-org/pgb4_login
+Requires=pgb4-backend.service pgb4-frontend.service
+After=pgb4-backend.service pgb4-frontend.service
+Conflicts=shutdown.target
+
+[Install]
+WantedBy=multi-user.target

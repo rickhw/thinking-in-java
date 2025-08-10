@@ -40,14 +40,14 @@
   - 添加 Nginx 健康檢查配置
   - _Requirements: 2.1, 2.4, 3.1_
 
-- [ ] 4. 創建 SystemD 服務配置和部署腳本
-- [ ] 4.1 編寫 SystemD 服務配置文件
+- [x] 4. 創建 SystemD 服務配置和部署腳本
+- [x] 4.1 編寫 SystemD 服務配置文件
   - 創建 `pgb4-backend.service` 配置文件
   - 創建 `pgb4-frontend.service` 配置文件（如果需要）
   - 配置服務依賴關係、自動重啟和日誌管理
   - _Requirements: 1.1, 1.2, 1.4, 1.5_
 
-- [ ] 4.2 實現 SystemD 部署自動化腳本
+- [x] 4.2 實現 SystemD 部署自動化腳本
   - 編寫 `scripts/deploy-systemd.sh` 部署腳本
   - 實現服務安裝、啟動和狀態檢查功能
   - 添加部署前的環境檢查和驗證
