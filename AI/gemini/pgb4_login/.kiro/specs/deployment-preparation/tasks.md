@@ -6,20 +6,20 @@
   - 創建 `config/` 目錄用於存放環境配置文件
   - _Requirements: 4.3, 5.1_
 
-- [ ] 2. 實現後端 Spring Boot 應用的部署準備
-- [ ] 2.1 配置後端應用的環境變數支持
+- [x] 2. 實現後端 Spring Boot 應用的部署準備
+- [x] 2.1 配置後端應用的環境變數支持
   - 修改 `application.properties` 支持環境變數覆蓋
   - 添加生產環境配置文件 `application-prod.properties`
   - 實現配置驗證和錯誤處理邏輯
   - _Requirements: 5.1, 5.4, 5.5_
 
-- [ ] 2.2 增強後端健康檢查和監控端點
+- [x] 2.2 增強後端健康檢查和監控端點
   - 配置 Spring Boot Actuator 健康檢查端點
   - 添加自定義健康檢查指標（數據庫連接、外部服務）
   - 實現就緒檢查和存活檢查端點
   - _Requirements: 1.5, 2.5, 3.4_
 
-- [ ] 2.3 創建後端 Dockerfile 和構建優化
+- [x] 2.3 創建後端 Dockerfile 和構建優化
   - 編寫多階段 Dockerfile，使用 OpenJDK 17 基礎鏡像
   - 配置非 root 用戶運行容器
   - 實現 Docker 健康檢查配置

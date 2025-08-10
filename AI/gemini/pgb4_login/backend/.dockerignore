@@ -1,0 +1,49 @@
+# Ignore build artifacts
+build/
+target/
+bin/
+
+# Ignore IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore version control
+.git/
+.gitignore
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Ignore test data
+TEST_DATA_README.md
+generate_*.sh
+cleanup_test_data.sh
+setup_test_data.sh
+
+# Ignore documentation
+HELP.md
+README.md
+
+# Ignore Gradle daemon files
+.gradle/
+
+# Keep only necessary files for build
+!gradlew
+!gradle/
+!build.gradle
+!settings.gradle
+!src/

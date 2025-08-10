@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: pgb4-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-medusa}
+      MYSQL_DATABASE: ${DB_NAME:-pgb}
+      MYSQL_USER: ${DB_USERNAME:-pgb_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-pgb_password}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-db:/docker-entrypoint-initdb.d
+    networks:
+      - pgb4-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 60s
+
+  # Backend Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pgb4-backend
+    environment:
+      # Database configuration
+      DB_URL: jdbc:mysql://mysql:3306/${DB_NAME:-pgb}
+      DB_USERNAME: ${DB_USERNAME:-pgb_user}
+      DB_PASSWORD: ${DB_PASSWORD:-pgb_password}
+      
+      # Server configuration
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      
+      # JPA configuration
+      JPA_DDL_AUTO: update
+      JPA_SHOW_SQL: "false"
+      
+      # Logging configuration
+      LOG_LEVEL: INFO
+      APP_LOG_LEVEL: INFO
+      
+      # Health check configuration
+      ACTUATOR_ENDPOINTS: health,info,metrics
+      HEALTH_SHOW_DETAILS: when-authorized
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - pgb4-network
+    volumes:
+      - backend_logs:/app/logs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/live"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 120s
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
+    driver: local
+  backend_logs:
+    driver: local
+
+networks:
+  pgb4-network:
+    driver: bridge
