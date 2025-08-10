@@ -1,0 +1,266 @@
+# Docker Compose configuration for PGB4 Message Board
+# Complete stack: Frontend (React) + Backend (Spring Boot) + Database (MySQL)
+version: '3.8'
+
+services:
+  # MySQL Database Service
+  mysql:
+    image: mysql:8.0
+    container_name: pgb4-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-medusa}
+      MYSQL_DATABASE: ${DB_NAME:-pgb}
+      MYSQL_USER: ${DB_USERNAME:-pgb_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-pgb_password}
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - mysql_config:/etc/mysql/conf.d
+      - ./config/mysql/init:/docker-entrypoint-initdb.d:ro
+    networks:
+      - pgb4-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-medusa}"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 60s
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=256M
+      --max-connections=200
+
+  # Backend Spring Boot Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+      args:
+        BUILD_VERSION: ${BUILD_VERSION:-latest}
+    container_name: pgb4-backend
+    restart: unless-stopped
+    environment:
+      # Database Configuration
+      DB_URL: jdbc:mysql://mysql:3306/${DB_NAME:-pgb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: ${DB_USERNAME:-pgb_user}
+      DB_PASSWORD: ${DB_PASSWORD:-pgb_password}
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-20}
+      DB_POOL_MIN_IDLE: ${DB_POOL_MIN_IDLE:-10}
+      
+      # Server Configuration
+      SERVER_PORT: 8080
+      SPRING_PROFILES_ACTIVE: prod
+      CONTEXT_PATH: ${CONTEXT_PATH:-}
+      
+      # JPA Configuration
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO:-validate}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL:-false}
+      JPA_FORMAT_SQL: false
+      
+      # Logging Configuration
+      LOG_LEVEL: ${LOG_LEVEL:-WARN}
+      APP_LOG_LEVEL: ${APP_LOG_LEVEL:-INFO}
+      LOG_FILE: /app/logs/application.log
+      
+      # Health Check Configuration
+      ACTUATOR_ENDPOINTS: health,info,metrics
+      HEALTH_SHOW_DETAILS: never
+      HEALTH_DB_ENABLED: true
+      
+      # Application Information
+      APP_NAME: "PGB4 Message Board"
+      APP_VERSION: ${BUILD_VERSION:-1.0.0}
+      APP_DESCRIPTION: "Message Board Application - Docker"
+      
+      # Performance Configuration
+      ASYNC_CORE_SIZE: ${ASYNC_CORE_SIZE:-10}
+      ASYNC_MAX_SIZE: ${ASYNC_MAX_SIZE:-20}
+      ASYNC_QUEUE_CAPACITY: ${ASYNC_QUEUE_CAPACITY:-100}
+      
+      # JVM Configuration
+      JAVA_OPTS: >-
+        -server
+        -Xms${JVM_MIN_HEAP:-512m}
+        -Xmx${JVM_MAX_HEAP:-1024m}
+        -XX:+UseG1GC
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+        -XX:+OptimizeStringConcat
+        -XX:+UseStringDeduplication
+        -XX:+ExitOnOutOfMemoryError
+        -Djava.security.egd=file:/dev/./urandom
+        -Djava.awt.headless=true
+    ports:
+      - "${SERVER_PORT:-8080}:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - pgb4-network
+    volumes:
+      - backend_logs:/app/logs
+      - backend_data:/app/data
+      - backend_tmp:/app/tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health/live"]
+      timeout: 15s
+      retries: 5
+      interval: 30s
+      start_period: 120s
+    deploy:
+      resources:
+        limits:
+          memory: ${BACKEND_MEMORY_LIMIT:-1.5G}
+          cpus: ${BACKEND_CPU_LIMIT:-1.0}
+        reservations:
+          memory: ${BACKEND_MEMORY_RESERVATION:-512M}
+          cpus: ${BACKEND_CPU_RESERVATION:-0.5}
+
+  # Frontend React Service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        BUILD_MODE: production
+        VITE_API_BASE_URL: ${FRONTEND_API_URL:-http://localhost:8080/api/v1}
+        VITE_APP_NAME: "PGB4 Message Board"
+        VITE_APP_VERSION: ${BUILD_VERSION:-1.0.0}
+        VITE_APP_ENV: production
+    container_name: pgb4-frontend
+    restart: unless-stopped
+    environment:
+      # Backend URL for nginx proxy
+      BACKEND_URL: http://backend:8080
+      
+      # Nginx Configuration
+      NGINX_WORKER_PROCESSES: ${NGINX_WORKERS:-auto}
+      NGINX_WORKER_CONNECTIONS: ${NGINX_CONNECTIONS:-1024}
+      NGINX_CLIENT_MAX_BODY_SIZE: ${NGINX_MAX_BODY_SIZE:-16M}
+    ports:
+      - "${FRONTEND_PORT:-3000}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - pgb4-network
+    volumes:
+      - frontend_logs:/var/log/nginx
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "--timeout=5", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          memory: ${FRONTEND_MEMORY_LIMIT:-256M}
+          cpus: ${FRONTEND_CPU_LIMIT:-0.5}
+        reservations:
+          memory: ${FRONTEND_MEMORY_RESERVATION:-128M}
+          cpus: ${FRONTEND_CPU_RESERVATION:-0.25}
+
+  # Optional: Redis for session storage and caching
+  redis:
+    image: redis:7-alpine
+    container_name: pgb4-redis
+    restart: unless-stopped
+    profiles:
+      - with-redis
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    networks:
+      - pgb4-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    command: redis-server /usr/local/etc/redis/redis.conf
+    deploy:
+      resources:
+        limits:
+          memory: ${REDIS_MEMORY_LIMIT:-128M}
+          cpus: ${REDIS_CPU_LIMIT:-0.25}
+
+  # Optional: Nginx Load Balancer (for multiple backend instances)
+  nginx-lb:
+    image: nginx:1.25-alpine
+    container_name: pgb4-nginx-lb
+    restart: unless-stopped
+    profiles:
+      - with-loadbalancer
+    ports:
+      - "${LB_PORT:-80}:80"
+      - "${LB_SSL_PORT:-443}:443"
+    volumes:
+      - ./config/nginx/nginx-lb.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    networks:
+      - pgb4-network
+    depends_on:
+      - frontend
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Named Volumes for Data Persistence
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_DIR:-./data}/mysql
+  mysql_config:
+    driver: local
+  backend_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${LOGS_DIR:-./logs}/backend
+  backend_data:
+    driver: local
+  backend_tmp:
+    driver: local
+  frontend_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${LOGS_DIR:-./logs}/frontend
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_DIR:-./data}/redis
+  nginx_logs:
+    driver: local
+
+# Networks
+networks:
+  pgb4-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${NETWORK_SUBNET:-172.20.0.0/16}
+    driver_opts:
+      com.docker.network.bridge.name: pgb4-bridge

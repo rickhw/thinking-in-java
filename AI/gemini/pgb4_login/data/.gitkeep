@@ -1,0 +1,2 @@
+# Keep data directory in git
+# This directory will contain persistent data for Docker containers

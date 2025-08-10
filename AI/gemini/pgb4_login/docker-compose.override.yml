@@ -1,0 +1,115 @@
+# Docker Compose Override for Development Environment
+# This file is automatically loaded by docker-compose and overrides settings in docker-compose.yml
+version: '3.8'
+
+services:
+  # Development overrides for MySQL
+  mysql:
+    environment:
+      MYSQL_ROOT_PASSWORD: medusa
+      MYSQL_DATABASE: pgb
+      MYSQL_USER: pgb_user
+      MYSQL_PASSWORD: pgb_password
+    ports:
+      - "3306:3306"
+    volumes:
+      # Use local directory for development data persistence
+      - ./data/mysql:/var/lib/mysql
+      - ./config/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
+
+  # Development overrides for Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    environment:
+      # Development database settings
+      JPA_DDL_AUTO: update
+      JPA_SHOW_SQL: true
+      JPA_FORMAT_SQL: true
+      
+      # Development logging
+      LOG_LEVEL: DEBUG
+      APP_LOG_LEVEL: DEBUG
+      
+      # Development actuator settings
+      ACTUATOR_ENDPOINTS: health,info,metrics,env,configprops,beans
+      HEALTH_SHOW_DETAILS: always
+      
+      # Development JVM settings
+      JAVA_OPTS: >-
+        -server
+        -Xms256m
+        -Xmx512m
+        -XX:+UseG1GC
+        -XX:+UseContainerSupport
+        -Djava.security.egd=file:/dev/./urandom
+        -Djava.awt.headless=true
+        -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+    ports:
+      - "8080:8080"
+      - "5005:5005"  # Debug port
+    volumes:
+      # Mount source code for hot reload (if using spring-boot-devtools)
+      - ./backend/src:/app/src:ro
+      - ./backend/build:/app/build
+      - ./logs/backend:/app/logs
+    restart: "no"  # Don't auto-restart in development
+
+  # Development overrides for Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+      args:
+        VITE_API_BASE_URL: http://localhost:8080/api/v1
+        VITE_APP_ENV: development
+    environment:
+      NODE_ENV: development
+      BACKEND_URL: http://backend:8080
+    ports:
+      - "3000:80"
+      - "3001:3001"  # Vite dev server port
+    volumes:
+      # Mount source code for hot reload
+      - ./frontend/src:/app/src:ro
+      - ./frontend/public:/app/public:ro
+      - ./logs/frontend:/var/log/nginx
+    restart: "no"  # Don't auto-restart in development
+
+  # Development Redis (always enabled in dev)
+  redis:
+    profiles: []  # Remove profile restriction for development
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+
+# Development-specific volumes
+volumes:
+  mysql_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/mysql
+  backend_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs/backend
+  frontend_logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./logs/frontend
+  redis_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./data/redis

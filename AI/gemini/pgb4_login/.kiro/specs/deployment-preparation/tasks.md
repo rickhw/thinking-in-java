@@ -54,15 +54,15 @@
   - 實現部署後的服務健康檢查
   - _Requirements: 1.3, 1.6, 4.1, 4.5_
 
-- [ ] 5. 創建 Docker Compose 配置和容器編排
-- [ ] 5.1 編寫 Docker Compose 配置文件
+- [x] 5. 創建 Docker Compose 配置和容器編排
+- [x] 5.1 編寫 Docker Compose 配置文件
   - 創建 `docker-compose.yml` 定義前後端服務
   - 配置服務間網絡通信和依賴關係
   - 實現環境變數和卷掛載配置
   - 添加 MySQL 數據庫服務配置
   - _Requirements: 2.2, 2.3, 2.4_
 
-- [ ] 5.2 實現 Docker 部署自動化腳本
+- [x] 5.2 實現 Docker 部署自動化腳本
   - 編寫 `scripts/deploy-docker.sh` 部署腳本
   - 實現鏡像構建、推送和部署功能
   - 添加容器健康檢查和故障恢復邏輯

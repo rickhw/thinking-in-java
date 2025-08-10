@@ -1,0 +1,240 @@
+# Docker Compose Configuration for Production Environment
+# Use with: docker-compose -f docker-compose.yml -f docker-compose.prod.yml up
+version: '3.8'
+
+services:
+  # Production MySQL Configuration
+  mysql:
+    restart: always
+    environment:
+      # Production should use secrets or external configuration
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/mysql_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/mysql_password
+    volumes:
+      # Use named volumes for production data persistence
+      - mysql_data_prod:/var/lib/mysql
+      - mysql_config_prod:/etc/mysql/conf.d
+      - ./config/mysql/my.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    secrets:
+      - mysql_root_password
+      - mysql_password
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+
+  # Production Backend Configuration
+  backend:
+    restart: always
+    environment:
+      # Production JPA settings
+      JPA_DDL_AUTO: validate
+      JPA_SHOW_SQL: false
+      JPA_FORMAT_SQL: false
+      
+      # Production logging
+      LOG_LEVEL: WARN
+      APP_LOG_LEVEL: INFO
+      LOG_FILE: /app/logs/application.log
+      
+      # Production actuator settings
+      ACTUATOR_ENDPOINTS: health,info,metrics,prometheus
+      HEALTH_SHOW_DETAILS: never
+      
+      # Production JVM settings
+      JAVA_OPTS: >-
+        -server
+        -Xms1g
+        -Xmx2g
+        -XX:+UseG1GC
+        -XX:+UseContainerSupport
+        -XX:MaxRAMPercentage=75.0
+        -XX:+OptimizeStringConcat
+        -XX:+UseStringDeduplication
+        -XX:+ExitOnOutOfMemoryError
+        -XX:+HeapDumpOnOutOfMemoryError
+        -XX:HeapDumpPath=/app/logs/
+        -Djava.security.egd=file:/dev/./urandom
+        -Djava.awt.headless=true
+        
+      # Production database pool settings
+      DB_POOL_SIZE: 30
+      DB_POOL_MIN_IDLE: 15
+      DB_CONNECTION_TIMEOUT: 30000
+      DB_IDLE_TIMEOUT: 600000
+      DB_MAX_LIFETIME: 1800000
+      
+      # Production async settings
+      ASYNC_CORE_SIZE: 20
+      ASYNC_MAX_SIZE: 40
+      ASYNC_QUEUE_CAPACITY: 200
+    volumes:
+      - backend_logs_prod:/app/logs
+      - backend_data_prod:/app/data
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 2.5G
+          cpus: '2.0'
+        reservations:
+          memory: 1G
+          cpus: '1.0'
+      restart_policy:
+        condition: any
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 30s
+        failure_action: rollback
+        monitor: 60s
+        order: start-first
+
+  # Production Frontend Configuration
+  frontend:
+    restart: always
+    environment:
+      # Production nginx settings
+      NGINX_WORKER_PROCESSES: auto
+      NGINX_WORKER_CONNECTIONS: 2048
+      NGINX_CLIENT_MAX_BODY_SIZE: 32M
+    volumes:
+      - frontend_logs_prod:/var/log/nginx
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
+        reservations:
+          memory: 256M
+          cpus: '0.5'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+        monitor: 30s
+
+  # Production Redis Configuration
+  redis:
+    restart: always
+    profiles: []  # Always enabled in production
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/redis_password
+    volumes:
+      - redis_data_prod:/data
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+    secrets:
+      - redis_password
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+  # Production Load Balancer
+  nginx-lb:
+    restart: always
+    profiles: []  # Always enabled in production
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./config/nginx/nginx-lb.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/ssl:/etc/nginx/ssl:ro
+      - nginx_logs_prod:/var/log/nginx
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+      restart_policy:
+        condition: any
+        delay: 5s
+        max_attempts: 3
+
+# Production Secrets
+secrets:
+  mysql_root_password:
+    external: true
+  mysql_password:
+    external: true
+  redis_password:
+    external: true
+
+# Production Volumes
+volumes:
+  mysql_data_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/pgb4/mysql
+  mysql_config_prod:
+    driver: local
+  backend_logs_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/log/pgb4/backend
+  backend_data_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/pgb4/backend
+  frontend_logs_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/log/pgb4/frontend
+  redis_data_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/lib/pgb4/redis
+  nginx_logs_prod:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /var/log/pgb4/nginx
+
+# Production Networks with custom configuration
+networks:
+  pgb4-network:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: pgb4-prod-bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

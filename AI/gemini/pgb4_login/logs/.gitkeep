@@ -1,0 +1,2 @@
+# Keep logs directory in git
+# This directory will contain log files from Docker containers
