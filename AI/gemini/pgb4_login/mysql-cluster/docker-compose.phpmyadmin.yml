@@ -1,0 +1,58 @@
+services:
+  # phpMyAdmin for MySQL Master
+  phpmyadmin-master:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-master
+    hostname: phpmyadmin-master
+    environment:
+      PMA_HOST: mysql-master
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"
+    networks:
+      - mysql-cluster
+    restart: unless-stopped
+
+  # phpMyAdmin for MySQL Slave1
+  phpmyadmin-slave1:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-slave1
+    hostname: phpmyadmin-slave1
+    environment:
+      PMA_HOST: mysql-slave1
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+      PMA_ARBITRARY: 1
+    ports:
+      - "8081:80"
+    networks:
+      - mysql-cluster
+    restart: unless-stopped
+
+  # phpMyAdmin for MySQL Slave2
+  phpmyadmin-slave2:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-slave2
+    hostname: phpmyadmin-slave2
+    environment:
+      PMA_HOST: mysql-slave2
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+      PMA_ARBITRARY: 1
+    ports:
+      - "8082:80"
+    networks:
+      - mysql-cluster
+    restart: unless-stopped
+
+networks:
+  mysql-cluster:
+    external: true

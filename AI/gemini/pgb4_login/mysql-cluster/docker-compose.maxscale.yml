@@ -11,7 +11,7 @@ services:
       - "4008:4008"  # Read Connection Router
       - "8989:8989"  # MaxScale Admin Interface
     networks:
-      - pgb4_login_mysql-cluster
+      - mysql-cluster
     restart: unless-stopped
     command: ["maxscale", "--nodaemon", "--user=maxscale", "--config=/etc/maxscale.cnf"]
     environment:
@@ -19,5 +19,5 @@ services:
       - MAXSCALE_PASSWORD=mariadb
 
 networks:
-  pgb4_login_mysql-cluster:
+  mysql-cluster:
     external: true
