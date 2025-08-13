@@ -1,0 +1,125 @@
+services:
+  # MySQL Master Node
+  mysql-master:
+    image: mysql:8.0
+    container_name: mysql-master
+    hostname: mysql-master
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    command: >
+      --server-id=1
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --log-slave-updates=ON
+      --master-info-repository=TABLE
+      --relay-log-info-repository=TABLE
+      --transaction-write-set-extraction=XXHASH64
+      --binlog-checksum=NONE
+      --relay-log-recovery=ON
+      --log-bin-trust-function-creators=1
+    volumes:
+      - mysql_master_data:/var/lib/mysql
+      - ./config/mysql/master:/etc/mysql/conf.d
+    ports:
+      - "3306:3306"
+    networks:
+      - mysql-cluster
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      timeout: 20s
+      retries: 10
+
+  # MySQL Slave Node 1
+  mysql-slave1:
+    image: mysql:8.0
+    container_name: mysql-slave1
+    hostname: mysql-slave1
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    command: >
+      --server-id=2
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --log-slave-updates=ON
+      --master-info-repository=TABLE
+      --relay-log-info-repository=TABLE
+      --transaction-write-set-extraction=XXHASH64
+      --binlog-checksum=NONE
+      --relay-log-recovery=ON
+      --log-bin-trust-function-creators=1
+      --read-only=1
+    volumes:
+      - mysql_slave1_data:/var/lib/mysql
+      - ./config/mysql/slave1:/etc/mysql/conf.d
+    ports:
+      - "3307:3306"
+    networks:
+      - mysql-cluster
+    depends_on:
+      mysql-master:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      timeout: 20s
+      retries: 10
+
+  # MySQL Slave Node 2
+  mysql-slave2:
+    image: mysql:8.0
+    container_name: mysql-slave2
+    hostname: mysql-slave2
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: testpass
+    command: >
+      --server-id=3
+      --log-bin=mysql-bin
+      --binlog-format=ROW
+      --gtid-mode=ON
+      --enforce-gtid-consistency=ON
+      --log-slave-updates=ON
+      --master-info-repository=TABLE
+      --relay-log-info-repository=TABLE
+      --transaction-write-set-extraction=XXHASH64
+      --binlog-checksum=NONE
+      --relay-log-recovery=ON
+      --log-bin-trust-function-creators=1
+      --read-only=1
+    volumes:
+      - mysql_slave2_data:/var/lib/mysql
+      - ./config/mysql/slave2:/etc/mysql/conf.d
+    ports:
+      - "3308:3306"
+    networks:
+      - mysql-cluster
+    depends_on:
+      mysql-master:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      timeout: 20s
+      retries: 10
+
+volumes:
+  mysql_master_data:
+  mysql_slave1_data:
+  mysql_slave2_data:
+
+networks:
+  mysql-cluster:
+    driver: bridge

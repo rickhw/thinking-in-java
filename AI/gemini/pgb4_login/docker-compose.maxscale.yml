@@ -1,0 +1,23 @@
+services:
+  # MaxScale Proxy
+  maxscale:
+    image: mariadb/maxscale:latest
+    container_name: maxscale
+    hostname: maxscale
+    volumes:
+      - ./config/maxscale/maxscale.cnf:/etc/maxscale.cnf
+    ports:
+      - "4006:4006"  # Read/Write Split Router
+      - "4008:4008"  # Read Connection Router
+      - "8989:8989"  # MaxScale Admin Interface
+    networks:
+      - pgb4_login_mysql-cluster
+    restart: unless-stopped
+    command: ["maxscale", "--nodaemon", "--user=maxscale", "--config=/etc/maxscale.cnf"]
+    environment:
+      - MAXSCALE_USER=admin
+      - MAXSCALE_PASSWORD=mariadb
+
+networks:
+  pgb4_login_mysql-cluster:
+    external: true

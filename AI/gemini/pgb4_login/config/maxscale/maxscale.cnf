@@ -1,0 +1,81 @@
+# MaxScale configuration file
+
+[maxscale]
+threads=auto
+log_warning=1
+log_notice=1
+log_info=1
+log_debug=1
+admin_host=0.0.0.0
+admin_port=8989
+admin_auth=true
+admin_log_auth_failures=true
+
+# Servers configuration
+[mysql-master]
+type=server
+address=mysql-master
+port=3306
+protocol=MariaDBBackend
+
+[mysql-slave1]
+type=server
+address=mysql-slave1
+port=3306
+protocol=MariaDBBackend
+
+[mysql-slave2]
+type=server
+address=mysql-slave2
+port=3306
+protocol=MariaDBBackend
+
+# Monitor for the Master-Slave setup
+[MySQL-Monitor]
+type=monitor
+module=mariadbmon
+servers=mysql-master,mysql-slave1,mysql-slave2
+user=maxscale
+password=maxscale_password
+monitor_interval=2000ms
+failcount=5
+failover_timeout=90s
+switchover_timeout=90s
+replication_user=replication
+replication_password=replication_password
+auto_failover=true
+auto_rejoin=true
+
+# Read/Write Split Service
+[Read-Write-Service]
+type=service
+router=readwritesplit
+servers=mysql-master,mysql-slave1,mysql-slave2
+user=maxscale
+password=maxscale_password
+master_failure_mode=fail_on_write
+max_slave_connections=255
+max_replication_lag=3s
+
+# Read Connection Router Service
+[Read-Connection-Service]
+type=service
+router=readconnroute
+router_options=slave
+servers=mysql-slave1,mysql-slave2
+user=maxscale
+password=maxscale_password
+
+# Read/Write Split Listener
+[Read-Write-Listener]
+type=listener
+service=Read-Write-Service
+protocol=MariaDBClient
+port=4006
+
+# Read Connection Listener
+[Read-Connection-Listener]
+type=listener
+service=Read-Connection-Service
+protocol=MariaDBClient
+port=4008
