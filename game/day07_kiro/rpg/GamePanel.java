@@ -9,7 +9,7 @@ import java.awt.*;
 public class GamePanel extends JPanel implements Runnable {
 
     // Game settings
-    private final int FPS = Config.FPS;
+    private final int FPS = Config.TARGET_FPS;
 
     // System
     private Thread gameThread;

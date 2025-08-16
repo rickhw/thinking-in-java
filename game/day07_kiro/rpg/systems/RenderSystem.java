@@ -9,19 +9,19 @@ import java.awt.image.BufferedImage;
 import java.awt.geom.AffineTransform;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 
 /**
  * System responsible for rendering entities with render components.
  * Includes frustum culling, layer management, and render optimization.
+ * Integrates with CameraSystem for viewport management.
  */
-public class RenderSystem extends GameSystem {
+public class RenderSystem extends GameSystem implements EventListener<CameraEvent> {
     private Rectangle viewport;
-    private List<RenderableEntity> renderQueue;
-    
-    // Camera offset for world rendering
-    private float cameraX = 0;
-    private float cameraY = 0;
+    private RenderQueue renderQueue;
+    private Camera camera;
+    private DebugRenderer debugRenderer;
     
     // Culling settings
     private boolean enableCulling = true;
@@ -29,8 +29,14 @@ public class RenderSystem extends GameSystem {
     
     @Override
     public void initialize() {
-        this.renderQueue = new ArrayList<>();
+        this.renderQueue = new RenderQueue();
+        this.debugRenderer = new DebugRenderer();
         this.viewport = new Rectangle(0, 0, 800, 600); // Default viewport size
+        
+        // Subscribe to camera events
+        if (eventBus != null) {
+            eventBus.subscribe(CameraEvent.class, this);
+        }
     }
     
     /**
@@ -41,11 +47,20 @@ public class RenderSystem extends GameSystem {
     }
     
     /**
-     * Set camera position for world-to-screen coordinate conversion
+     * Set the camera for rendering
      */
-    public void setCameraPosition(float x, float y) {
-        this.cameraX = x;
-        this.cameraY = y;
+    public void setCamera(Camera camera) {
+        this.camera = camera;
+        if (camera != null) {
+            this.viewport = new Rectangle(0, 0, camera.getViewportWidth(), camera.getViewportHeight());
+        }
+    }
+    
+    /**
+     * Get the current camera
+     */
+    public Camera getCamera() {
+        return camera;
     }
     
     /**
@@ -67,7 +82,7 @@ public class RenderSystem extends GameSystem {
         if (!isEnabled()) return;
         
         // Update render components (animations, etc.)
-        List<Entity> renderableEntities = entityManager.getEntitiesWith(RenderComponent.class);
+        List<Entity> renderableEntities = entityManager.getEntitiesWithComponent(RenderComponent.class);
         
         for (Entity entity : renderableEntities) {
             RenderComponent render = entity.getComponent(RenderComponent.class);
@@ -89,18 +104,24 @@ public class RenderSystem extends GameSystem {
         // Collect renderable entities
         collectRenderableEntities();
         
-        // Sort by layer (lower layers render first)
-        renderQueue.sort(Comparator.comparingInt(re -> re.renderComponent.getLayer()));
+        // Prepare render queue (sort layers, create batches)
+        renderQueue.prepare();
         
-        // Render each entity
-        for (RenderableEntity renderable : renderQueue) {
-            renderEntity(g2, renderable);
+        // Render all batches
+        renderQueue.render(g2);
+        
+        // Render debug information if enabled
+        if (debugRenderer.isEnabled()) {
+            Collection<Entity> entityCollection = entityManager.getAllEntities();
+            List<Entity> allEntities = new ArrayList<>(entityCollection);
+            RenderQueue.RenderStats stats = renderQueue.getStats();
+            debugRenderer.render(g2, camera, allEntities, stats);
         }
     }
     
     private void collectRenderableEntities() {
-        List<Entity> entities = entityManager.getEntitiesWith(
-            TransformComponent.class, RenderComponent.class);
+        Collection<Entity> entityCollection = entityManager.getAllEntities();
+        List<Entity> entities = new ArrayList<>(entityCollection);
         
         for (Entity entity : entities) {
             TransformComponent transform = entity.getComponent(TransformComponent.class);
@@ -115,94 +136,59 @@ public class RenderSystem extends GameSystem {
                 continue;
             }
             
-            renderQueue.add(new RenderableEntity(entity, transform, render));
+            renderQueue.addEntity(new RenderableEntity(entity, transform, render));
         }
     }
     
     private boolean isInViewport(TransformComponent transform, RenderComponent render) {
+        if (camera == null) return true; // Render everything if no camera
+        
         BufferedImage sprite = render.getSprite();
         if (sprite == null) return false;
         
-        // Calculate screen position
-        float screenX = transform.x - cameraX;
-        float screenY = transform.y - cameraY;
-        
-        // Calculate sprite bounds
+        // Calculate sprite bounds in world coordinates
         float spriteWidth = sprite.getWidth() * transform.scaleX;
         float spriteHeight = sprite.getHeight() * transform.scaleY;
         
-        // Check if sprite intersects with viewport (with margin)
         Rectangle spriteBounds = new Rectangle(
-            (int)(screenX - cullMargin),
-            (int)(screenY - cullMargin),
+            (int)(transform.x - cullMargin),
+            (int)(transform.y - cullMargin),
             (int)(spriteWidth + cullMargin * 2),
             (int)(spriteHeight + cullMargin * 2)
         );
         
-        return viewport.intersects(spriteBounds);
+        // Use camera's visibility check
+        return camera.isVisible(spriteBounds);
     }
     
-    private void renderEntity(Graphics2D g2, RenderableEntity renderable) {
-        TransformComponent transform = renderable.transformComponent;
-        RenderComponent render = renderable.renderComponent;
-        BufferedImage sprite = render.getSprite();
-        
-        if (sprite == null) return;
-        
-        // Save original transform
-        AffineTransform originalTransform = g2.getTransform();
-        
-        try {
-            // Calculate screen position
-            float screenX = transform.x - cameraX;
-            float screenY = transform.y - cameraY;
-            
-            // Apply transformations
-            AffineTransform renderTransform = new AffineTransform();
-            renderTransform.translate(screenX, screenY);
-            
-            // Apply rotation if needed
-            if (transform.rotation != 0) {
-                renderTransform.rotate(Math.toRadians(transform.rotation), 
-                    sprite.getWidth() / 2.0, sprite.getHeight() / 2.0);
-            }
-            
-            // Apply scaling
-            if (transform.scaleX != 1.0f || transform.scaleY != 1.0f) {
-                renderTransform.scale(transform.scaleX, transform.scaleY);
-            }
-            
-            // Apply flipping
-            if (render.isFlipX() || render.isFlipY()) {
-                float flipX = render.isFlipX() ? -1 : 1;
-                float flipY = render.isFlipY() ? -1 : 1;
-                renderTransform.scale(flipX, flipY);
-                
-                if (render.isFlipX()) {
-                    renderTransform.translate(-sprite.getWidth(), 0);
-                }
-                if (render.isFlipY()) {
-                    renderTransform.translate(0, -sprite.getHeight());
-                }
-            }
-            
-            g2.setTransform(renderTransform);
-            
-            // Apply alpha if needed
-            if (render.getAlpha() < 1.0f) {
-                g2.setComposite(java.awt.AlphaComposite.getInstance(
-                    java.awt.AlphaComposite.SRC_OVER, render.getAlpha()));
-            }
-            
-            // Draw the sprite
-            g2.drawImage(sprite, 0, 0, null);
-            
-        } finally {
-            // Restore original transform and composite
-            g2.setTransform(originalTransform);
-            g2.setComposite(java.awt.AlphaComposite.getInstance(
-                java.awt.AlphaComposite.SRC_OVER, 1.0f));
-        }
+
+    
+    /**
+     * Get the render queue for external access
+     */
+    public RenderQueue getRenderQueue() {
+        return renderQueue;
+    }
+    
+    /**
+     * Get the debug renderer
+     */
+    public DebugRenderer getDebugRenderer() {
+        return debugRenderer;
+    }
+    
+    /**
+     * Get render statistics
+     */
+    public RenderQueue.RenderStats getRenderStats() {
+        return renderQueue.getStats();
+    }
+    
+    /**
+     * Create or get a render layer
+     */
+    public RenderLayer getOrCreateLayer(int layerIndex, String name) {
+        return renderQueue.getOrCreateLayer(layerIndex, name);
     }
     
     @Override
@@ -210,6 +196,17 @@ public class RenderSystem extends GameSystem {
         if (renderQueue != null) {
             renderQueue.clear();
         }
+        
+        // Unsubscribe from events
+        if (eventBus != null) {
+            eventBus.unsubscribe(CameraEvent.class, this);
+        }
+    }
+    
+    @Override
+    public void onEvent(CameraEvent event) {
+        // Camera events are handled automatically through the camera reference
+        // This method can be used for additional camera-related rendering updates
     }
     
     @Override
@@ -217,18 +214,5 @@ public class RenderSystem extends GameSystem {
         return 1000; // Render system should run last
     }
     
-    /**
-     * Helper class to hold renderable entity data
-     */
-    private static class RenderableEntity {
-        final Entity entity;
-        final TransformComponent transformComponent;
-        final RenderComponent renderComponent;
-        
-        RenderableEntity(Entity entity, TransformComponent transform, RenderComponent render) {
-            this.entity = entity;
-            this.transformComponent = transform;
-            this.renderComponent = render;
-        }
-    }
+
 }

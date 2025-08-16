@@ -99,21 +99,21 @@
   - Create sprite animation data structures and loading
   - _Requirements: 9.1, 9.4_
 
-- [ ] 5. Refactor rendering system with optimization
+- [x] 5. Refactor rendering system with optimization
   - Implement Camera class with viewport management
   - Create render pipeline with layer sorting
   - Build frustum culling for performance optimization
   - Add render state management and batching
   - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5_
 
-- [ ] 5.1 Create optimized Camera and viewport system
+- [x] 5.1 Create optimized Camera and viewport system
   - Implement Camera class with smooth following and boundaries
   - Create viewport culling for efficient rendering
   - Add camera shake and transition effects
   - Implement world-to-screen coordinate conversion
   - _Requirements: 5.1, 5.2_
 
-- [ ] 5.2 Build render pipeline with layer management
+- [x] 5.2 Build render pipeline with layer management
   - Create RenderLayer system for depth sorting
   - Implement render queue for batching similar objects
   - Add render state management to minimize state changes
