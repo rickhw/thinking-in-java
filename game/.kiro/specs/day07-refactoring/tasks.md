@@ -142,21 +142,21 @@
   - Build collision layer system for selective collision detection
   - _Requirements: 8.3, 8.4_
 
-- [ ] 7. Refactor input system with command pattern
+- [x] 7. Refactor input system with command pattern
   - Create Command interface and concrete command implementations
   - Implement InputManager with configurable key bindings
   - Build input event queue and processing system
   - Add support for multiple input devices
   - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 7.1 Implement command pattern for input handling
+- [x] 7.1 Implement command pattern for input handling
   - Create Command interface with execute and undo methods
   - Implement concrete commands for player actions (Move, Interact, Menu)
   - Build CommandQueue for input event processing
   - Add command history for undo functionality
   - _Requirements: 7.1, 7.4_
 
-- [ ] 7.2 Create configurable input binding system
+- [x] 7.2 Create configurable input binding system
   - Implement InputManager with key binding configuration
   - Create input configuration loading from external files
   - Add runtime key binding modification capabilities

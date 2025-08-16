@@ -3,10 +3,10 @@ package rpg.systems;
 import rpg.components.InputComponent;
 import rpg.components.MovementComponent;
 import rpg.engine.Entity;
+import rpg.systems.commands.*;
+import rpg.systems.commands.MenuCommand.MenuAction;
 import java.awt.event.KeyEvent;
 import java.util.List;
-import java.util.Queue;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -15,7 +15,7 @@ import java.util.HashMap;
  * Uses command pattern for decoupled input handling.
  */
 public class InputSystem extends GameSystem {
-    private Queue<Command> commandQueue;
+    private CommandQueue commandQueue;
     private Map<String, CommandFactory> commandFactories;
     private boolean[] keyStates;
     private boolean[] previousKeyStates;
@@ -26,7 +26,7 @@ public class InputSystem extends GameSystem {
     
     @Override
     public void initialize() {
-        this.commandQueue = new LinkedList<>();
+        this.commandQueue = new CommandQueue(100, 50);
         this.commandFactories = new HashMap<>();
         this.keyStates = new boolean[256];
         this.previousKeyStates = new boolean[256];
@@ -49,9 +49,13 @@ public class InputSystem extends GameSystem {
         commandFactories.put("move_right_alt", entity -> new MoveCommand(entity, 1, 0));
         
         // Action commands
-        commandFactories.put("interact", entity -> new InteractCommand(entity));
-        commandFactories.put("attack", entity -> new AttackCommand(entity));
+        commandFactories.put("interact", entity -> new InteractCommand(entity, eventBus));
+        commandFactories.put("attack", entity -> new AttackCommand(entity, eventBus));
         commandFactories.put("run", entity -> new RunCommand(entity));
+        
+        // Menu commands
+        commandFactories.put("menu", entity -> new MenuCommand(entity, MenuAction.TOGGLE_PAUSE, eventBus));
+        commandFactories.put("pause", entity -> new MenuCommand(entity, MenuAction.TOGGLE_PAUSE, eventBus));
     }
     
     /**
@@ -92,14 +96,14 @@ public class InputSystem extends GameSystem {
         if (!isEnabled() || !acceptInput) return;
         
         // Process input for all entities with input components
-        List<Entity> inputEntities = entityManager.getEntitiesWith(InputComponent.class);
+        List<Entity> inputEntities = entityManager.getEntitiesWithComponent(InputComponent.class);
         
         for (Entity entity : inputEntities) {
             processEntityInput(entity);
         }
         
         // Execute queued commands
-        executeCommands();
+        commandQueue.executeAll();
         
         // Update previous key states
         System.arraycopy(keyStates, 0, previousKeyStates, 0, keyStates.length);
@@ -145,7 +149,9 @@ public class InputSystem extends GameSystem {
             if (command != null) {
                 // Set command properties
                 if (command instanceof InputCommand) {
-                    ((InputCommand) command).setJustPressed(justPressed);
+                    InputCommand inputCommand = (InputCommand) command;
+                    inputCommand.setJustPressed(justPressed);
+                    inputCommand.setJustReleased(false); // Will be set separately for release events
                 }
                 
                 // Publish input event
@@ -156,20 +162,32 @@ public class InputSystem extends GameSystem {
                 }
                 
                 // Add to queue if not full
-                if (commandQueue.size() < maxQueueSize) {
-                    commandQueue.offer(command);
-                }
+                commandQueue.enqueue(command);
             }
         }
     }
     
-    private void executeCommands() {
-        while (!commandQueue.isEmpty()) {
-            Command command = commandQueue.poll();
-            if (command != null) {
-                command.execute();
-            }
-        }
+    /**
+     * Undo the last executed command if possible.
+     * @return true if a command was undone
+     */
+    public boolean undoLastCommand() {
+        return commandQueue.undoLast();
+    }
+    
+    /**
+     * Get the current command queue size.
+     * @return the number of queued commands
+     */
+    public int getQueuedCommandCount() {
+        return commandQueue.getQueueSize();
+    }
+    
+    /**
+     * Clear all queued commands.
+     */
+    public void clearCommandQueue() {
+        commandQueue.clearQueue();
     }
     
     @Override
@@ -187,122 +205,3 @@ public class InputSystem extends GameSystem {
         return 50; // Input should be processed early
     }
     
-    // Command interfaces and implementations
-    
-    /**
-     * Base interface for all commands
-     */
-    public interface Command {
-        void execute();
-        void undo();
-    }
-    
-    /**
-     * Factory interface for creating commands
-     */
-    public interface CommandFactory {
-        Command createCommand(Entity entity);
-    }
-    
-    /**
-     * Base class for input-related commands
-     */
-    public abstract static class InputCommand implements Command {
-        protected Entity entity;
-        protected boolean justPressed;
-        
-        public InputCommand(Entity entity) {
-            this.entity = entity;
-            this.justPressed = false;
-        }
-        
-        public void setJustPressed(boolean justPressed) {
-            this.justPressed = justPressed;
-        }
-        
-        @Override
-        public void undo() {
-            // Default implementation - most input commands can't be undone
-        }
-    }
-    
-    /**
-     * Movement command implementation
-     */
-    public static class MoveCommand extends InputCommand {
-        private final float directionX;
-        private final float directionY;
-        
-        public MoveCommand(Entity entity, float directionX, float directionY) {
-            super(entity);
-            this.directionX = directionX;
-            this.directionY = directionY;
-        }
-        
-        @Override
-        public void execute() {
-            MovementComponent movement = entity.getComponent(MovementComponent.class);
-            InputComponent input = entity.getComponent(InputComponent.class);
-            
-            if (movement == null || input == null || !movement.canMove) return;
-            
-            // Get movement vector from input component
-            float[] moveVector = input.getMovementVector();
-            
-            // Apply movement based on input
-            float speed = input.isRunning() ? movement.maxSpeed * 1.5f : movement.maxSpeed;
-            movement.setVelocity(moveVector[0] * speed, moveVector[1] * speed);
-        }
-    }
-    
-    /**
-     * Interact command implementation
-     */
-    public static class InteractCommand extends InputCommand {
-        public InteractCommand(Entity entity) {
-            super(entity);
-        }
-        
-        @Override
-        public void execute() {
-            if (!justPressed) return; // Only execute on key press, not hold
-            
-            // Interaction logic will be implemented when needed
-            // For now, just log the interaction
-            System.out.println("Entity " + entity.getId() + " interacted");
-        }
-    }
-    
-    /**
-     * Attack command implementation
-     */
-    public static class AttackCommand extends InputCommand {
-        public AttackCommand(Entity entity) {
-            super(entity);
-        }
-        
-        @Override
-        public void execute() {
-            if (!justPressed) return; // Only execute on key press, not hold
-            
-            // Attack logic will be implemented when needed
-            // For now, just log the attack
-            System.out.println("Entity " + entity.getId() + " attacked");
-        }
-    }
-    
-    /**
-     * Run command implementation
-     */
-    public static class RunCommand extends InputCommand {
-        public RunCommand(Entity entity) {
-            super(entity);
-        }
-        
-        @Override
-        public void execute() {
-            // Running is handled in MoveCommand by checking input.isRunning()
-            // This command exists for consistency but doesn't need to do anything
-        }
-    }
-}
