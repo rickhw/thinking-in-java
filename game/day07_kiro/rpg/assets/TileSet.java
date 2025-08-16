@@ -12,7 +12,7 @@ import java.util.Map;
  * Supports efficient tile storage and retrieval with collision and animation data.
  */
 public class TileSet {
-    private static final GameLogger logger = GameLogger.getInstance();
+
     
     private final Map<Integer, Tile> tiles = new HashMap<>();
     private final Map<Integer, TileProperties> tileProperties = new HashMap<>();
@@ -73,7 +73,7 @@ public class TileSet {
                 }
             }
             
-            logger.info("Loaded tileset: " + name + " with " + tiles.size() + " tiles");
+            GameLogger.info("Loaded tileset: " + name + " with " + tiles.size() + " tiles");
             
         } catch (Exception e) {
             throw new AssetLoadException(imagePath, "TileSet", e);

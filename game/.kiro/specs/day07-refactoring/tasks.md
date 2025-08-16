@@ -77,7 +77,7 @@
   - Implement event queuing and processing system
   - _Requirements: 3.3, 3.4_
 
-- [x] 4. Implement asset management system
+- [ ] 4. Implement asset management system
   - Create AssetManager with caching and lifecycle management
   - Build resource loading system with error handling
   - Implement asset preloading and streaming

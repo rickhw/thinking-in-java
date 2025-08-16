@@ -10,7 +10,6 @@ import java.awt.image.BufferedImage;
  * Provides various filtering options for texture scaling and enhancement.
  */
 public class TextureFilter {
-    private static final GameLogger logger = GameLogger.getInstance();
     
     /**
      * Filtering modes for texture scaling.
@@ -27,12 +26,12 @@ public class TextureFilter {
      */
     public static BufferedImage scaleTexture(BufferedImage source, int newWidth, int newHeight, FilterMode filterMode) {
         if (source == null) {
-            logger.warn("Cannot scale null texture");
+            GameLogger.warn("Cannot scale null texture");
             return null;
         }
         
         if (newWidth <= 0 || newHeight <= 0) {
-            logger.warn("Invalid scale dimensions: " + newWidth + "x" + newHeight);
+            GameLogger.warn("Invalid scale dimensions: " + newWidth + "x" + newHeight);
             return source;
         }
         
@@ -51,7 +50,7 @@ public class TextureFilter {
         g2d.drawImage(source, 0, 0, newWidth, newHeight, null);
         g2d.dispose();
         
-        logger.debug("Scaled texture from " + source.getWidth() + "x" + source.getHeight() + 
+        GameLogger.debug("Scaled texture from " + source.getWidth() + "x" + source.getHeight() + 
                     " to " + newWidth + "x" + newHeight + " using " + filterMode);
         
         return scaledImage;
@@ -102,7 +101,7 @@ public class TextureFilter {
             }
         }
         
-        logger.debug("Pixel-perfect scaled texture by " + scale + "x");
+        GameLogger.debug("Pixel-perfect scaled texture by " + scale + "x");
         return scaledImage;
     }
     
@@ -127,7 +126,7 @@ public class TextureFilter {
         
         g2d.dispose();
         
-        logger.debug("Applied color filter: " + filterColor + " with intensity " + intensity);
+        GameLogger.debug("Applied color filter: " + filterColor + " with intensity " + intensity);
         return filtered;
     }
     
@@ -144,7 +143,7 @@ public class TextureFilter {
         g2d.drawImage(source, 0, 0, null);
         g2d.dispose();
         
-        logger.debug("Converted texture to grayscale");
+        GameLogger.debug("Converted texture to grayscale");
         return grayscale;
     }
     
@@ -172,7 +171,7 @@ public class TextureFilter {
             }
         }
         
-        logger.debug("Adjusted texture brightness by factor " + brightness);
+        GameLogger.debug("Adjusted texture brightness by factor " + brightness);
         return adjusted;
     }
     
@@ -199,7 +198,7 @@ public class TextureFilter {
         g2d.drawImage(source, x, y, width, height, null);
         g2d.dispose();
         
-        logger.debug("Flipped texture - horizontal: " + horizontal + ", vertical: " + vertical);
+        GameLogger.debug("Flipped texture - horizontal: " + horizontal + ", vertical: " + vertical);
         return flipped;
     }
     
@@ -214,7 +213,7 @@ public class TextureFilter {
         // Normalize degrees to 0, 90, 180, 270
         degrees = ((degrees % 360) + 360) % 360;
         if (degrees % 90 != 0) {
-            logger.warn("Rotation degrees must be multiples of 90. Got: " + degrees);
+            GameLogger.warn("Rotation degrees must be multiples of 90. Got: " + degrees);
             return source;
         }
         
@@ -255,7 +254,7 @@ public class TextureFilter {
         }
         
         g2d.dispose();
-        logger.debug("Rotated texture by " + degrees + " degrees");
+        GameLogger.debug("Rotated texture by " + degrees + " degrees");
         return rotated;
     }
     

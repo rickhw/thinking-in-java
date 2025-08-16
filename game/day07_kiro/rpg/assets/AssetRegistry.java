@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Integrates with AssetManager and provides convenient access methods.
  */
 public class AssetRegistry {
-    private static final GameLogger logger = GameLogger.getInstance();
+
     
     // Asset registries by type
     private final Map<String, BufferedImage> images = new ConcurrentHashMap<>();
@@ -57,7 +57,7 @@ public class AssetRegistry {
         images.put(name, image);
         metadata.put(name, new AssetMetadata(name, path, AssetType.IMAGE));
         
-        logger.debug("Registered image: " + name + " from " + path);
+        GameLogger.debug("Registered image: " + name + " from " + path);
     }
     
     /**
@@ -68,7 +68,7 @@ public class AssetRegistry {
         atlases.put(name, atlas);
         metadata.put(name, new AssetMetadata(name, path, AssetType.ATLAS));
         
-        logger.debug("Registered atlas: " + name + " from " + path);
+        GameLogger.debug("Registered atlas: " + name + " from " + path);
     }
     
     /**
@@ -79,7 +79,7 @@ public class AssetRegistry {
         spriteSheets.put(name, spriteSheet);
         metadata.put(name, new AssetMetadata(name, path, AssetType.SPRITE_SHEET));
         
-        logger.debug("Registered sprite sheet: " + name + " from " + path);
+        GameLogger.debug("Registered sprite sheet: " + name + " from " + path);
     }
     
     /**
@@ -90,7 +90,7 @@ public class AssetRegistry {
         tileSets.put(name, tileSet);
         metadata.put(name, new AssetMetadata(name, path, AssetType.TILESET));
         
-        logger.debug("Registered tileset: " + name + " from " + path);
+        GameLogger.debug("Registered tileset: " + name + " from " + path);
     }
     
     /**
@@ -101,7 +101,7 @@ public class AssetRegistry {
         maps.put(name, map);
         metadata.put(name, new AssetMetadata(name, path, AssetType.MAP));
         
-        logger.debug("Registered map: " + name + " from " + path);
+        GameLogger.debug("Registered map: " + name + " from " + path);
     }
     
     /**
@@ -111,7 +111,7 @@ public class AssetRegistry {
         animations.put(name, animationData);
         metadata.put(name, new AssetMetadata(name, null, AssetType.ANIMATION));
         
-        logger.debug("Registered animation: " + name);
+        GameLogger.debug("Registered animation: " + name);
     }
     
     /**
@@ -120,7 +120,7 @@ public class AssetRegistry {
     public BufferedImage getImage(String name) {
         BufferedImage image = images.get(name);
         if (image == null) {
-            logger.warn("Image not found in registry: " + name);
+            GameLogger.warn("Image not found in registry: " + name);
         }
         return image;
     }
@@ -131,7 +131,7 @@ public class AssetRegistry {
     public TextureAtlas getAtlas(String name) {
         TextureAtlas atlas = atlases.get(name);
         if (atlas == null) {
-            logger.warn("Atlas not found in registry: " + name);
+            GameLogger.warn("Atlas not found in registry: " + name);
         }
         return atlas;
     }
@@ -142,7 +142,7 @@ public class AssetRegistry {
     public SpriteSheet getSpriteSheet(String name) {
         SpriteSheet spriteSheet = spriteSheets.get(name);
         if (spriteSheet == null) {
-            logger.warn("Sprite sheet not found in registry: " + name);
+            GameLogger.warn("Sprite sheet not found in registry: " + name);
         }
         return spriteSheet;
     }
@@ -153,7 +153,7 @@ public class AssetRegistry {
     public TileSet getTileSet(String name) {
         TileSet tileSet = tileSets.get(name);
         if (tileSet == null) {
-            logger.warn("Tileset not found in registry: " + name);
+            GameLogger.warn("Tileset not found in registry: " + name);
         }
         return tileSet;
     }
@@ -164,7 +164,7 @@ public class AssetRegistry {
     public GameMap getMap(String name) {
         GameMap map = maps.get(name);
         if (map == null) {
-            logger.warn("Map not found in registry: " + name);
+            GameLogger.warn("Map not found in registry: " + name);
         }
         return map;
     }
@@ -175,7 +175,7 @@ public class AssetRegistry {
     public SpriteAnimationData getAnimation(String name) {
         SpriteAnimationData animation = animations.get(name);
         if (animation == null) {
-            logger.warn("Animation not found in registry: " + name);
+            GameLogger.warn("Animation not found in registry: " + name);
         }
         return animation;
     }
@@ -230,7 +230,7 @@ public class AssetRegistry {
             }
             metadata.remove(name);
             
-            logger.debug("Unregistered asset: " + name);
+            GameLogger.debug("Unregistered asset: " + name);
         }
     }
     
@@ -277,7 +277,7 @@ public class AssetRegistry {
         animations.clear();
         metadata.clear();
         
-        logger.info("Asset registry cleared");
+        GameLogger.info("Asset registry cleared");
     }
     
     /**
@@ -299,10 +299,10 @@ public class AssetRegistry {
             // Register maps
             registerMap("world01", "/rpg/assets/maps/world01.txt");
             
-            logger.info("Common assets initialized");
+            GameLogger.info("Common assets initialized");
             
         } catch (AssetLoadException e) {
-            logger.error("Failed to initialize common assets", e);
+            GameLogger.error("Failed to initialize common assets", e);
         }
     }
     

@@ -12,7 +12,7 @@ import java.util.Map;
  * Combines multiple sprites into a single texture for better performance.
  */
 public class TextureAtlas {
-    private static final GameLogger logger = GameLogger.getInstance();
+
     
     private final String name;
     private final BufferedImage atlasImage;
@@ -41,7 +41,7 @@ public class TextureAtlas {
         AtlasRegion region = new AtlasRegion(regionName, x, y, width, height);
         regions.put(regionName, region);
         
-        logger.debug("Added atlas region: " + regionName + " at (" + x + ", " + y + 
+        GameLogger.debug("Added atlas region: " + regionName + " at (" + x + ", " + y + 
                     ") size (" + width + "x" + height + ")");
     }
     
@@ -51,7 +51,7 @@ public class TextureAtlas {
     public BufferedImage getSprite(String regionName) {
         AtlasRegion region = regions.get(regionName);
         if (region == null) {
-            logger.warn("Atlas region not found: " + regionName);
+            GameLogger.warn("Atlas region not found: " + regionName);
             return null;
         }
         
@@ -63,7 +63,7 @@ public class TextureAtlas {
      */
     public BufferedImage getSprite(int x, int y, int width, int height) {
         if (x < 0 || y < 0 || x + width > textureWidth || y + height > textureHeight) {
-            logger.warn("Invalid sprite coordinates: (" + x + ", " + y + 
+            GameLogger.warn("Invalid sprite coordinates: (" + x + ", " + y + 
                        ") size (" + width + "x" + height + ")");
             return null;
         }
@@ -137,7 +137,7 @@ public class TextureAtlas {
             }
         }
         
-        logger.info("Created sprite sheet atlas: " + name + " with " + 
+        GameLogger.info("Created sprite sheet atlas: " + name + " with " + 
                    (rows * cols) + " sprites (" + cols + "x" + rows + ")");
         
         return atlas;

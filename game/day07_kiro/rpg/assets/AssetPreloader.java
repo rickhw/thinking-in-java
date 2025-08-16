@@ -15,7 +15,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Supports progress tracking and asynchronous loading operations.
  */
 public class AssetPreloader {
-    private static final GameLogger logger = GameLogger.getInstance();
     
     private final AssetManager assetManager;
     private final ExecutorService loadingExecutor;
@@ -116,7 +115,7 @@ public class AssetPreloader {
      */
     public void preload() {
         if (isLoading) {
-            logger.warn("Preloading already in progress");
+            GameLogger.warn("Preloading already in progress");
             return;
         }
         
@@ -125,7 +124,7 @@ public class AssetPreloader {
         completedTasks.set(0);
         failedTasks.set(0);
         
-        logger.info("Starting asset preloading: " + preloadTasks.size() + " assets");
+        GameLogger.info("Starting asset preloading: " + preloadTasks.size() + " assets");
         notifyPreloadStarted();
         
         // Sort tasks by priority
@@ -139,7 +138,7 @@ public class AssetPreloader {
                 completedTasks.incrementAndGet();
                 
             } catch (Exception e) {
-                logger.error("Failed to preload asset: " + task.path, e);
+                GameLogger.error("Failed to preload asset: " + task.path, e);
                 failedTasks.incrementAndGet();
             }
             
@@ -150,7 +149,7 @@ public class AssetPreloader {
         
         isLoading = false;
         
-        logger.info("Asset preloading completed. Success: " + completedTasks.get() + 
+        GameLogger.info("Asset preloading completed. Success: " + completedTasks.get() + 
                    ", Failed: " + failedTasks.get());
         notifyPreloadCompleted();
     }
@@ -180,7 +179,7 @@ public class AssetPreloader {
                 throw new AssetLoadException(task.path, task.type.name(), "Unsupported asset type");
         }
         
-        logger.debug("Preloaded " + task.type.name().toLowerCase() + ": " + task.path);
+        GameLogger.debug("Preloaded " + task.type.name().toLowerCase() + ": " + task.path);
     }
     
     /**
@@ -223,7 +222,7 @@ public class AssetPreloader {
      */
     public void clear() {
         if (isLoading) {
-            logger.warn("Cannot clear tasks while preloading is in progress");
+            GameLogger.warn("Cannot clear tasks while preloading is in progress");
             return;
         }
         
@@ -255,7 +254,7 @@ public class AssetPreloader {
             try {
                 listener.onPreloadStarted(preloadTasks.size());
             } catch (Exception e) {
-                logger.error("Error in preload listener", e);
+                GameLogger.error("Error in preload listener", e);
             }
         }
     }
@@ -268,7 +267,7 @@ public class AssetPreloader {
             try {
                 listener.onProgressUpdate(progress, completedTasks.get(), preloadTasks.size());
             } catch (Exception e) {
-                logger.error("Error in preload listener", e);
+                GameLogger.error("Error in preload listener", e);
             }
         }
     }
@@ -281,7 +280,7 @@ public class AssetPreloader {
             try {
                 listener.onPreloadCompleted(completedTasks.get(), failedTasks.get());
             } catch (Exception e) {
-                logger.error("Error in preload listener", e);
+                GameLogger.error("Error in preload listener", e);
             }
         }
     }

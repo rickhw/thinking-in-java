@@ -4,6 +4,7 @@ import rpg.exceptions.AssetLoadException;
 import rpg.utils.GameLogger;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
  * Supports loading from text files and provides efficient tile access.
  */
 public class GameMap {
-    private static final GameLogger logger = GameLogger.getInstance();
+
     
     private final String name;
     private final String mapPath;
@@ -96,12 +97,13 @@ public class GameMap {
                 }
             }
             
-            logger.info("Loaded map: " + name + " (" + width + "x" + height + ")");
+            GameLogger.info("Loaded map: " + name + " (" + width + "x" + height + ")");
             
+        } catch (IOException e) {
+            throw new AssetLoadException(mapPath, "GameMap", e);
+        } catch (AssetLoadException e) {
+            throw e;
         } catch (Exception e) {
-            if (e instanceof AssetLoadException) {
-                throw e;
-            }
             throw new AssetLoadException(mapPath, "GameMap", e);
         }
     }
