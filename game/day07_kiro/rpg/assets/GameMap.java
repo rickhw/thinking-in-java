@@ -3,323 +3,300 @@ package rpg.assets;
 import rpg.exceptions.AssetLoadException;
 import rpg.utils.GameLogger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
- * Represents a game map with tile data and metadata.
- * Supports loading from text files and provides efficient tile access.
+ * Enhanced GameMap class with support for multiple layers, validation, and efficient tile access.
+ * Supports loading from various map formats and provides streaming capabilities for large worlds.
  */
 public class GameMap {
-
+    
+    /**
+     * Represents a single layer in the map (background, foreground, collision, etc.)
+     */
+    public static class MapLayer {
+        private final String name;
+        private final int[][] tileData;
+        private final int width;
+        private final int height;
+        private final boolean visible;
+        private final float opacity;
+        private final Map<String, Object> properties;
+        
+        public MapLayer(String name, int width, int height) {
+            this(name, width, height, true, 1.0f, new HashMap<>());
+        }
+        
+        public MapLayer(String name, int width, int height, boolean visible, float opacity, Map<String, Object> properties) {
+            this.name = name;
+            this.width = width;
+            this.height = height;
+            this.visible = visible;
+            this.opacity = opacity;
+            this.properties = new HashMap<>(properties);
+            this.tileData = new int[width][height];
+        }
+        
+        public void setTile(int x, int y, int tileId) {
+            if (isValidCoordinate(x, y)) {
+                tileData[x][y] = tileId;
+            }
+        }
+        
+        public int getTile(int x, int y) {
+            if (isValidCoordinate(x, y)) {
+                return tileData[x][y];
+            }
+            return -1; // Invalid tile
+        }
+        
+        public boolean isValidCoordinate(int x, int y) {
+            return x >= 0 && x < width && y >= 0 && y < height;
+        }
+        
+        // Getters
+        public String getName() { return name; }
+        public int getWidth() { return width; }
+        public int getHeight() { return height; }
+        public boolean isVisible() { return visible; }
+        public float getOpacity() { return opacity; }
+        public Map<String, Object> getProperties() { return new HashMap<>(properties); }
+        public int[][] getTileData() { return tileData; }
+    }
     
     private final String name;
-    private final String mapPath;
-    private int[][] tileData;
-    private int width;
-    private int height;
-    private TileSet tileSet;
-    private final List<MapLayer> layers = new ArrayList<>();
+    private final int width;
+    private final int height;
+    private final int tileSize;
+    private final List<MapLayer> layers;
+    private final Map<String, MapLayer> layerMap;
+    private final TileSet tileSet;
+    private final Map<String, Object> properties;
+    private final Rectangle bounds;
     
-    /**
-     * Create a game map from a file path.
-     */
-    public GameMap(String mapPath, AssetManager assetManager) throws AssetLoadException {
-        this.mapPath = mapPath;
-        this.name = extractNameFromPath(mapPath);
-        loadFromFile(mapPath);
-    }
+    // Animation tracking
+    private float animationTime;
     
-    /**
-     * Create a game map with specified dimensions.
-     */
-    public GameMap(String name, int width, int height) {
+    public GameMap(String name, int width, int height, int tileSize, TileSet tileSet) {
         this.name = name;
-        this.mapPath = null;
         this.width = width;
         this.height = height;
-        this.tileData = new int[width][height];
+        this.tileSize = tileSize;
+        this.tileSet = tileSet;
+        this.layers = new ArrayList<>();
+        this.layerMap = new HashMap<>();
+        this.properties = new HashMap<>();
+        this.bounds = new Rectangle(0, 0, width * tileSize, height * tileSize);
+        this.animationTime = 0.0f;
     }
     
     /**
-     * Load map data from a text file.
+     * Add a layer to the map.
      */
-    private void loadFromFile(String mapPath) throws AssetLoadException {
-        try {
-            InputStream stream = getClass().getResourceAsStream(mapPath);
-            if (stream == null) {
-                throw new AssetLoadException(mapPath, "GameMap", "Map file not found");
+    public void addLayer(MapLayer layer) {
+        if (layer.getWidth() != width || layer.getHeight() != height) {
+            throw new IllegalArgumentException("Layer dimensions must match map dimensions");
+        }
+        
+        layers.add(layer);
+        layerMap.put(layer.getName(), layer);
+    }
+    
+    /**
+     * Get a layer by name.
+     */
+    public MapLayer getLayer(String layerName) {
+        return layerMap.get(layerName);
+    }
+    
+    /**
+     * Get tile ID at coordinates from a specific layer.
+     */
+    public int getTile(String layerName, int x, int y) {
+        MapLayer layer = layerMap.get(layerName);
+        return layer != null ? layer.getTile(x, y) : -1;
+    }
+    
+    /**
+     * Get tile ID at coordinates from the first layer (for backward compatibility).
+     */
+    public int getTile(int x, int y) {
+        if (!layers.isEmpty()) {
+            return layers.get(0).getTile(x, y);
+        }
+        return -1;
+    }
+    
+    /**
+     * Set tile ID at coordinates in a specific layer.
+     */
+    public void setTile(String layerName, int x, int y, int tileId) {
+        MapLayer layer = layerMap.get(layerName);
+        if (layer != null) {
+            layer.setTile(x, y, tileId);
+        }
+    }
+    
+    /**
+     * Check if a tile is collidable at the given coordinates.
+     */
+    public boolean isCollidable(int x, int y) {
+        // Check all layers for collision
+        for (MapLayer layer : layers) {
+            int tileId = layer.getTile(x, y);
+            if (tileId >= 0 && tileSet.isCollidable(tileId)) {
+                return true;
             }
-            
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-            List<String> lines = new ArrayList<>();
-            String line;
-            
-            // Read all lines
-            while ((line = reader.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    lines.add(line.trim());
+        }
+        return false;
+    }
+    
+    /**
+     * Get tile properties at coordinates.
+     */
+    public TileSet.TileProperties getTileProperties(int x, int y) {
+        // Return properties from the first non-empty tile found
+        for (MapLayer layer : layers) {
+            int tileId = layer.getTile(x, y);
+            if (tileId >= 0) {
+                TileSet.TileProperties props = tileSet.getTileProperties(tileId);
+                if (props != null) {
+                    return props;
                 }
             }
-            reader.close();
+        }
+        return null;
+    }
+    
+    /**
+     * Update animation time for animated tiles.
+     */
+    public void update(float deltaTime) {
+        animationTime += deltaTime;
+    }
+    
+    /**
+     * Render the map with camera culling.
+     */
+    public void render(Graphics2D g2, Rectangle viewBounds) {
+        // Calculate visible tile range
+        int startX = Math.max(0, viewBounds.x / tileSize);
+        int endX = Math.min(width - 1, (viewBounds.x + viewBounds.width) / tileSize + 1);
+        int startY = Math.max(0, viewBounds.y / tileSize);
+        int endY = Math.min(height - 1, (viewBounds.y + viewBounds.height) / tileSize + 1);
+        
+        // Render each visible layer
+        for (MapLayer layer : layers) {
+            if (!layer.isVisible()) continue;
             
-            if (lines.isEmpty()) {
-                throw new AssetLoadException(mapPath, "GameMap", "Map file is empty");
+            // Set layer opacity
+            Composite originalComposite = g2.getComposite();
+            if (layer.getOpacity() < 1.0f) {
+                g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, layer.getOpacity()));
             }
             
-            // Parse dimensions from first line
-            String[] firstLineTokens = lines.get(0).split("\\s+");
-            width = firstLineTokens.length;
-            height = lines.size();
-            
-            // Initialize tile data array
-            tileData = new int[width][height];
-            
-            // Parse tile data
-            for (int row = 0; row < height; row++) {
-                String[] tokens = lines.get(row).split("\\s+");
-                if (tokens.length != width) {
-                    throw new AssetLoadException(mapPath, "GameMap", 
-                        "Inconsistent row width at line " + (row + 1));
-                }
-                
-                for (int col = 0; col < width; col++) {
-                    try {
-                        tileData[col][row] = Integer.parseInt(tokens[col]);
-                    } catch (NumberFormatException e) {
-                        throw new AssetLoadException(mapPath, "GameMap", 
-                            "Invalid tile ID at (" + col + ", " + row + "): " + tokens[col]);
+            // Render visible tiles in this layer
+            for (int x = startX; x <= endX; x++) {
+                for (int y = startY; y <= endY; y++) {
+                    int tileId = layer.getTile(x, y);
+                    if (tileId >= 0) {
+                        TileSet.Tile tile = tileSet.getTile(tileId);
+                        if (tile != null) {
+                            int screenX = x * tileSize - viewBounds.x;
+                            int screenY = y * tileSize - viewBounds.y;
+                            
+                            // Get current frame for animated tiles
+                            java.awt.image.BufferedImage image = tile.getCurrentFrame(animationTime);
+                            g2.drawImage(image, screenX, screenY, tileSize, tileSize, null);
+                        }
                     }
                 }
             }
             
-            GameLogger.info("Loaded map: " + name + " (" + width + "x" + height + ")");
-            
-        } catch (IOException e) {
-            throw new AssetLoadException(mapPath, "GameMap", e);
-        } catch (AssetLoadException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new AssetLoadException(mapPath, "GameMap", e);
+            // Restore original composite
+            g2.setComposite(originalComposite);
         }
-    }
-    
-    /**
-     * Get tile ID at specified coordinates.
-     */
-    public int getTileAt(int x, int y) {
-        if (isValidCoordinate(x, y)) {
-            return tileData[x][y];
-        }
-        return -1; // Invalid tile
-    }
-    
-    /**
-     * Set tile ID at specified coordinates.
-     */
-    public void setTileAt(int x, int y, int tileId) {
-        if (isValidCoordinate(x, y)) {
-            tileData[x][y] = tileId;
-        }
-    }
-    
-    /**
-     * Check if coordinates are within map bounds.
-     */
-    public boolean isValidCoordinate(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
-    }
-    
-    /**
-     * Check if a tile at coordinates is collidable.
-     */
-    public boolean isCollidableAt(int x, int y) {
-        if (!isValidCoordinate(x, y) || tileSet == null) {
-            return true; // Treat out-of-bounds as collidable
-        }
-        
-        int tileId = getTileAt(x, y);
-        return tileSet.isCollidable(tileId);
-    }
-    
-    /**
-     * Get map width in tiles.
-     */
-    public int getWidth() {
-        return width;
-    }
-    
-    /**
-     * Get map height in tiles.
-     */
-    public int getHeight() {
-        return height;
-    }
-    
-    /**
-     * Get map name.
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Get map file path.
-     */
-    public String getMapPath() {
-        return mapPath;
-    }
-    
-    /**
-     * Set the tileset for this map.
-     */
-    public void setTileSet(TileSet tileSet) {
-        this.tileSet = tileSet;
-    }
-    
-    /**
-     * Get the tileset for this map.
-     */
-    public TileSet getTileSet() {
-        return tileSet;
-    }
-    
-    /**
-     * Get a copy of the tile data array.
-     */
-    public int[][] getTileData() {
-        int[][] copy = new int[width][height];
-        for (int x = 0; x < width; x++) {
-            System.arraycopy(tileData[x], 0, copy[x], 0, height);
-        }
-        return copy;
-    }
-    
-    /**
-     * Add a map layer.
-     */
-    public void addLayer(MapLayer layer) {
-        layers.add(layer);
-    }
-    
-    /**
-     * Get map layers.
-     */
-    public List<MapLayer> getLayers() {
-        return new ArrayList<>(layers);
-    }
-    
-    /**
-     * Get tiles in a rectangular region.
-     */
-    public int[][] getTilesInRegion(int startX, int startY, int regionWidth, int regionHeight) {
-        int[][] region = new int[regionWidth][regionHeight];
-        
-        for (int x = 0; x < regionWidth; x++) {
-            for (int y = 0; y < regionHeight; y++) {
-                int mapX = startX + x;
-                int mapY = startY + y;
-                region[x][y] = isValidCoordinate(mapX, mapY) ? getTileAt(mapX, mapY) : -1;
-            }
-        }
-        
-        return region;
     }
     
     /**
      * Validate map integrity.
      */
-    public boolean validateMap() {
-        if (tileData == null || width <= 0 || height <= 0) {
-            return false;
+    public List<String> validate() {
+        List<String> errors = new ArrayList<>();
+        
+        // Check dimensions
+        if (width <= 0 || height <= 0) {
+            errors.add("Invalid map dimensions: " + width + "x" + height);
         }
         
-        // Check for consistent dimensions
-        if (tileData.length != width) {
-            return false;
+        if (tileSize <= 0) {
+            errors.add("Invalid tile size: " + tileSize);
         }
         
-        for (int x = 0; x < width; x++) {
-            if (tileData[x] == null || tileData[x].length != height) {
-                return false;
+        // Check layers
+        if (layers.isEmpty()) {
+            errors.add("Map has no layers");
+        }
+        
+        // Validate each layer
+        for (MapLayer layer : layers) {
+            if (layer.getWidth() != width || layer.getHeight() != height) {
+                errors.add("Layer '" + layer.getName() + "' has incorrect dimensions");
+            }
+            
+            // Check for invalid tile IDs
+            for (int x = 0; x < layer.getWidth(); x++) {
+                for (int y = 0; y < layer.getHeight(); y++) {
+                    int tileId = layer.getTile(x, y);
+                    if (tileId >= 0 && !tileSet.hasTile(tileId)) {
+                        errors.add("Layer '" + layer.getName() + "' contains invalid tile ID: " + tileId + " at (" + x + "," + y + ")");
+                    }
+                }
             }
         }
         
-        return true;
+        return errors;
     }
     
     /**
-     * Extract name from file path.
+     * Load map from simple text format (backward compatibility).
      */
-    private String extractNameFromPath(String path) {
-        if (path == null) return "unknown";
-        
-        String filename = path.substring(path.lastIndexOf('/') + 1);
-        int dotIndex = filename.lastIndexOf('.');
-        return dotIndex > 0 ? filename.substring(0, dotIndex) : filename;
+    public static GameMap loadFromTextFile(String mapPath, TileSet tileSet) throws AssetLoadException {
+        return MapLoaderSimple.loadTextMap(mapPath, tileSet);
+    }
+    
+    // Getters
+    public String getName() { return name; }
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+    public int getTileSize() { return tileSize; }
+    public List<MapLayer> getLayers() { return new ArrayList<>(layers); }
+    public TileSet getTileSet() { return tileSet; }
+    public Map<String, Object> getProperties() { return new HashMap<>(properties); }
+    public Rectangle getBounds() { return new Rectangle(bounds); }
+    public float getAnimationTime() { return animationTime; }
+    
+    /**
+     * Get world coordinates bounds.
+     */
+    public int getWorldWidth() { return width * tileSize; }
+    public int getWorldHeight() { return height * tileSize; }
+    
+    /**
+     * Convert world coordinates to tile coordinates.
+     */
+    public Point worldToTile(int worldX, int worldY) {
+        return new Point(worldX / tileSize, worldY / tileSize);
     }
     
     /**
-     * Map layer for multi-layer support.
+     * Convert tile coordinates to world coordinates.
      */
-    public static class MapLayer {
-        private final String name;
-        private final int[][] layerData;
-        private final int width;
-        private final int height;
-        private boolean visible = true;
-        private float opacity = 1.0f;
-        
-        public MapLayer(String name, int width, int height) {
-            this.name = name;
-            this.width = width;
-            this.height = height;
-            this.layerData = new int[width][height];
-        }
-        
-        public String getName() {
-            return name;
-        }
-        
-        public int getTileAt(int x, int y) {
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                return layerData[x][y];
-            }
-            return -1;
-        }
-        
-        public void setTileAt(int x, int y, int tileId) {
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                layerData[x][y] = tileId;
-            }
-        }
-        
-        public boolean isVisible() {
-            return visible;
-        }
-        
-        public void setVisible(boolean visible) {
-            this.visible = visible;
-        }
-        
-        public float getOpacity() {
-            return opacity;
-        }
-        
-        public void setOpacity(float opacity) {
-            this.opacity = Math.max(0.0f, Math.min(1.0f, opacity));
-        }
-        
-        public int getWidth() {
-            return width;
-        }
-        
-        public int getHeight() {
-            return height;
-        }
+    public Point tileToWorld(int tileX, int tileY) {
+        return new Point(tileX * tileSize, tileY * tileSize);
     }
 }

@@ -3,93 +3,145 @@ package rpg.assets;
 import rpg.exceptions.AssetLoadException;
 import rpg.utils.GameLogger;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a collection of tiles with properties and metadata.
- * Supports efficient tile storage and retrieval with collision and animation data.
+ * Enhanced TileSet class that manages tile properties, metadata, and animations.
+ * Supports loading tiles from sprite sheets and individual files.
  */
 public class TileSet {
-
     
-    private final Map<Integer, Tile> tiles = new HashMap<>();
-    private final Map<Integer, TileProperties> tileProperties = new HashMap<>();
-    private String name;
-    private String imagePath;
-    private int tileWidth = 32;
-    private int tileHeight = 32;
-    
-    /**
-     * Default constructor for fallback tileset.
-     */
-    public TileSet() {
-        this.name = "fallback";
-        this.imagePath = null;
+    public enum TileType {
+        GROUND,
+        WALL,
+        WATER,
+        DECORATION,
+        INTERACTIVE,
+        ANIMATED
     }
     
     /**
-     * Create a tileset from an image path.
+     * Properties for individual tiles including collision, type, and custom properties.
      */
-    public TileSet(String imagePath, AssetManager assetManager) throws AssetLoadException {
-        this.imagePath = imagePath;
-        this.name = extractNameFromPath(imagePath);
-        loadFromImage(imagePath, assetManager);
-    }
-    
-    /**
-     * Create a tileset with custom tile dimensions.
-     */
-    public TileSet(String imagePath, int tileWidth, int tileHeight, AssetManager assetManager) throws AssetLoadException {
-        this.imagePath = imagePath;
-        this.name = extractNameFromPath(imagePath);
-        this.tileWidth = tileWidth;
-        this.tileHeight = tileHeight;
-        loadFromImage(imagePath, assetManager);
-    }
-    
-    /**
-     * Load tiles from a tileset image.
-     */
-    private void loadFromImage(String imagePath, AssetManager assetManager) throws AssetLoadException {
-        try {
-            BufferedImage tilesetImage = assetManager.loadImage(imagePath);
-            
-            int tilesPerRow = tilesetImage.getWidth() / tileWidth;
-            int tilesPerColumn = tilesetImage.getHeight() / tileHeight;
-            
-            int tileId = 0;
-            for (int row = 0; row < tilesPerColumn; row++) {
-                for (int col = 0; col < tilesPerRow; col++) {
-                    BufferedImage tileImage = tilesetImage.getSubimage(
-                        col * tileWidth, row * tileHeight, tileWidth, tileHeight);
-                    
-                    Tile tile = new Tile(tileId, tileImage);
-                    tiles.put(tileId, tile);
-                    tileProperties.put(tileId, new TileProperties());
-                    
-                    tileId++;
-                }
+    public static class TileProperties {
+        private final boolean collidable;
+        private final TileType type;
+        private final Map<String, Object> customProperties;
+        private final boolean animated;
+        private final int animationFrames;
+        private final float animationSpeed;
+        
+        public TileProperties(boolean collidable, TileType type) {
+            this(collidable, type, new HashMap<>(), false, 1, 0.0f);
+        }
+        
+        public TileProperties(boolean collidable, TileType type, Map<String, Object> customProperties,
+                            boolean animated, int animationFrames, float animationSpeed) {
+            this.collidable = collidable;
+            this.type = type;
+            this.customProperties = new HashMap<>(customProperties);
+            this.animated = animated;
+            this.animationFrames = animationFrames;
+            this.animationSpeed = animationSpeed;
+        }
+        
+        public boolean isCollidable() { return collidable; }
+        public TileType getType() { return type; }
+        public Map<String, Object> getCustomProperties() { return new HashMap<>(customProperties); }
+        public boolean isAnimated() { return animated; }
+        public int getAnimationFrames() { return animationFrames; }
+        public float getAnimationSpeed() { return animationSpeed; }
+        
+        public Object getCustomProperty(String key) {
+            return customProperties.get(key);
+        }
+        
+        public <T> T getCustomProperty(String key, Class<T> type, T defaultValue) {
+            Object value = customProperties.get(key);
+            if (value != null && type.isInstance(value)) {
+                return type.cast(value);
             }
-            
-            GameLogger.info("Loaded tileset: " + name + " with " + tiles.size() + " tiles");
-            
-        } catch (Exception e) {
-            throw new AssetLoadException(imagePath, "TileSet", e);
+            return defaultValue;
         }
     }
     
     /**
-     * Add a single tile to the tileset.
+     * Individual tile data with image and animation frames.
      */
-    public void addTile(int tileId, BufferedImage image, boolean collidable) {
-        Tile tile = new Tile(tileId, image);
-        tiles.put(tileId, tile);
+    public static class Tile {
+        private final BufferedImage[] frames;
+        private final TileProperties properties;
+        private final int tileId;
         
-        TileProperties properties = new TileProperties();
-        properties.setCollidable(collidable);
-        tileProperties.put(tileId, properties);
+        public Tile(int tileId, BufferedImage image, TileProperties properties) {
+            this.tileId = tileId;
+            this.frames = new BufferedImage[]{image};
+            this.properties = properties;
+        }
+        
+        public Tile(int tileId, BufferedImage[] frames, TileProperties properties) {
+            this.tileId = tileId;
+            this.frames = frames.clone();
+            this.properties = properties;
+        }
+        
+        public BufferedImage getFrame(int frameIndex) {
+            if (frameIndex >= 0 && frameIndex < frames.length) {
+                return frames[frameIndex];
+            }
+            return frames[0]; // Default to first frame
+        }
+        
+        public BufferedImage getCurrentFrame(float animationTime) {
+            if (!properties.isAnimated() || frames.length <= 1) {
+                return frames[0];
+            }
+            
+            int frameIndex = (int) (animationTime * properties.getAnimationSpeed()) % frames.length;
+            return frames[frameIndex];
+        }
+        
+        public int getFrameCount() { return frames.length; }
+        public TileProperties getProperties() { return properties; }
+        public int getTileId() { return tileId; }
+    }
+    
+    private final Map<Integer, Tile> tiles;
+    private final String name;
+    private final int tileSize;
+    private final String imagePath;
+    
+    public TileSet(String name, int tileSize) {
+        this.name = name;
+        this.tileSize = tileSize;
+        this.imagePath = null;
+        this.tiles = new HashMap<>();
+    }
+    
+    public TileSet(String name, String imagePath, int tileSize) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.tileSize = tileSize;
+        this.tiles = new HashMap<>();
+    }
+    
+    /**
+     * Add a tile to the tileset.
+     */
+    public void addTile(int tileId, BufferedImage image, TileProperties properties) {
+        tiles.put(tileId, new Tile(tileId, image, properties));
+    }
+    
+    /**
+     * Add an animated tile to the tileset.
+     */
+    public void addAnimatedTile(int tileId, BufferedImage[] frames, TileProperties properties) {
+        tiles.put(tileId, new Tile(tileId, frames, properties));
     }
     
     /**
@@ -100,146 +152,94 @@ public class TileSet {
     }
     
     /**
-     * Get tile properties by ID.
-     */
-    public TileProperties getTileProperties(int tileId) {
-        return tileProperties.get(tileId);
-    }
-    
-    /**
-     * Check if a tile is collidable.
-     */
-    public boolean isCollidable(int tileId) {
-        TileProperties props = tileProperties.get(tileId);
-        return props != null && props.isCollidable();
-    }
-    
-    /**
-     * Set tile collision property.
-     */
-    public void setTileCollidable(int tileId, boolean collidable) {
-        TileProperties props = tileProperties.get(tileId);
-        if (props != null) {
-            props.setCollidable(collidable);
-        }
-    }
-    
-    /**
-     * Get the number of tiles in this tileset.
-     */
-    public int getTileCount() {
-        return tiles.size();
-    }
-    
-    /**
-     * Get tileset name.
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Get tile dimensions.
-     */
-    public int getTileWidth() {
-        return tileWidth;
-    }
-    
-    public int getTileHeight() {
-        return tileHeight;
-    }
-    
-    /**
-     * Check if tileset contains a specific tile ID.
+     * Check if a tile exists.
      */
     public boolean hasTile(int tileId) {
         return tiles.containsKey(tileId);
     }
     
     /**
+     * Get tile properties by ID.
+     */
+    public TileProperties getTileProperties(int tileId) {
+        Tile tile = tiles.get(tileId);
+        return tile != null ? tile.getProperties() : null;
+    }
+    
+    /**
+     * Check if a tile is collidable.
+     */
+    public boolean isCollidable(int tileId) {
+        TileProperties props = getTileProperties(tileId);
+        return props != null && props.isCollidable();
+    }
+    
+    /**
+     * Load tileset from individual tile images.
+     */
+    public static TileSet loadFromIndividualTiles(String name, Map<Integer, String> tileImagePaths,
+                                                 Map<Integer, TileProperties> tileProperties) throws AssetLoadException {
+        TileSet tileSet = new TileSet(name, 48); // Default tile size
+        
+        for (Map.Entry<Integer, String> entry : tileImagePaths.entrySet()) {
+            int tileId = entry.getKey();
+            String imagePath = entry.getValue();
+            
+            try {
+                InputStream is = TileSet.class.getResourceAsStream(imagePath);
+                if (is == null) {
+                    throw new AssetLoadException(imagePath, "tile image", "Could not find tile image");
+                }
+                
+                BufferedImage image = ImageIO.read(is);
+                TileProperties props = tileProperties.getOrDefault(tileId, 
+                    new TileProperties(false, TileType.GROUND));
+                
+                tileSet.addTile(tileId, image, props);
+                is.close();
+                
+            } catch (IOException e) {
+                throw new AssetLoadException(imagePath, "tile image", e);
+            }
+        }
+        
+        GameLogger.info("Loaded tileset '" + name + "' with " + tileSet.tiles.size() + " tiles");
+        return tileSet;
+    }
+    
+    /**
+     * Create default tileset with basic tiles for backward compatibility.
+     */
+    public static TileSet createDefaultTileSet() throws AssetLoadException {
+        Map<Integer, String> tileImagePaths = new HashMap<>();
+        tileImagePaths.put(0, "/rpg/assets/tiles/grass.png");
+        tileImagePaths.put(1, "/rpg/assets/tiles/wall.png");
+        tileImagePaths.put(2, "/rpg/assets/tiles/water.png");
+        tileImagePaths.put(3, "/rpg/assets/tiles/earth.png");
+        tileImagePaths.put(4, "/rpg/assets/tiles/tree.png");
+        tileImagePaths.put(5, "/rpg/assets/tiles/sand.png");
+        
+        Map<Integer, TileProperties> tileProperties = new HashMap<>();
+        tileProperties.put(0, new TileProperties(false, TileType.GROUND));
+        tileProperties.put(1, new TileProperties(true, TileType.WALL));
+        tileProperties.put(2, new TileProperties(true, TileType.WATER));
+        tileProperties.put(3, new TileProperties(false, TileType.GROUND));
+        tileProperties.put(4, new TileProperties(true, TileType.DECORATION));
+        tileProperties.put(5, new TileProperties(false, TileType.GROUND));
+        
+        return loadFromIndividualTiles("default", tileImagePaths, tileProperties);
+    }
+    
+    // Getters
+    public String getName() { return name; }
+    public int getTileSize() { return tileSize; }
+    public String getImagePath() { return imagePath; }
+    public int getTileCount() { return tiles.size(); }
+    
+    /**
      * Get all tile IDs in this tileset.
      */
-    public Integer[] getTileIds() {
-        return tiles.keySet().toArray(new Integer[0]);
-    }
-    
-    /**
-     * Extract name from file path.
-     */
-    private String extractNameFromPath(String path) {
-        if (path == null) return "unknown";
-        
-        String filename = path.substring(path.lastIndexOf('/') + 1);
-        int dotIndex = filename.lastIndexOf('.');
-        return dotIndex > 0 ? filename.substring(0, dotIndex) : filename;
-    }
-    
-    /**
-     * Individual tile representation.
-     */
-    public static class Tile {
-        private final int id;
-        private final BufferedImage image;
-        
-        public Tile(int id, BufferedImage image) {
-            this.id = id;
-            this.image = image;
-        }
-        
-        public int getId() {
-            return id;
-        }
-        
-        public BufferedImage getImage() {
-            return image;
-        }
-    }
-    
-    /**
-     * Tile properties and metadata.
-     */
-    public static class TileProperties {
-        private boolean collidable = false;
-        private TileType type = TileType.NORMAL;
-        private final Map<String, Object> customProperties = new HashMap<>();
-        
-        public boolean isCollidable() {
-            return collidable;
-        }
-        
-        public void setCollidable(boolean collidable) {
-            this.collidable = collidable;
-        }
-        
-        public TileType getType() {
-            return type;
-        }
-        
-        public void setType(TileType type) {
-            this.type = type;
-        }
-        
-        public void setCustomProperty(String key, Object value) {
-            customProperties.put(key, value);
-        }
-        
-        public Object getCustomProperty(String key) {
-            return customProperties.get(key);
-        }
-        
-        public boolean hasCustomProperty(String key) {
-            return customProperties.containsKey(key);
-        }
-    }
-    
-    /**
-     * Tile type enumeration.
-     */
-    public enum TileType {
-        NORMAL,
-        ANIMATED,
-        TRIGGER,
-        DECORATION,
-        COLLISION_ONLY
+    public java.util.Set<Integer> getTileIds() {
+        return new java.util.HashSet<>(tiles.keySet());
     }
 }

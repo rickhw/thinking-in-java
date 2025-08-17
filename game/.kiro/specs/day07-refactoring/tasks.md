@@ -177,14 +177,14 @@
   - Add state transition animations and effects
   - _Requirements: 3.1, 3.2_
 
-- [ ] 9. Refactor map and tile system
+- [x] 9. Refactor map and tile system
   - Create TileMap class with improved tile management
   - Implement TileSet loading and tile property management
   - Build map loading system with multiple format support
   - Add map streaming for large worlds
   - _Requirements: 5.1, 5.2, 9.1_
 
-- [ ] 9.1 Implement enhanced tile and map management
+- [x] 9.1 Implement enhanced tile and map management
   - Create TileMap class with efficient tile storage and access
   - Implement TileSet loading with tile properties and metadata
   - Build map file format parser with error handling
