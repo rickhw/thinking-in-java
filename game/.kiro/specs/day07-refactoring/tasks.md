@@ -192,7 +192,7 @@
   - Create tile animation support for animated tiles
   - _Requirements: 5.1, 9.1, 9.3_
 
-- [ ] 10. Migrate existing Player entity to new architecture
+- [-] 10. Migrate existing Player entity to new architecture
   - Convert Player class to use component-based architecture
   - Implement player-specific components and systems
   - Maintain all existing player functionality
