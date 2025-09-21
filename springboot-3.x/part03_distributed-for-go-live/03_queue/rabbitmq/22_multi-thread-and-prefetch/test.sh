@@ -6,16 +6,16 @@ BASE_URL="http://localhost:8080/api/messages"
 # 函数：发送正常消息
 send_normal_messages() {
     echo "发送正常消息..."
-    for i in {1..10}
+    for i in {1..16}
     do
-        curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -d "Normal message $i" \
-            "$BASE_URL/send" &
-
-        # response=$(curl -s -X POST -H "Content-Type: application/json" \
+        # curl -s -X POST \
+        #     -H "Content-Type: application/json" \
         #     -d "Normal message $i" \
-        #     "$BASE_URL/send")
+        #     "$BASE_URL/send" &
+
+        response=$(curl -s -X POST -H "Content-Type: application/json" \
+            -d "Normal message $i" \
+            "$BASE_URL/send")
         echo "$response"
         # sleep 0.5
     done
@@ -29,7 +29,7 @@ send_error_messages() {
         response=$(curl -s -X POST -H "Content-Type: application/json" \
             -d "Error message $i" \
             "$BASE_URL/send-error")
-        echo "$response"
+        echo "$response\n"
         sleep 0.5
     done
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- 設定 log 檔案儲存路徑 -->
+    <property name="LOG_PATH" value="./logs" />
+    <property name="APP_NAME" value="asimov.api-server" />
+
+    <!-- 根 logger 設定 -->
+    <root level="INFO">
+        <appender-ref ref="StdoutConsoleAppender" />
+        <appender-ref ref="StdoutFileAppender" />
+    </root>
+
+    <!-- appender -->
+    <appender name="StdoutConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %highlight(%-5level) %green([%thread]) %logger{16}#%M\(%line\) %message%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="StdoutFileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/stdout.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/stdout-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>10MB</totalSizeCap>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd'T'HH:mm:ss.SSS} %highlight(%-5level) %green([%thread]) %logger{16}:%line %message%n</pattern>
+        </encoder>
+    </appender>
+
+</configuration>

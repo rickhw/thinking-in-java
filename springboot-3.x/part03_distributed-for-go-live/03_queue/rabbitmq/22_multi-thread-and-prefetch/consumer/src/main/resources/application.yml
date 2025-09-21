@@ -1,0 +1,18 @@
+server:
+  port: 8081
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: medusa
+
+application:
+  rabbitmq:
+    queue-name: demo-queue
+    client:
+      thread-name-prefix: rabbit-consumer-
+      concurrent-consumers: 2   # 可以配置同時處理的 message 數量
+      max-concurrent-consumers: 4  # 可以配置同時處理的 message 數量
+      prefetch-count: 2

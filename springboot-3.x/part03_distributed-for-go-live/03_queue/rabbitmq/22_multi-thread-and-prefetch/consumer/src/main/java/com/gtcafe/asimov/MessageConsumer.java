@@ -23,7 +23,7 @@ public class MessageConsumer {
     private final MessageHandler handler;
     // private final ThreadPoolTaskExecutor asyncExecutor;
 
-    @Async
+    // @Async(value = "asyncExecutor")
     @RabbitListener(
         queues = "${application.rabbitmq.queue-name}",
         containerFactory = "rabbitListenerContainerFactory"
@@ -34,18 +34,19 @@ public class MessageConsumer {
         @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag
     ) throws IOException {
         String messageBody = new String(message.getBody());
-        
+        log.info("start: [{}]", messageBody);
+       
         try {
             boolean processed = handler.run(messageBody);
             
             if (processed) {
                 // 手動確認消息
                 channel.basicAck(deliveryTag, false);
-                log.info("Message processed successfully: {}", messageBody);
+                log.info("finish: [{}]", messageBody);
             } else {
                 // 處理失敗，重新入隊
                 channel.basicNack(deliveryTag, false, true);
-                log.warn("Message processing failed, will be requeued: {}", messageBody);
+                log.info("failed, will be requeued: [{}]", messageBody);
             }
         } catch (Exception e) {
             // 發生異常，重新入隊

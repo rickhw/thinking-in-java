@@ -11,8 +11,9 @@ public class MessageHandler {
     public boolean run(String message) {
         try {
             // 模擬複雜的處理邏輯
-            int sleep = (int) (Math.random() * 1000);
-            log.info("message: {}, sleep: [{}]", message, sleep);
+            int sleep = (int) (Math.random() * 10000);
+            // int sleep = 10000;
+            log.info("start - message: [{}], sleep: [{}]", message, sleep);
             
             // 這裡可以模擬處理失敗的情況
             if (message.contains("error")) {
@@ -21,10 +22,13 @@ public class MessageHandler {
 
             // 模擬處理耗時
             Thread.sleep(sleep);
+
+
+            log.info("finish - message: [{}], sleep: [{}]", message, sleep);
             
             return true;
         } catch (Exception e) {
-            log.error("Message processing failed: {}", e.getMessage());
+            log.info("failed - message: [{}]", e.getMessage());
             return false;
         }
     }
